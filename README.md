@@ -7,7 +7,8 @@ Before running the application, ensure that you have the following dependencies 
 - Python
 - SQLite
 
-Additionally, make sure to download all necessary python packages (will add those in a list soon too).
+Additionally, make sure to download all necessary python packages by running the code:
+```pip install -r requirements.txt```
 
 ## Getting Started
 
