@@ -18,5 +18,6 @@ def create_app():
     login_manager.init_app(app)
 
     from app.routes import main
+    app.register_blueprint(main)
 
     return app
