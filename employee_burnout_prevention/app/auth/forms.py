@@ -5,6 +5,7 @@ from wtforms.validators import DataRequired, EqualTo, Email, ValidationError
 from app.models import User
 
 class RegistrationForm(FlaskForm):
+    # Add more specific information to the profile about the employee
     username = StringField('Username', validators=[DataRequired()])
     email = StringField('Email', validators=[DataRequired(), Email()])
     password = PasswordField('Password', validators=[DataRequired()])
