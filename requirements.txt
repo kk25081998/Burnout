@@ -1,6 +1,10 @@
 Flask
-Flask-WTF
-Flask-Login
+Flask-SQLAlchemy
 Flask-Migrate
-SQLAlchemy
+Flask-Login
+Flask-WTF
 Werkzeug
+WTForms
+email-validator
+SQLAlchemy
+python-dotenv
