@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}
+Dashboard - Employee Burnout Prevention
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="jumbotron">
+        <h1 class="display-4">Welcome to your Dashboard!</h1>
+        <p class="lead">Monitor your well-being and prevent burnout effectively.</p>
+        <hr class="my-4">
+    </div>
+    
+    <div class="row">
+        <div class="col-md-4">
+            <h2>Your Profile</h2>
+            <!-- Replace with the actual user profile data -->
+            <p>Name: John Doe</p>
+            <p>Role: Software Engineer</p>
+        </div>
+        
+        <div class="col-md-4">
+            <h2>Current Burnout Score</h2>
+            <!-- Replace with the actual burnout score -->
+            <p>Score: 70/100</p>
+        </div>
+        
+        <div class="col-md-4">
+            <h2>Score History</h2>
+            <!-- Replace with the actual burnout score history -->
+            <p>History: 65, 68, 70</p>
+        </div>
+    </div>
+    
+    <hr>
+    
+    <h2>Resources</h2>
+    <!-- Replace with actual resources -->
+    <p>Here are some resources to help you maintain your well-being:</p>
+    <ul>
+        <li><a href="#">Resource 1</a></li>
+        <li><a href="#">Resource 2</a></li>
+        <li><a href="#">Resource 3</a></li>
+    </ul>
+</div>
+{% endblock %}
