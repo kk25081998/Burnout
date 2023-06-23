@@ -5,12 +5,13 @@ from flask import render_template, redirect, url_for, flash, abort, request, jso
 from flask_login import login_user, logout_user, login_required, current_user, LoginManager
 from app import db, create_app
 from app.forms import RegistrationForm, LoginForm
-from app.models import User
 from datetime import datetime
 from werkzeug.exceptions import HTTPException  # import HTTPException instead of abort
 from flask import Blueprint
 from flask import current_app
 import json
+from app.personalization import save_picture
+from app.models import User, Company
 
 login_manager = LoginManager()
 login_manager.login_view = 'main.login'
@@ -27,9 +28,19 @@ def register():
 
     form = RegistrationForm()
     if form.validate_on_submit():
-        existing_user = User.query.filter_by(username=form.username.data).first()
-        if existing_user:
-            flash('Username already taken. Please choose a different one.')
+        # Validate the company ID
+        try:
+            company_id = int(form.companyId.data)
+        except ValueError:
+            flash('Company ID is not valid. It should be a numeric value.')
+            return redirect(url_for('main.register'))
+
+        # Check if the company ID exists
+        company = Company.query.get(company_id)
+        print(f"Queried company: {company}")  # Debug print
+        if company is None:
+            print("Company is None, flashing message and redirecting")  # Debug print
+            flash('Company ID is not valid. No such company exists.')
             return redirect(url_for('main.register'))
 
         existing_email = User.query.filter_by(email=form.email.data).first()
@@ -41,7 +52,10 @@ def register():
             flash('Password and confirmation do not match. Please try again.')
             return redirect(url_for('main.register'))
 
-        user = User(username=form.username.data, email=form.email.data)
+        user = User(email=form.email.data, 
+                    firstname=form.firstname.data,
+                    lastname=form.lastname.data,
+                    companyId=form.companyId.data)
         user.set_password(form.password.data)
         db.session.add(user)
         db.session.commit()
@@ -77,3 +91,23 @@ def logout():
 @login_required
 def dashboard():
     return render_template('dashboard.html')
+
+@main.route('/edit_profile', methods=['GET', 'POST'])
+@login_required
+def edit_profile():
+    form = EditProfileForm()
+    if form.validate_on_submit():
+        if form.picture.data:
+            picture_file = save_picture(form.picture.data)
+            current_user.image_file = picture_file
+        current_user.date_of_birth = form.date_of_birth.data
+        current_user.bio = form.bio.data
+        db.session.commit()
+        flash('Your changes have been saved.')
+        return redirect(url_for('main.edit_profile'))
+    elif request.method == 'GET':
+        form.date_of_birth.data = current_user.date_of_birth
+        form.bio.data = current_user.bio
+    image_file = url_for('static', filename='profile_pics/' + current_user.image_file)
+    return render_template('edit_profile.html', title='Edit Profile', image_file=image_file, form=form)
+

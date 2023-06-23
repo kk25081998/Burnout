@@ -1,6 +1,6 @@
 Immediate things to do:
-1. Add company model to store company names, id, description, sector, size (number of employees) etc...
-2. Each user should be linked to a company id, so add that in user model and in the registration html
+1. Add company model to store company names, id, description, sector, size (number of employees) etc... (DONE)
+2. Each user should be linked to a company id, so add that in user model and in the registration html (DONE)
 3. Create a questionarie based on the MBIT test for burnout (this should be in the forms.py)
 4. Edit user profile page so user can change their usernames, password, and image potentially, add name first and last as well, date of birth
 5. Create history page as well for the user to see past results fo the questionaire
