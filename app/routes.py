@@ -90,7 +90,9 @@ def logout():
 @main.route('/dashboard')
 @login_required
 def dashboard():
-    return render_template('dashboard.html')
+    user = User.query.filter_by(id=current_user.id).first()
+    return render_template('dashboard.html', user=user)
+
 
 @main.route('/edit_profile', methods=['GET', 'POST'])
 @login_required
@@ -110,4 +112,9 @@ def edit_profile():
         form.bio.data = current_user.bio
     image_file = url_for('static', filename='profile_pics/' + current_user.image_file)
     return render_template('edit_profile.html', title='Edit Profile', image_file=image_file, form=form)
+
+@main.route('/test_history')
+@login_required
+def test_history():
+    return render_template('test_history.html')
 

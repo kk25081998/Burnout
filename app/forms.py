@@ -11,9 +11,10 @@ from datetime import datetime
 class RegistrationForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email(message='Invalid email address')])
     password = PasswordField('Password', validators=[DataRequired()])
-    password_confirm = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
+    password_confirm = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')]) # Why do we have 2 password columns in the database?
     firstname = StringField('First Name', validators=[DataRequired()])
     lastname = StringField('Last Name', validators=[DataRequired()])
+    date_of_birth = DateField('Date of Birth', format='%Y-%m-%d', validators=[DataRequired()])
     companyId = IntegerField('Company ID', validators=[DataRequired()])
     submit = SubmitField('Register')
 

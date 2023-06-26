@@ -15,9 +15,15 @@ Dashboard - Employee Burnout Prevention
     <div class="row">
         <div class="col-md-4">
             <h2>Your Profile</h2>
+            
+            <!-- Add a profile picture -->
+            <img src="{{ url_for('static', filename='images/profile.jpg') }}" alt="Profile Picture" class="img-thumbnail" style="width: 300px; height: 300;">
+            
             <!-- Replace with the actual user profile data -->
-            <p>Name: John Doe</p>
-            <p>Role: Software Engineer</p>
+            <p>Name: {{user.firstname}} {{user.lastname}}</p>
+            <p> Date of Birth: {{user.date_of_birth}}</p>
+            <p> Organization: {{user.companyID}}</p>
+            <p> Role: Software Engineer</p>
         </div>
         
         <div class="col-md-4">
