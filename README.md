@@ -35,5 +35,5 @@ Once the application is running, you can access it in your web browser. Make sur
 ## Common Commands
 
 1. Database
-Open the database: ```./sqlite3.exe app.db```
-See all tables: ```.tables```
+   - Open the database: `./sqlite3.exe app.db` (for Unix/Linux) or `sqlite3.exe app.db` (for Windows).
+   - See all tables: `.tables`
