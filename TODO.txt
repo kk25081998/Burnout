@@ -10,9 +10,9 @@ Long term to do list:
 8. Figure out how to signin using google email or microsoft email and that sort of workflow
 
 Subtasks for Kartik:
-1. Figure out how to save picture for each person individually, have ID saved as name possibly then load it 
-2. Fix edit profilt UI and also make sure fields are prepopulated, change it to view_profile instead of edit_profile 
-3. Dashboard reflect user information
+1. Figure out how to save picture for each person individually, have ID saved as name possibly then load it (DONE)
+2. Fix edit profilt UI and also make sure fields are prepopulated, change it to view_profile instead of edit_profile (DONE)
+3. Dashboard reflect user information (DONE)
 
 Subtasks for G:
 1. MBIT questionnaire for general job category

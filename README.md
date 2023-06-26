@@ -31,3 +31,9 @@ To start the application, follow these steps:
    ```
 
 Once the application is running, you can access it in your web browser. Make sure to adapt the database settings if necessary, as the project currently uses SQLite for simplicity. Feel free to switch to a different database for production purposes or further practice.
+
+## Common Commands
+
+1. Database
+Open the database: ```./sqlite3.exe app.db```
+See all tables: ```.tables```

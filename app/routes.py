@@ -1,7 +1,7 @@
 # app/routes.py
 print("Routes file loaded!")  # Add this line
 
-from flask import render_template, redirect, url_for, flash, abort, request, jsonify, session
+from flask import render_template, redirect, url_for, flash, abort, request, jsonify, session, get_flashed_messages
 from flask_login import login_user, logout_user, login_required, current_user, LoginManager
 from app import db, create_app
 from app.forms import RegistrationForm, LoginForm, EditProfileForm
@@ -19,10 +19,12 @@ main = Blueprint('main', __name__)
 
 @main.route('/')
 def index():
+    get_flashed_messages()
     return render_template('index.html')
 
 @main.route('/register', methods=['GET', 'POST'])
 def register():
+    get_flashed_messages()
     if current_user.is_authenticated:
         return redirect(url_for('main.index'))
 
@@ -73,7 +75,7 @@ def login():
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
         if user is None or not user.check_password(form.password.data):
-            flash('Invalid email or password.')
+            flash('Invalid email/password combination.')
             return redirect(url_for('main.login'))
 
         login_user(user, remember=form.remember_me.data)
@@ -90,28 +92,34 @@ def logout():
 @main.route('/dashboard')
 @login_required
 def dashboard():
+    get_flashed_messages()
     user = User.query.filter_by(id=current_user.id).first()
     return render_template('dashboard.html', user=user)
 
 
-@main.route('/edit_profile', methods=['GET', 'POST'])
+@main.route('/view_profile', methods=['GET', 'POST'])
 @login_required
-def edit_profile():
-    form = EditProfileForm()
+def view_profile():
+    form = EditProfileForm(obj=current_user)
     if form.validate_on_submit():
-        if 'image' in request.files:
-            print(f'Calling save_picture with {type(form.image.data)}: {form.image.data}')
-            picture_file = save_picture(form.image.data)
-            current_user.image_file = picture_file
+        # Ensure there is a file in the request and that it's not empty
+        if 'image' in request.files and request.files['image'].filename != '':
+            picture_file = save_picture(form.image.data, current_user.email, current_user.id)
+            current_user.image = picture_file
+        current_user.email = form.email.data
+        current_user.firstname = form.firstname.data
+        current_user.lastname = form.lastname.data
         current_user.date_of_birth = form.date_of_birth.data
-        current_user.bio = form.bio.data
         db.session.commit()
         flash('Your changes have been saved.')
-        return redirect(url_for('main.edit_profile'))
+        return redirect(url_for('main.view_profile'))
     elif request.method == 'GET':
+        form.email.data = current_user.email
+        form.firstname.data = current_user.firstname
+        form.lastname.data = current_user.lastname
         form.date_of_birth.data = current_user.date_of_birth
-    image_file = url_for('static', filename='images/profile.jpg') # current_user.image_file Needs to be added.
-    return render_template('edit_profile.html', title='Edit Profile', image_file=image_file, form=form)
+    image = url_for('static', filename='profile_pics/' + current_user.image) if current_user.image else url_for('static', filename='images/profile.jpg')
+    return render_template('view_profile.html', title='View Profile', image_file=image, form=form)
 
 
 @main.route('/test_history')

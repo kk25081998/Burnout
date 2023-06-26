@@ -9,7 +9,7 @@ from datetime import datetime
 # from email_validator import validate_email, EmailNotValidError
 
 class RegistrationForm(FlaskForm):
-    email = StringField('Email', validators=[DataRequired(), Email(message='Invalid email address')])
+    email = StringField('Email', validators=[DataRequired(), Email(message='Please enter a valid email address')])
     firstname = StringField('First Name', validators=[DataRequired()])
     lastname = StringField('Last Name', validators=[DataRequired()])
     date_of_birth = DateField('Date of Birth', format='%Y-%m-%d', validators=[DataRequired()])
@@ -24,7 +24,7 @@ class RegistrationForm(FlaskForm):
             raise ValidationError('Email already in use.')
 
 class LoginForm(FlaskForm):
-    email = StringField('Email', validators=[DataRequired(), Email()])
+    email = StringField('Email', validators=[DataRequired(), Email(message='Please enter a valid email address')])
     password = PasswordField('Password', validators=[DataRequired()])
     remember_me = BooleanField('Remember Me')
     submit = SubmitField('Log In')
@@ -33,7 +33,6 @@ class EditProfileForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
     firstname = StringField('First Name')
     lastname = StringField('Last Name')
-    bio = TextAreaField('Bio')
     date_of_birth = DateField('Date of Birth', format='%Y-%m-%d')
     image = FileField('Update Profile Picture', validators=[FileAllowed(['jpg', 'png'])])
     submit = SubmitField('Update')

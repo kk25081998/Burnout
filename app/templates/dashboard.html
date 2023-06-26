@@ -17,12 +17,16 @@ Dashboard - Employee Burnout Prevention
             <h2>Your Profile</h2>
             
             <!-- Add a profile picture -->
-            <img src="{{ url_for('static', filename='images/profile.jpg') }}" alt="Profile Picture" class="img-thumbnail" style="width: 300px; height: 300;">
+            {% if current_user.image %}
+                <img src="{{ url_for('static', filename='profile_pics/' + current_user.image) }}" alt="Profile Picture" class="img-thumbnail" style="width: 200px; height: 200;">
+            {% else %}
+                <img src="{{ url_for('static', filename='profile_pics/default.jpg') }}" alt="Profile Picture" class="img-thumbnail" style="width: 200px; height: 200px;">
+            {% endif %}
             
             <!-- Replace with the actual user profile data -->
             <p>Name: {{user.firstname}} {{user.lastname}}</p>
             <p> Date of Birth: {{user.date_of_birth}}</p>
-            <p> Organization: {{user.companyID}}</p>
+            <p> Organization: {{user.company.name}}</p>
             <p> Role: Software Engineer</p>
         </div>
         
