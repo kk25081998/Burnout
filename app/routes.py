@@ -4,7 +4,7 @@ print("Routes file loaded!")  # Add this line
 from flask import render_template, redirect, url_for, flash, abort, request, jsonify, session
 from flask_login import login_user, logout_user, login_required, current_user, LoginManager
 from app import db, create_app
-from app.forms import RegistrationForm, LoginForm
+from app.forms import RegistrationForm, LoginForm, EditProfileForm
 from datetime import datetime
 from werkzeug.exceptions import HTTPException  # import HTTPException instead of abort
 from flask import Blueprint
@@ -109,9 +109,9 @@ def edit_profile():
         return redirect(url_for('main.edit_profile'))
     elif request.method == 'GET':
         form.date_of_birth.data = current_user.date_of_birth
-        form.bio.data = current_user.bio
-    image_file = url_for('static', filename='profile_pics/' + current_user.image_file)
+    image_file = url_for('static', filename='images/profile.jpg') # current_user.image_file Needs to be added.
     return render_template('edit_profile.html', title='Edit Profile', image_file=image_file, form=form)
+
 
 @main.route('/test_history')
 @login_required
