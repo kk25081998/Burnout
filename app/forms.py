@@ -35,7 +35,7 @@ class EditProfileForm(FlaskForm):
     lastname = StringField('Last Name')
     bio = TextAreaField('Bio')
     date_of_birth = DateField('Date of Birth', format='%Y-%m-%d')
-    picture = FileField('Update Profile Picture', validators=[FileAllowed(['jpg', 'png'])])  # Add this line
+    image = FileField('Update Profile Picture', validators=[FileAllowed(['jpg', 'png'])])  # Add this line
     submit = SubmitField('Update')
 
 

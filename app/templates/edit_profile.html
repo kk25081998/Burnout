@@ -1,26 +1,29 @@
 {% extends "base.html" %}
 
-{% block title %}
-Dashboard - Employee Burnout Prevention
-{% endblock %}
-
 {% block content %}
-
-<div class="container">
-    <div class="jumbotron">
-        <h1 class="display-4">Burnout Test History</h1>
-        <p class="lead">Keep Track of your well-being and burnout effectively.</p>
-        <hr class="my-4">
-    </div>
-    
-    <div>
-        <h3>Date: </h3>
-        <p>Test A: 
-            &emsp;&emsp; Test B: 
-            &emsp;&emsp;&emsp;&emsp;Test C: </p>
-        <p>Total: </p>
-        <p>Burnout Rate:</p>
-    </div>
-</div>
-
+    <h1>Edit Profile</h1>
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.email.label }}<br>
+            {{ form.email(size=30) }}
+        </p>
+        <p>
+            {{ form.firstname.label }}<br>
+            {{ form.firstname(size=30) }}
+        </p>
+        <p>
+            {{ form.lastname.label }}<br>
+            {{ form.lastname(size=30) }}
+        </p>
+        <p>
+            {{ form.date_of_birth.label }}<br>
+            {{ form.date_of_birth() }}
+        </p>
+        <p>
+            {{ form.image.label }}<br>
+            {{ form.image(size=30) }}
+        </p>
+        <p>{{ form.submit() }}</p>
+    </form>
 {% endblock %}
