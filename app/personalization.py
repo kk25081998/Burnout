@@ -1,6 +1,7 @@
 import os
 from PIL import Image
 from flask import current_app
+from werkzeug.utils import secure_filename  # Add this line
 
 def save_picture(form_picture):
     picture_fn = secure_filename(form_picture.filename)

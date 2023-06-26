@@ -8,3 +8,16 @@ Long term to do list:
 6. Implement role systems so different roles see different pages
 7. Manager can view other subordinate results in a seperate tab/page 
 8. Figure out how to signin using google email or microsoft email and that sort of workflow
+
+Subtasks for Kartik:
+1. Figure out how to save picture for each person individually, have ID saved as name possibly then load it 
+2. Fix edit profilt UI and also make sure fields are prepopulated, change it to view_profile instead of edit_profile 
+3. Dashboard reflect user information
+
+Subtasks for G:
+1. MBIT questionnaire for general job category
+2. How to convert questionaire answers to actual user friendly results
+3. Any opportunities for AI/ML?
+
+Future subtask:
+1. Make take_test page for the questionaire

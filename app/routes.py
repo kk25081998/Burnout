@@ -99,7 +99,8 @@ def dashboard():
 def edit_profile():
     form = EditProfileForm()
     if form.validate_on_submit():
-        if form.image.data:
+        if 'image' in request.files:
+            print(f'Calling save_picture with {type(form.image.data)}: {form.image.data}')
             picture_file = save_picture(form.image.data)
             current_user.image_file = picture_file
         current_user.date_of_birth = form.date_of_birth.data
