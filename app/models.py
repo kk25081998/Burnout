@@ -21,6 +21,8 @@ class User(UserMixin, db.Model):
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
 
+    result = db.relationship('Result', backref='user', lazy='dynamic')
+
 class Company(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), nullable=False)
@@ -30,6 +32,13 @@ class Company(db.Model):
 
     def __repr__(self):
         return f'<Company {self.name}>'
+
+# class Results(db.Model):
+#     id = db.Column(db.Integer, primary_key=True)
+#     testDate = db.Column(db.Date, nullable=False)
+#     scoreA = db.Column(db.Integer, nullable=False)
+#     scoreB = db.Column(db.Integer, nullable=False)
+#     scoreC = db.Column(db.Integer, nullable=False)
 
 @login_manager.user_loader
 def load_user(id):

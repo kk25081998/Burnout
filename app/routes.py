@@ -4,7 +4,7 @@ print("Routes file loaded!")  # Add this line
 from flask import render_template, redirect, url_for, flash, abort, request, jsonify, session, get_flashed_messages
 from flask_login import login_user, logout_user, login_required, current_user, LoginManager
 from app import db, create_app
-from app.forms import RegistrationForm, LoginForm, EditProfileForm
+from app.forms import RegistrationForm, LoginForm, EditProfileForm, SurveyForm
 from datetime import datetime
 from werkzeug.exceptions import HTTPException  # import HTTPException instead of abort
 from flask import Blueprint
@@ -121,6 +121,21 @@ def view_profile():
     image = url_for('static', filename='profile_pics/' + current_user.image) if current_user.image else url_for('static', filename='images/profile.jpg')
     return render_template('view_profile.html', title='View Profile', image_file=image, form=form)
 
+@main.route('/survey', methods=['GET', 'POST'])
+def survey():
+    form = SurveyForm()
+    if form.validate_on_submit():
+        score1 = sum(question.data for question in form.section1)
+        score2 = sum(question.data for question in form.section2)
+        score3 = sum(question.data for question in form.section3)
+        
+        # Save scores to database or do something else here...
+
+    section1 = [form.q1, form.q2, form.q3, form.q4, form.q5, form.q6]
+    section2 = [form.q7, form.q8, form.q9, form.q10, form.q11, form.q12]
+    section3 = [form.q13, form.q14, form.q15, form.q16, form.q17, form.q18]
+
+    return render_template('survey.html', title='Survey', form=form, section1=section1, section2=section2, section3=section3)
 
 @main.route('/test_history')
 @login_required

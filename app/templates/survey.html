@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <style>
+        .radio-inline input[type="radio"] {
+            display: inline;
+        }
+    </style>
+    <form method="POST">
+        {{ form.hidden_tag() }}
+
+        <h2>Section 1</h2>
+        {% for question in section1 %}
+            <div class="inline-radio">
+                {{ question.label }}<br>
+                {{ question() }}<br>
+            </div>
+        {% endfor %}
+        {{ form.submit1() }}
+
+        <h2>Section 2</h2>
+        {% for question in section2 %}
+            <div class="inline-radio">
+                {{ question.label }}<br>
+                {{ question() }}<br>
+            </div>
+        {% endfor %}
+        {{ form.submit2() }}
+
+        <h2>Section 3</h2>
+        {% for question in section3 %}
+            <div class="inline-radio">
+                {{ question.label }}<br>
+                {{ question() }}<br>
+            </div>
+        {% endfor %}
+        {{ form.submit3() }}
+    </form>
+
+{% endblock %}
