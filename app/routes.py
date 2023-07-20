@@ -4,14 +4,15 @@ print("Routes file loaded!")  # Add this line
 from flask import render_template, redirect, url_for, flash, abort, request, jsonify, session, get_flashed_messages
 from flask_login import login_user, logout_user, login_required, current_user, LoginManager
 from app import db, create_app
-from app.forms import RegistrationForm, LoginForm, EditProfileForm, SurveyForm
+from app.forms import RegistrationForm, LoginForm, EditProfileForm, TakeTest
 from datetime import datetime
 from werkzeug.exceptions import HTTPException  # import HTTPException instead of abort
 from flask import Blueprint
 from flask import current_app
 import json
 from app.personalization import save_picture
-from app.models import User, Company
+from app.models import User, Company, Results
+import datetime
 
 login_manager = LoginManager()
 login_manager.login_view = 'main.login'
@@ -121,21 +122,33 @@ def view_profile():
     image = url_for('static', filename='profile_pics/' + current_user.image) if current_user.image else url_for('static', filename='images/profile.jpg')
     return render_template('view_profile.html', title='View Profile', image_file=image, form=form)
 
-@main.route('/survey', methods=['GET', 'POST'])
-def survey():
-    form = SurveyForm()
+@main.route('/test', methods=['GET', 'POST'])
+@login_required
+def test():
+    form = TakeTest()
+
+    # Questions grouped by section
+    section1 = [form.q1, form.q2, form.q3, form.q4, form.q5, form.q6, form.q7]
+    section2 = [form.q8, form.q9, form.q10, form.q11, form.q12, form.q13, form.q14]
+    section3 = [form.q15, form.q16, form.q17, form.q18, form.q19, form.q20, form.q21, form.q22]
+
     if form.validate_on_submit():
-        score1 = sum(question.data for question in form.section1)
-        score2 = sum(question.data for question in form.section2)
-        score3 = sum(question.data for question in form.section3)
-        
-        # Save scores to database or do something else here...
+        # Calculate scores for each section
+        score1 = sum(int(question.data) for question in section1)
+        score2 = sum(int(question.data) for question in section2)
+        score3 = sum(int(question.data) for question in section3)
+        date = datetime.datetime.now()
 
-    section1 = [form.q1, form.q2, form.q3, form.q4, form.q5, form.q6]
-    section2 = [form.q7, form.q8, form.q9, form.q10, form.q11, form.q12]
-    section3 = [form.q13, form.q14, form.q15, form.q16, form.q17, form.q18]
+        # Save scores to database
+        new_test_score = Results(user_id=current_user.id, testDate=date, scoreA=score1, scoreB=score2, scoreC=score3, )
+        db.session.add(new_test_score)
+        db.session.commit()
 
-    return render_template('survey.html', title='Survey', form=form, section1=section1, section2=section2, section3=section3)
+        flash('Your test has been successfully submitted!')
+        return redirect(url_for('main.test_history'))
+    
+    return render_template('test.html', title='test', form=form, section1=section1, section2=section2, section3=section3)
+
 
 @main.route('/test_history')
 @login_required

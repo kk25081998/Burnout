@@ -37,7 +37,7 @@ class EditProfileForm(FlaskForm):
     image = FileField('Update Profile Picture', validators=[FileAllowed(['jpg', 'png'])])
     submit = SubmitField('Update')
 
-class SurveyForm(FlaskForm):
+class TakeTest(FlaskForm):
     # Define ratings as choices
     ratings = [(str(i), str(i)) for i in range(7)]
 
@@ -49,7 +49,6 @@ class SurveyForm(FlaskForm):
     q5 = RadioField('I feel I work too hard at my job.', choices=ratings, validators=[DataRequired()])
     q6 = RadioField('It stresses me too much to work in direct contact with people.', choices=ratings, validators=[DataRequired()])
     q7 = RadioField('I feel like I’m at the end of my rope.', choices=ratings, validators=[DataRequired()])
-    submit1 = SubmitField('Submit Section 1')
 
     # Section 2
     q8 = RadioField('I feel I look after certain patients/clients impersonally, as if they are objects.', choices=ratings, validators=[DataRequired()])
@@ -59,7 +58,6 @@ class SurveyForm(FlaskForm):
     q12 = RadioField('I really don’t care about what happens to some of my patients/clients.', choices=ratings, validators=[DataRequired()])
     q13 = RadioField('I have become more insensitive to people since I’ve been working.', choices=ratings, validators=[DataRequired()])
     q14 = RadioField('I’m afraid that this job is making me uncaring.', choices=ratings, validators=[DataRequired()])
-    submit2 = SubmitField('Submit Section 2')
 
     # Section 3
     q15 = RadioField('I accomplish many worthwhile things in this job.', choices=ratings, validators=[DataRequired()])
@@ -70,6 +68,6 @@ class SurveyForm(FlaskForm):
     q20 = RadioField('Through my work, I feel that I have a positive influence on people.', choices=ratings, validators=[DataRequired()])
     q21 = RadioField('I am easily able to create a relaxed atmosphere with my patients/clients.', choices=ratings, validators=[DataRequired()])
     q22 = RadioField('I feel refreshed when I have been close to my patients/clients at work.', choices=ratings, validators=[DataRequired()])
-    submit3 = SubmitField('Submit Section 3')
 
-
+    # Global submit button
+    submit = SubmitField('Submit Responses')

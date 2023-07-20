@@ -17,7 +17,6 @@
                 {{ question() }}<br>
             </div>
         {% endfor %}
-        {{ form.submit1() }}
 
         <h2>Section 2</h2>
         {% for question in section2 %}
@@ -26,7 +25,6 @@
                 {{ question() }}<br>
             </div>
         {% endfor %}
-        {{ form.submit2() }}
 
         <h2>Section 3</h2>
         {% for question in section3 %}
@@ -35,7 +33,7 @@
                 {{ question() }}<br>
             </div>
         {% endfor %}
-        {{ form.submit3() }}
+        {{ form.submit() }}
     </form>
 
 {% endblock %}
