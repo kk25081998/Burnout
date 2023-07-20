@@ -132,7 +132,15 @@ def test():
     section2 = [form.q8, form.q9, form.q10, form.q11, form.q12, form.q13, form.q14]
     section3 = [form.q15, form.q16, form.q17, form.q18, form.q19, form.q20, form.q21, form.q22]
 
+    print("Form data: ", form.data)
+    print("Form errors: ", form.errors)
+
     if form.validate_on_submit():
+        #debug
+        print([question.data for question in section1])
+        print([question.data for question in section2])
+        print([question.data for question in section3])
+
         # Calculate scores for each section
         score1 = sum(int(question.data) for question in section1)
         score2 = sum(int(question.data) for question in section2)
@@ -140,9 +148,14 @@ def test():
         date = datetime.datetime.now()
 
         # Save scores to database
-        new_test_score = Results(user_id=current_user.id, testDate=date, scoreA=score1, scoreB=score2, scoreC=score3, )
-        db.session.add(new_test_score)
-        db.session.commit()
+        try:
+            new_test_score = Results(user_id=current_user.id, testDate=date, scoreA=score1, scoreB=score2, scoreC=score3, )
+            db.session.add(new_test_score)
+            db.session.commit()
+        except Exception as e:
+            print(f"Error while saving test results: {e}")
+            db.session.rollback()
+
 
         flash('Your test has been successfully submitted!')
         return redirect(url_for('main.test_history'))

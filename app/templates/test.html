@@ -1,39 +1,57 @@
 {% extends "base.html" %}
 
+{% block extra_css %}
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+{% endblock %}
+
 {% block content %}
-
-    <style>
-        .radio-inline input[type="radio"] {
-            display: inline;
-        }
-    </style>
-    <form method="POST">
+    <form method="POST" class="mt-4">
         {{ form.hidden_tag() }}
+        <div class="container">
 
-        <h2>Section 1</h2>
-        {% for question in section1 %}
-            <div class="inline-radio">
-                {{ question.label }}<br>
-                {{ question() }}<br>
-            </div>
-        {% endfor %}
+            <h2>Section 1</h2>
+            {% for question in section1 %}
+                <div class="form-group">
+                    <label>{{ question.label }}</label><br>
+                    {% for subfield in question %}
+                        <div class="custom-control custom-radio custom-control-inline">
+                            <input type="radio" id="{{ subfield.id }}" name="{{ subfield.name }}" value="{{ loop.index0 }}" class="custom-control-input">
+                            <label class="custom-control-label" for="{{ subfield.id }}">{{ subfield.label.text }}</label>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endfor %}
 
-        <h2>Section 2</h2>
-        {% for question in section2 %}
-            <div class="inline-radio">
-                {{ question.label }}<br>
-                {{ question() }}<br>
-            </div>
-        {% endfor %}
+            <h2>Section 2</h2>
+            {% for question in section2 %}
+                <div class="form-group">
+                    <label>{{ question.label }}</label><br>
+                    {% for subfield in question %}
+                        <div class="custom-control custom-radio custom-control-inline">
+                            <input type="radio" id="{{ subfield.id }}" name="{{ subfield.name }}" value="{{ loop.index0 }}" class="custom-control-input">
+                            <label class="custom-control-label" for="{{ subfield.id }}">{{ subfield.label.text }}</label>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endfor %}
 
-        <h2>Section 3</h2>
-        {% for question in section3 %}
-            <div class="inline-radio">
-                {{ question.label }}<br>
-                {{ question() }}<br>
+            <h2>Section 3</h2>
+            {% for question in section3 %}
+                <div class="form-group">
+                    <label>{{ question.label }}</label><br>
+                    {% for subfield in question %}
+                        <div class="custom-control custom-radio custom-control-inline">
+                            <input type="radio" id="{{ subfield.id }}" name="{{ subfield.name }}" value="{{ loop.index0 }}" class="custom-control-input">
+                            <label class="custom-control-label" for="{{ subfield.id }}">{{ subfield.label.text }}</label>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">{{ form.submit.label }}</button>
             </div>
-        {% endfor %}
-        {{ form.submit() }}
+
+        </div>
     </form>
-
 {% endblock %}
