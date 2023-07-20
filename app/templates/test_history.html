@@ -5,22 +5,26 @@ Dashboard - Employee Burnout Prevention
 {% endblock %}
 
 {% block content %}
-
 <div class="container">
     <div class="jumbotron">
         <h1 class="display-4">Burnout Test History</h1>
         <p class="lead">Keep Track of your well-being and burnout effectively.</p>
         <hr class="my-4">
     </div>
-    
-    <div>
-        <h3>Date: </h3>
-        <p>Test A: 
-            &emsp;&emsp; Test B: 
-            &emsp;&emsp;&emsp;&emsp;Test C: </p>
-        <p>Total: </p>
-        <p>Burnout Rate:</p>
-    </div>
-</div>
 
+    {% for result in results %}
+        <div>
+            <h3>Date: {{ result.testDate }}</h3>
+            <p>
+                Test A: {{ result.scoreA }} 
+                &emsp;&emsp; Test B: {{ result.scoreB }} 
+                &emsp;&emsp;&emsp;&emsp;Test C: {{ result.scoreC }}
+            </p>
+            <p>Total: {{ result.scoreA + result.scoreB + result.scoreC }}</p>
+            <!-- You can calculate the burnout rate according to your own rules -->
+            <p>Burnout Rate: </p>
+        </div>
+    {% endfor %}
+
+</div>
 {% endblock %}

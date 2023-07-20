@@ -162,9 +162,10 @@ def test():
     
     return render_template('test.html', title='test', form=form, section1=section1, section2=section2, section3=section3)
 
-
-@main.route('/test_history')
+@main.route('/test_history', methods=['GET'])
 @login_required
 def test_history():
-    return render_template('test_history.html')
+    # Query the database for the user's results
+    results = Results.query.filter_by(user_id=current_user.id).all()
 
+    return render_template('test_history.html', title='Test History', results=results)
