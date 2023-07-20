@@ -1,5 +1,5 @@
-from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
+from werkzeug.security import generate_password_hash, check_password_hash
 from app import db, login_manager
 
 class User(UserMixin, db.Model):
@@ -10,7 +10,9 @@ class User(UserMixin, db.Model):
     lastname = db.Column(db.String(64), nullable=False)  
     image = db.Column(db.String(128), nullable=True)  
     date_of_birth = db.Column(db.Date, nullable=True) 
-    companyId = db.Column(db.Integer, db.ForeignKey('company.id')) # Notice the foreign key here
+    companyId = db.Column(db.Integer, db.ForeignKey('company.id')) 
+
+    results = db.relationship('Results', backref='user', lazy='dynamic')
 
     def __repr__(self):
         return f'<User {self.firstname} {self.lastname}>'
@@ -20,8 +22,6 @@ class User(UserMixin, db.Model):
 
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
-
-    result = db.relationship('Result', backref='user', lazy='dynamic')
 
 class Company(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -33,12 +33,18 @@ class Company(db.Model):
     def __repr__(self):
         return f'<Company {self.name}>'
 
-# class Results(db.Model):
-#     id = db.Column(db.Integer, primary_key=True)
-#     testDate = db.Column(db.Date, nullable=False)
-#     scoreA = db.Column(db.Integer, nullable=False)
-#     scoreB = db.Column(db.Integer, nullable=False)
-#     scoreC = db.Column(db.Integer, nullable=False)
+
+class Results(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    testDate = db.Column(db.Date, nullable=False)
+    scoreA = db.Column(db.Integer, nullable=False)
+    scoreB = db.Column(db.Integer, nullable=False)
+    scoreC = db.Column(db.Integer, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+    def __repr__(self):
+        return f'<Results {self.id}>'
+
 
 @login_manager.user_loader
 def load_user(id):
