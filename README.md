@@ -1,5 +1,3 @@
-# StudyPlanGen
-
 ## Prerequisites
 
 Before running the application, ensure that you have the following dependencies installed:
