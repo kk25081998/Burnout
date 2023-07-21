@@ -12,19 +12,82 @@ Dashboard - Employee Burnout Prevention
         <hr class="my-4">
     </div>
 
+    <!-- Chart.js Line Chart -->
+    <div>
+        <canvas id="lineChart"></canvas>
+    </div>
+
     {% for result in results %}
-        <div>
-            <h3>Date: {{ result.testDate }}</h3>
-            <p>
-                Test A: {{ result.scoreA }} 
-                &emsp;&emsp; Test B: {{ result.scoreB }} 
-                &emsp;&emsp;&emsp;&emsp;Test C: {{ result.scoreC }}
+    <div class="card" style="margin-bottom: 1em;">
+        <div class="card-body">
+            <h5 class="card-title">Test Date: {{ result.testDate }}</h5>
+            <p class="card-text">
+                Burnout Level: 
+                {% if result.scoreA <= 17 %}
+                    Low
+                {% elif result.scoreA > 17 and result.scoreA <= 29 %}
+                    Moderate
+                {% else %}
+                    High
+                {% endif %}
+                <br>
+                Depersonalization Level: 
+                {% if result.scoreB <= 5 %}
+                    Low
+                {% elif result.scoreB > 5 and result.scoreB <= 11 %}
+                    Moderate
+                {% else %}
+                    High
+                {% endif %}
+                <br>
+                Personal Achievement Level: 
+                {% if result.scoreC <= 33 %}
+                    High Burnout (Low Achievement)
+                {% elif result.scoreC > 33 and result.scoreC <= 39 %}
+                    Moderate Burnout (Moderate Achievement)
+                {% else %}
+                    Low Burnout (High Achievement)
+                {% endif %}
             </p>
-            <p>Total: {{ result.scoreA + result.scoreB + result.scoreC }}</p>
-            <!-- You can calculate the burnout rate according to your own rules -->
-            <p>Burnout Rate: </p>
+            <p class="card-text">Total: {{ result.scoreA + result.scoreB + result.scoreC }}</p>
+            <p class="card-text">
+                Overall Burnout Risk: 
+                {% if result.scoreA + result.scoreB > 30 and result.scoreC <= 33 %}
+                    High
+                {% elif result.scoreA + result.scoreB > 18 and result.scoreC <= 39 %}
+                    Moderate
+                {% else %}
+                    Low
+                {% endif %}
+            </p>
         </div>
+    </div>
     {% endfor %}
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+    var ctx = document.getElementById('lineChart').getContext('2d');
+    var lineChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: [{% for result in results %}"{{ result.testDate }}",{% endfor %}], // X-axis data (test dates)
+            datasets: [{
+                label: 'Total Burnout',
+                data: [{% for result in results %}{{ result.scoreA + result.scoreB + result.scoreC }},{% endfor %}], // Y-axis data (total burnout scores)
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+    </script>
 
 </div>
 {% endblock %}
