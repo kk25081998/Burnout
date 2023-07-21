@@ -1,19 +1,24 @@
 Immediate things to do:
-1. Add company model to store company names, id, description, sector, size (number of employees) etc... (DONE)
-2. Each user should be linked to a company id, so add that in user model and in the registration html (DONE)
-3. Create a questionarie based on the MBIT test for burnout (this should be in the forms.py)
-4. Edit user profile page so user can change their usernames, password, and image potentially, add name first and last as well, date of birth
-5. Create history page as well for the user to see past results fo the questionaire
-Long term to do list:
+~~1. Add company model to store company names, id, description, sector, size (number of employees) etc... (DONE)~~
+~~2. Each user should be linked to a company id, so add that in the user model and in the registration HTML (DONE)~~
+~~3. Create a questionnaire based on the MBIT test for burnout (this should be in the forms.py)~~
+~~4. Edit user profile page so the user can change their usernames, password, and image potentially, add name first and last as well, date of birth~~
+~~5. Create a history page as well for the user to see past results of the questionnaire~~
+
+Long-term to-do list:
 6. Implement role systems so different roles see different pages
-7. Manager can view other subordinate results in a seperate tab/page 
-8. Figure out how to signin using google email or microsoft email and that sort of workflow
+7. Managers can view other subordinate results on a separate tab/page
+8. Work on building a more resilient logic of burnout
+9. Figure out how to sign in using Google email or Microsoft email and that sort of workflow
 
+Individual tasks for next meeting:
 Subtasks for Kartik:
-1. Add front end error for take test
-
+1. Add front-end error for take test when the test is not completed, and submit is clicked
 Subtasks for G:
-1. Write logic document for the 3 sections of scores
+1. Review the logic of the test history page to see if it matches the document
 
 Future subtask:
-1. Make take history page for past results using document logic
+1. Figure out how role systems will go in the app aka (managers can see subordinates roles)
+
+UserName: kartik.khosa@gmail.com
+Password: 123
