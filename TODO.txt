@@ -15,10 +15,8 @@ Individual tasks for next meeting:
 Subtasks for Kartik:
 1. Add front-end error for take test when the test is not completed, and submit is clicked
 Subtasks for G:
-1. Review the logic of the test history page to see if it matches the document
+1. Create excel file and test the logic with python/sql script and see if that actually works. 
 
-Future subtask:
-1. Figure out how role systems will go in the app aka (managers can see subordinates roles)
 
 UserName: kartik.khosa@gmail.com
 Password: 123
