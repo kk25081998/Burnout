@@ -17,6 +17,8 @@ Subtasks for Kartik:
 Subtasks for G:
 1. Create excel file and test the logic with python/sql script and see if that actually works. 
 
+After excel/python/sql implementation:
+1. Change password during first login
 
 UserName: kartik.khosa@gmail.com
 Password: 123

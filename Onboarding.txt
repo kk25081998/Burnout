@@ -42,8 +42,8 @@ Here's an example of what the data might look like:
 
 | Email                | First Name | Last Name | Date of Birth | Company ID | Manager Email        |
 |----------------------|------------|-----------|---------------|------------|----------------------|
-| john.doe@example.com | John       | Doe       | 1980-01-01    | 1          | jane.manager@example.com |
-| jane.manager@example.com | Jane       | Manager   | 1975-01-01    | 1          |                      |
+| john.doe@example.com | John       | Doe       | 1980-01-01    | 11          | jane.manager@example.com |
+| jane.manager@example.com | Jane       | Manager   | 1975-01-01    | 11          |                      |
 | ...                  | ...        | ...       | ...           | ...        | ...                  |
 
 Note that for the CEO or other top-level users who do not have a manager, the "Manager Email" field can be left blank.
