@@ -52,16 +52,16 @@ Dashboard - Employee Burnout Prevention
             <p class="card-text">Total: {{ result.scoreA + result.scoreB + result.scoreC }}</p>
             <p class="card-text">
                 Overall Burnout Risk: 
-                {% set highCount = (result.scoreA > 30 ? 1 : 0) + (result.scoreB >= 12 ? 1 : 0) + (result.scoreC <= 33 ? 1 : 0) %}
-                {% set moderateCount = (result.scoreA > 17 and result.scoreA <= 30 ? 1 : 0) + (result.scoreB > 5 and result.scoreB <= 11 ? 1 : 0) + (result.scoreC > 33 and result.scoreC <= 39 ? 1 : 0) %}
+                {% set highCount = (1 if result.scoreA > 30 else 0) + (1 if result.scoreB >= 12 else 0) + (1 if result.scoreC <= 33 else 0) %}
+                {% set moderateCount = (1 if result.scoreA > 17 and result.scoreA <= 30 else 0) + (1 if result.scoreB > 5 and result.scoreB <= 11 else 0) + (1 if result.scoreC > 33 and result.scoreC <= 39 else 0) %}
                 {% if highCount >= 2 %}
                     High
-                {% elif highCount = 1 and moderateCount >= 1 %}
+                {% elif highCount == 1 and moderateCount >= 1 %}
                     Moderate
                 {% else %}
                     Low
                 {% endif %}
-            </p>            
+            </p>                      
         </div>
     </div>
     {% endfor %}
