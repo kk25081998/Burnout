@@ -20,7 +20,7 @@ Team Test History - Employee Burnout Prevention
         <div class="card-body">
             <h5 class="card-title">User: {{ result.user.firstname }} {{ result.user.lastname }} - Test Date: {{ result.testDate }}</h5>
             <p class="card-text">
-                Burnout Level: 
+                Burnout Level: {{ result.scoreA }} - 
                 {% if result.scoreA <= 17 %}
                     Low
                 {% elif result.scoreA > 17 and result.scoreA <= 29 %}
@@ -29,7 +29,7 @@ Team Test History - Employee Burnout Prevention
                     High
                 {% endif %}
                 <br>
-                Depersonalization Level: 
+                Depersonalization Level: {{ result.scoreB }} - 
                 {% if result.scoreB <= 5 %}
                     Low
                 {% elif result.scoreB > 5 and result.scoreB <= 11 %}
@@ -38,7 +38,7 @@ Team Test History - Employee Burnout Prevention
                     High
                 {% endif %}
                 <br>
-                Personal Achievement Level: 
+                Personal Achievement Level: {{ result.scoreC }} - 
                 {% if result.scoreC <= 33 %}
                     High Burnout (Low Achievement)
                 {% elif result.scoreC > 33 and result.scoreC <= 39 %}
@@ -50,14 +50,16 @@ Team Test History - Employee Burnout Prevention
             <p class="card-text">Total: {{ result.scoreA + result.scoreB + result.scoreC }}</p>
             <p class="card-text">
                 Overall Burnout Risk: 
-                {% if result.scoreA + result.scoreB > 30 and result.scoreC <= 33 %}
+                {% set highCount = (1 if result.scoreA > 30 else 0) + (1 if result.scoreB >= 12 else 0) + (1 if result.scoreC <= 33 else 0) %}
+                {% set moderateCount = (1 if result.scoreA > 17 and result.scoreA <= 30 else 0) + (1 if result.scoreB > 5 and result.scoreB <= 11 else 0) + (1 if result.scoreC > 33 and result.scoreC <= 39 else 0) %}
+                {% if highCount >= 2 %}
                     High
-                {% elif result.scoreA + result.scoreB > 18 and result.scoreC <= 39 %}
+                {% elif highCount == 1 and moderateCount >= 1 %}
                     Moderate
                 {% else %}
                     Low
                 {% endif %}
-            </p>
+            </p>  
         </div>
     </div>
     {% endfor %}
