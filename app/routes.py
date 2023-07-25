@@ -4,7 +4,7 @@ print("Routes file loaded!")  # Add this line
 from flask import render_template, redirect, url_for, flash, abort, request, jsonify, session, get_flashed_messages
 from flask_login import login_user, logout_user, login_required, current_user, LoginManager
 from app import db, create_app
-from app.forms import RegistrationForm, LoginForm, EditProfileForm, TakeTest
+from app.forms import RegistrationForm, LoginForm, EditProfileForm, TakeTest, SelectManagerForm
 from datetime import datetime
 from werkzeug.exceptions import HTTPException  # import HTTPException instead of abort
 from flask import Blueprint
@@ -63,7 +63,7 @@ def register():
         db.session.add(user)
         db.session.commit()
         flash('Registration successful.')
-        return redirect(url_for('main.login'))
+        return redirect(url_for('main.select_manager'))
 
     return render_template('register.html', form=form)
 
@@ -169,3 +169,37 @@ def test_history():
     results = Results.query.filter_by(user_id=current_user.id).all()
 
     return render_template('test_history.html', title='Test History', results=results)
+
+@main.route('/team_test_history', methods=['GET'])
+@login_required
+def team_test_history():
+    # Query the database for the current user's subordinates' results
+    subordinates_results = (
+        Results.query
+        .join(User, User.id == Results.user_id)
+        .filter(User.manager_id == current_user.id)
+        .order_by(Results.testDate.desc())
+    )
+
+    return render_template(
+        'team_test_history.html', 
+        title='Team Test History', 
+        subordinates_results=subordinates_results
+    )
+
+@main.route('/select_manager', methods=['GET', 'POST'])
+@login_required
+def select_manager():
+    form = SelectManagerForm()
+    form.manager.choices = [(0, 'None')] + [(u.id, f'{u.firstname} {u.lastname}') for u in User.query.filter_by(companyId=current_user.companyId).all() if u.id != current_user.id]
+    if form.validate_on_submit():
+        current_user.manager_id = form.manager.data
+        db.session.commit()
+        flash('Your manager has been selected.')
+        return redirect(url_for('main.index'))  # redirect to the index page or any other page after manager selection
+    return render_template('select_manager.html', form=form)
+
+@main.before_request
+def before_request():
+    if current_user.is_authenticated and current_user.manager_id is None and request.endpoint not in ['main.select_manager', 'main.logout']:
+        return redirect(url_for('main.select_manager'))

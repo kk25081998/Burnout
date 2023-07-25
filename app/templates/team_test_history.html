@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}
+Team Test History - Employee Burnout Prevention
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="jumbotron">
+        <h1 class="display-4">Team Burnout Test History</h1>
+        <p class="lead">Keep Track of your team's well-being and burnout effectively.</p>
+        <hr class="my-4">
+    </div>
+
+    <!-- Subordinates' results -->
+    <h2>Team Results</h2>
+
+    {% for result in subordinates_results %}
+    <div class="card" style="margin-bottom: 1em;">
+        <div class="card-body">
+            <h5 class="card-title">User: {{ result.user.firstname }} {{ result.user.lastname }} - Test Date: {{ result.testDate }}</h5>
+            <p class="card-text">
+                Burnout Level: 
+                {% if result.scoreA <= 17 %}
+                    Low
+                {% elif result.scoreA > 17 and result.scoreA <= 29 %}
+                    Moderate
+                {% else %}
+                    High
+                {% endif %}
+                <br>
+                Depersonalization Level: 
+                {% if result.scoreB <= 5 %}
+                    Low
+                {% elif result.scoreB > 5 and result.scoreB <= 11 %}
+                    Moderate
+                {% else %}
+                    High
+                {% endif %}
+                <br>
+                Personal Achievement Level: 
+                {% if result.scoreC <= 33 %}
+                    High Burnout (Low Achievement)
+                {% elif result.scoreC > 33 and result.scoreC <= 39 %}
+                    Moderate Burnout (Moderate Achievement)
+                {% else %}
+                    Low Burnout (High Achievement)
+                {% endif %}
+            </p>
+            <p class="card-text">Total: {{ result.scoreA + result.scoreB + result.scoreC }}</p>
+            <p class="card-text">
+                Overall Burnout Risk: 
+                {% if result.scoreA + result.scoreB > 30 and result.scoreC <= 33 %}
+                    High
+                {% elif result.scoreA + result.scoreB > 18 and result.scoreC <= 39 %}
+                    Moderate
+                {% else %}
+                    Low
+                {% endif %}
+            </p>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

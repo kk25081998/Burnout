@@ -71,3 +71,7 @@ class TakeTest(FlaskForm):
 
     # Global submit button
     submit = SubmitField('Submit Responses')
+
+class SelectManagerForm(FlaskForm):
+    manager = SelectField('Manager', coerce=int, choices=[(0, 'None')]) # default choice for None
+    submit = SubmitField('Submit')
