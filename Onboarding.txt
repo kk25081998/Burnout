@@ -28,7 +28,7 @@ with open("import.sql", "w") as file:
         sql = f"UPDATE user SET manager_id = (SELECT id FROM user WHERE email = '{manager_email}') WHERE email = '{email}';\n"
         file.write(sql)
 
-Excel format:
+Excel format:M
 Based on your User model, your Excel spreadsheet could have the following columns:
 
 1. **Email**: The unique email address of the user.
