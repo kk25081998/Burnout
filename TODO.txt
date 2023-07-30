@@ -20,5 +20,15 @@ Subtasks for G:
 After excel/python/sql implementation:
 1. Change password during first login
 
-UserName: kartik.khosa@gmail.com
-Password: 123
+UserName/Passwords:
+
+harsh.gupta@test.com: Harsh1999
+kartik.khosa@test.com: Kartik1999
+joh.doe@gmail.com: John1995
+jane.austen@yahoo.com: Jane1990
+leo.messi@outlook.com: Lionel1985
+rafael.nadal@gmail.com: Rafael1980
+lewis.goat@test.com: Lewis1980
+sergio.perez@mexico.com: Sergio1980
+taylor.swift@test.com: Taylor1990
+selenagomez123@test.com: Selena1990
