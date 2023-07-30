@@ -9,10 +9,10 @@ with open("import.sql", "w") as file:
         firstname = row['First Name']
         lastname = row['Last Name']
         date_of_birth = row['Date of Birth']
-        company_id = row['Company ID']
+        companyId = row['Company ID']  # Note the change here
 
         password = generate_password_hash(f"{firstname}{date_of_birth.year}")  # Hash this password
-        sql = f"INSERT INTO user (email, password_hash, firstname, lastname, date_of_birth, company_id) VALUES ('{email}', '{password}', '{firstname}', '{lastname}', '{date_of_birth}', '{company_id}');\n"
+        sql = f"INSERT INTO user (email, password_hash, firstname, lastname, date_of_birth, companyId) VALUES ('{email}', '{password}', '{firstname}', '{lastname}', '{date_of_birth}', '{companyId}');\n"  # And here
         file.write(sql)
 
     # Second pass to update the manager_id field for each user
@@ -21,6 +21,7 @@ with open("import.sql", "w") as file:
         manager_email = row['Manager Email']
         sql = f"UPDATE user SET manager_id = (SELECT id FROM user WHERE email = '{manager_email}') WHERE email = '{email}';\n"
         file.write(sql)
+
 
 
 # # Chat GPT Code:

@@ -1,6 +1,6 @@
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
-from . import db, login_manager
+from app import db, login_manager
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -9,7 +9,7 @@ class User(UserMixin, db.Model):
     firstname = db.Column(db.String(64), nullable=False)  
     lastname = db.Column(db.String(64), nullable=False)  
     image = db.Column(db.String(128), nullable=True)  
-    date_of_birth = db.Column(db.Date, nullable=True) 
+    date_of_birth = db.Column(db.String(64), nullable=True)  # changed from db.Date to db.String
     companyId = db.Column(db.Integer, db.ForeignKey('company.id')) 
     manager_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     results = db.relationship('Results', backref='user', lazy='dynamic')

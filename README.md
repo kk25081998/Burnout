@@ -35,3 +35,4 @@ Once the application is running, you can access it in your web browser. Make sur
 1. Database
    - Open the database: `./sqlite3.exe app.db` (for Unix/Linux) or `sqlite3.exe app.db` (for Windows).
    - See all tables: `.tables`
+   - import the sql file in sqlite: `.read import.sql`
