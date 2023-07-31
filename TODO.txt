@@ -13,22 +13,10 @@ Long-term to-do list:
 
 Individual tasks for next meeting:
 Subtasks for Kartik:
-1. Add front-end error for take test when the test is not completed, and submit is clicked
+1. Add front-end error for take test when the test is not completed, and submit is clicked -> done
+2. Fix date of birth in view profile -> done
+3. Change password during first login -> done, created new form, database column, new route, new page
+4. Date problem fully solved, now saves as YYYY-MM-DD in database
+
 Subtasks for G:
-1. Create excel file and test the logic with python/sql script and see if that actually works. 
-
-After excel/python/sql implementation:
-1. Change password during first login
-
-UserName/Passwords:
-
-harsh.gupta@test.com: Harsh1999
-kartik.khosa@test.com: Kartik1999
-joh.doe@gmail.com: John1995
-jane.austen@yahoo.com: Jane1990
-leo.messi@outlook.com: Lionel1985
-rafael.nadal@gmail.com: Rafael1980
-lewis.goat@test.com: Lewis1980
-sergio.perez@mexico.com: Sergio1980
-taylor.swift@test.com: Taylor1990
-selenagomez123@test.com: Selena1990
+1. Create company sql list of 10 companies

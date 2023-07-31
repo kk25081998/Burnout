@@ -14,6 +14,7 @@ class User(UserMixin, db.Model):
     manager_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     results = db.relationship('Results', backref='user', lazy='dynamic')
     subordinates = db.relationship('User', backref=db.backref('manager', remote_side=[id]), lazy='dynamic')
+    first_login = db.Column(db.Boolean, default=True)
 
     def __repr__(self):
         return f'<User {self.firstname} {self.lastname}>'

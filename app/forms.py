@@ -1,7 +1,7 @@
 # app/forms.py
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
-from wtforms.validators import DataRequired, ValidationError, Email, EqualTo, URL, NumberRange
+from wtforms.validators import DataRequired, ValidationError, Email, EqualTo, URL, NumberRange, InputRequired
 from app.models import User
 from wtforms import TextAreaField, SelectField
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, IntegerField, DateField, FileField, RadioField
@@ -28,6 +28,12 @@ class LoginForm(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired()])
     remember_me = BooleanField('Remember Me')
     submit = SubmitField('Log In')
+
+class PasswordChangeForm(FlaskForm):
+    old_password = PasswordField('Old Password', validators=[InputRequired()])
+    new_password = PasswordField('New Password', validators=[InputRequired()])
+    confirm_password = PasswordField('Confirm New Password', validators=[InputRequired(), EqualTo('new_password')])
+    submit = SubmitField('Change Password')
 
 class EditProfileForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])

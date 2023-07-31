@@ -2,16 +2,46 @@
 
 {% block extra_css %}
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+        .highlight {
+            background-color: #ffcccc;
+        }
+        .btn {
+            margin-right: 10px;
+            border-radius: 20px;
+            padding: 10px;
+            font-size: 1rem;  /* Adjust font-size as needed */
+            transition: all 0.3s ease-in-out;
+            width: 150px;     /* Add a specific width */
+            height: 50px;     /* Add a specific height */
+            align-items: center;  /* Add this to align text in the center */
+            justify-content: center;  /* Add this to align text in the center */
+        }
+        .btn-primary {
+            background-color: #007bff;
+            border: none;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+        .btn-secondary {
+            background-color: #6c757d;
+            border: none;
+        }
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+    </style>
 {% endblock %}
 
 {% block content %}
-    <form method="POST" class="mt-4">
+    <form method="POST" class="mt-4" id="testForm">
         {{ form.hidden_tag() }}
         <div class="container">
 
             <h2>Section 1</h2>
             {% for question in section1 %}
-                <div class="form-group">
+                <div class="form-group question">
                     <label>{{ question.label }}</label><br>
                     {% for subfield in question %}
                         <div class="custom-control custom-radio custom-control-inline">
@@ -24,7 +54,7 @@
 
             <h2>Section 2</h2>
             {% for question in section2 %}
-                <div class="form-group">
+                <div class="form-group question">
                     <label>{{ question.label }}</label><br>
                     {% for subfield in question %}
                         <div class="custom-control custom-radio custom-control-inline">
@@ -37,7 +67,7 @@
 
             <h2>Section 3</h2>
             {% for question in section3 %}
-                <div class="form-group">
+                <div class="form-group question">
                     <label>{{ question.label }}</label><br>
                     {% for subfield in question %}
                         <div class="custom-control custom-radio custom-control-inline">
@@ -48,10 +78,56 @@
                 </div>
             {% endfor %}
 
+            <div id="warningMsg" class="alert alert-danger hidden">
+                Oops, it seems like you've missed some questions. We need your response on all questions to provide the best results. Please check the highlighted questions and provide your answers. Thank you!
+            </div>            
+
             <div class="form-group">
                 <button type="submit" class="btn btn-primary">{{ form.submit.label }}</button>
+                <button type="button" class="btn btn-secondary" id="resetBtn">Reset</button>
             </div>
 
         </div>
     </form>
+
+    <script>
+        document.getElementById('testForm').addEventListener('submit', function(event) {
+            let questions = document.querySelectorAll('.question');
+            let allAnswered = true;
+
+            questions.forEach(question => {
+                let inputs = question.querySelectorAll('input[type="radio"]');
+                let answered = Array.from(inputs).some(input => input.checked);
+
+                if (!answered) {
+                    allAnswered = false;
+                    question.classList.add('highlight');
+                } else {
+                    question.classList.remove('highlight');
+                }
+            });
+
+            if (!allAnswered) {
+                event.preventDefault();
+                document.getElementById('warningMsg').classList.remove('hidden');
+            } else {
+                document.getElementById('warningMsg').classList.add('hidden');
+            }
+        });
+
+        // Add event listener to reset button
+        document.getElementById('resetBtn').addEventListener('click', function() {
+            // Reset the form
+            document.getElementById('testForm').reset();
+
+            // Remove any highlighting
+            let questions = document.querySelectorAll('.question');
+            questions.forEach(question => {
+                question.classList.remove('highlight');
+            });
+
+            // Hide the warning message
+            document.getElementById('warningMsg').classList.add('hidden');
+        });
+    </script>
 {% endblock %}

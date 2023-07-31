@@ -25,7 +25,7 @@ Dashboard - Employee Burnout Prevention
             
             <!-- Replace with the actual user profile data -->
             <p>Name: {{user.firstname}} {{user.lastname}}</p>
-            <p> Date of Birth: {{user.date_of_birth}}</p>
+            <p> Date of Birth: {{ user.date_of_birth.split(" ")[0] }}</p>
             <p> Organization: {{user.company.name}}</p>
             <p> Role: Software Engineer</p>
         </div>

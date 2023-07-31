@@ -4,7 +4,7 @@ print("Routes file loaded!")  # Add this line
 from flask import render_template, redirect, url_for, flash, abort, request, jsonify, session, get_flashed_messages
 from flask_login import login_user, logout_user, login_required, current_user, LoginManager
 from app import db, create_app
-from app.forms import RegistrationForm, LoginForm, EditProfileForm, TakeTest, SelectManagerForm
+from app.forms import RegistrationForm, LoginForm, EditProfileForm, TakeTest, SelectManagerForm, PasswordChangeForm
 from datetime import datetime
 from werkzeug.exceptions import HTTPException  # import HTTPException instead of abort
 from flask import Blueprint
@@ -80,9 +80,30 @@ def login():
             return redirect(url_for('main.login'))
 
         login_user(user, remember=form.remember_me.data)
+
+        # Check if it's the user's first login
+        if user.first_login:
+            return redirect(url_for('main.change_password'))  # Redirect to password change form on first login
+
         return redirect(url_for('main.dashboard'))  # Redirect to dashboard after successful login
 
     return render_template('login.html', form=form)
+
+@main.route('/change_password', methods=['GET', 'POST'])
+@login_required
+def change_password():
+    form = PasswordChangeForm()
+    if form.validate_on_submit():
+        if not current_user.check_password(form.old_password.data):
+            flash('Incorrect old password')
+            return redirect(url_for('main.change_password'))
+
+        current_user.set_password(form.new_password.data)
+        current_user.first_login = False  # Set first_login attribute to False
+        db.session.commit()
+        flash('Your password has been updated.')
+        return redirect(url_for('main.dashboard'))
+    return render_template('change_password.html', form=form)
 
 
 @main.route('/logout')
