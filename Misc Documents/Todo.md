@@ -1,3 +1,4 @@
+
 # Immediate things to do:
 
 - [X] Add company model to store company names, id, description, sector, size (number of employees) etc...
@@ -11,17 +12,16 @@
 - [X] Implement role systems so different roles see different pages
 - [X] Managers can view other subordinate results on a separate tab/page
 - [ ] Work on building a more resilient logic of burnout
-- [ ] Figure out potential solutions to fixing/remediating burnout
+- [ ] Figure out potential solutions to fixing/remediating burnout (resources as a separate tab with solutions and explanations)
+- [ ] HIPPA compliency?
 
 ## Individual tasks for next meeting
 
 ### Subtasks for Kartik:
 
-- [X] Add front-end error for take test when the test is not completed, and submit is clicked
-- [X] Fix date of birth in view profile
-- [X] Change password during first login, created new form, database column, new route, new page
-- [X] Date problem fully solved, now saves as YYYY-MM-DD in database
+- [ ] Figure out how to make the take test form once a month accessible only
+- [ ] Find 10 resources for mental well being
 
 ### Subtasks for G:
 
-- [ ] Create employee sql list of 10 companies
+- [ ] Find 10 resources for mental well being
