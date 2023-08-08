@@ -1,0 +1,233 @@
+{% extends "base.html" %}
+
+{% block extra_css %}
+<style>
+    .card {
+        height: 100%;  /* Makes sure all cards are of the same height */
+    }
+</style>
+{% endblock %}
+
+<script>
+    function toggleDetails(id) {
+        var details = document.getElementById(id);
+        if (details.style.display === "none" || details.style.display === "") {
+            details.style.display = "block";
+        } else {
+            details.style.display = "none";
+        }
+    }
+</script>
+
+
+{% block content %}
+<div class="container">
+    <div class="jumbotron">
+        <h1 class="display-4">Welcome to the Wellness Hub!</h1>
+        <p class="lead">Discover tools and resources to help you manage stress and prevent burnout.</p>
+        <hr class="my-4">
+    </div>
+    
+    <div class="row">
+        <!-- Evaluate your options card -->
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm" id="evaluateCard" style="cursor: pointer; border-radius: 10px;" onclick="toggleDetails('evaluateDetails', 1)">
+                <div class="card-body d-flex flex-column justify-content-center">
+                    <h5 class="card-title text-center">Evaluate Your Options</h5>
+                    <!-- <p class="card-text">Discuss specific concerns with your supervisor. Set goals for what must get done and what can wait.</p> -->
+                </div>
+            </div>
+        </div>
+        
+        <!-- Seek support card -->
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm" id="supportCard" style="cursor: pointer; border-radius: 10px;" onclick="toggleDetails('supportDetails', 2)">
+                <div class="card-body d-flex flex-column justify-content-center">
+                    <h5 class="card-title text-center">Seek Support</h5>
+                    <!-- <p class="card-text">Reach out to co-workers, friends, or loved ones. Collaborate and find support to help you cope.</p> -->
+                </div>
+            </div>
+        </div>
+        
+        <!-- Try a relaxing activity card -->
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm" id="activityCard" style="cursor: pointer; border-radius: 10px;" onclick="toggleDetails('activityDetails', 3)">
+                <div class="card-body d-flex flex-column justify-content-center">
+                    <h5 class="card-title text-center">Relaxing Activities</h5>
+                    <!-- <p class="card-text">Explore programs like yoga, meditation, or tai chi to help with stress.</p> -->
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    
+    
+
+    <!-- Dropdowns for the first row -->
+    <div class="card bg-light mt-3" id="evaluateDetails" style="display: none;">
+        <div class="card-body p-4">
+            <h5>Evaluate Your Options</h5>
+            <p>When faced with burnout, it's essential to evaluate your options. This involves understanding your current situation, setting boundaries, and communicating your needs. By addressing burnout proactively, you can create a healthier work environment and improve your well-being.</p>
+            
+            <!-- HBR Article -->
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Harvard Business Review (HBR) Article</h5>
+                    <p class="card-text">"How to Tell Your Boss You’re Burned Out" - This article provides insights on approaching and communicating with your supervisor about burnout.</p>
+                    <a href="https://hbr.org/2021/01/how-to-tell-your-boss-youre-burned-out" class="btn btn-primary">Read Article</a>
+                </div>
+            </div>
+            
+            <!-- Sproutsocial -->
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Sproutsocial</h5>
+                    <p class="card-text">Gain insights on addressing burnout in the workplace and how to communicate your feelings effectively.</p>
+                    <a href="https://sproutsocial.com/insights/talking-to-your-boss-about-burnout/" class="btn btn-primary">Visit Sproutsocial</a>
+                </div>
+            </div>
+
+            <!-- The Muse -->
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">The Muse</h5>
+                    <p class="card-text">"A Realistic Plan for Telling Your Boss That You're Burnt Out" - A step-by-step guide to discussing burnout and seeking personal time.</p>
+                    <a href="https://www.themuse.com/advice/a-realistic-plan-for-telling-your-boss-that-youre-burnt-out-and-need-personal-time" class="btn btn-primary">Visit The Muse</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dropdown for Seek Support -->
+    <div class="card bg-light mt-3" id="supportDetails" style="display: none;">
+        <div class="card-body p-4">
+            <h5>Seek Support</h5>
+            <p>Seeking support is a sign of strength. Whether it's from professionals, peers, or loved ones, talking about your feelings can provide relief. It's essential to remember that you're not alone, and many resources can help you navigate through challenging times.</p>
+            
+            <!-- 7 Cups -->
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">7 Cups</h5>
+                    <p class="card-text">7 Cups offers a platform where you can connect with trained listeners for free counseling and support.</p>
+                    <a href="https://www.7cups.com/" class="btn btn-primary">Visit 7 Cups</a>
+                </div>
+            </div>
+
+            <!-- Talkspace -->
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Talkspace</h5>
+                    <p class="card-text">Online therapy with professional therapists to help you navigate personal challenges.</p>
+                    <a href="https://www.talkspace.com/" class="btn btn-primary">Visit Talkspace</a>
+                </div>
+            </div>
+
+            <!-- Peer Recovery Alliance -->
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Peer Recovery Alliance</h5>
+                    <p class="card-text">Promotes peer support in mental health, connecting individuals with others who have had similar experiences.</p>
+                    <a href="https://www.peerrecoveryalliance.org/" class="btn btn-primary">Visit Peer Recovery Alliance</a>
+                </div>
+            </div>
+
+            <!-- ADAA -->
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">ADAA</h5>
+                    <p class="card-text">Resources on understanding anxiety and depression, finding treatment, and connecting with a supportive community.</p>
+                    <a href="https://adaa.org/" class="btn btn-primary">Visit ADAA</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dropdown for Try a Relaxing Activity -->
+    <div class="card bg-light mt-3" id="activityDetails" style="display: none;">
+        <div class="card-body p-4">
+            <h5>Try a Relaxing Activity</h5>
+            <p>Relaxing activities are not just a way to pass time; they're essential for mental health. Activities like meditation, yoga, or tai chi can help reduce stress, improve focus, and enhance overall well-being. By incorporating these practices into your routine, you can create a balance between work and relaxation.</p>
+            
+            <!-- Headspace -->
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Headspace</h5>
+                    <p class="card-text">Headspace offers guided meditations designed to reduce stress, improve sleep, and enhance focus.</p>
+                    <a href="https://www.headspace.com/" class="btn btn-primary">Visit Headspace</a>
+                </div>
+            </div>
+
+            <!-- Do Yoga With Me -->
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Do Yoga With Me</h5>
+                    <p class="card-text">Free and premium yoga videos for practitioners of all levels.</p>
+                    <a href="https://www.doyogawithme.com/" class="btn btn-primary">Visit Do Yoga With Me</a>
+                </div>
+            </div>
+
+            <!-- Tai Chi for Health Institute -->
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Tai Chi for Health Institute</h5>
+                    <p class="card-text">Resources, classes, and information about Tai Chi for stress reduction and overall health.</p>
+                    <a href="https://taichiforhealthinstitute.org/" class="btn btn-primary">Visit Tai Chi for Health Institute</a>
+                </div>
+            </div>
+
+            <!-- Calm -->
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Calm</h5>
+                    <p class="card-text">Meditation and sleep app designed to reduce stress and improve overall well-being.</p>
+                    <a href="https://www.calm.com/" class="btn btn-primary">Visit Calm</a>
+                </div>
+            </div>
+
+            <!-- 10% Happier -->
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">10% Happier</h5>
+                    <p class="card-text">Practical meditation techniques suitable for beginners and experienced meditators alike.</p>
+                    <a href="https://www.tenpercent.com/" class="btn btn-primary">Visit 10% Happier</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Second row of cards -->
+    <div class="row mt-4">
+        <!-- Get some exercise card -->
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm" style="cursor: pointer; border-radius: 10px;">
+                <div class="card-body d-flex flex-column justify-content-center">
+                    <h5 class="card-title text-center">Exercise</h5>
+                    <!-- <p class="card-text">Regular physical activity can help manage stress and divert your mind from work.</p> -->
+                </div>
+            </div>
+        </div>
+    
+        <!-- Get some sleep card -->
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm" style="cursor: pointer; border-radius: 10px;">
+                <div class="card-body d-flex flex-column justify-content-center">
+                    <h5 class="card-title text-center">Sleep</h5>
+                    <!-- <p class="card-text">Sleep restores well-being and helps protect your health.</p> -->
+                </div>
+            </div>
+        </div>
+    
+        <!-- Mindfulness card -->
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm" style="cursor: pointer; border-radius: 10px;">
+                <div class="card-body d-flex flex-column justify-content-center">
+                    <h5 class="card-title text-center">Mindfulness</h5>
+                    <!-- <p class="card-text">Focus on your breath flow and be intensely aware of the present moment. Face situations with openness and patience.</p> -->
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</div>
+{% endblock %}
+

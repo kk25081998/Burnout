@@ -224,3 +224,8 @@ def select_manager():
 def before_request():
     if current_user.is_authenticated and current_user.manager_id is None and request.endpoint not in ['main.select_manager', 'main.logout']:
         return redirect(url_for('main.select_manager'))
+
+@main.route('/resources', methods=['GET'])
+# @login_required
+def resources():
+    return render_template('resources.html', title='Wellness Hub')

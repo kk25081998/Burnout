@@ -1,4 +1,3 @@
-
 # Immediate things to do:
 
 - [X] Add company model to store company names, id, description, sector, size (number of employees) etc...
@@ -14,6 +13,13 @@
 - [ ] Work on building a more resilient logic of burnout
 - [ ] Figure out potential solutions to fixing/remediating burnout (resources as a separate tab with solutions and explanations)
 - [ ] HIPPA compliency?
+- [ ] Figure out how to deploy application to AWS
+- [ ] Figure out how to create a marketing/onboarding strategy to get early customers
+- [ ] Figure out how to make money on the app
+
+  - [ ] Sponsored articles and links
+  - [ ] SaaS for business at low cost
+  - [ ] ETC...
 
 ## Individual tasks for next meeting
 
@@ -21,6 +27,7 @@
 
 - [ ] Figure out how to make the take test form once a month accessible only
 - [ ] Find 3-5 articles on first 3 solutions for the resources tab for mental well being (solutions.txt)
+- [ ] Create a page for resources tab
 
 ### Subtasks for G:
 
