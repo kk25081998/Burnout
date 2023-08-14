@@ -23,49 +23,49 @@ def index():
     get_flashed_messages()
     return render_template('index.html')
 
-@main.route('/register', methods=['GET', 'POST'])
-def register():
-    get_flashed_messages()
-    if current_user.is_authenticated:
-        return redirect(url_for('main.index'))
+# @main.route('/register', methods=['GET', 'POST'])
+# def register():
+#     get_flashed_messages()
+#     if current_user.is_authenticated:
+#         return redirect(url_for('main.index'))
 
-    form = RegistrationForm()
-    if form.validate_on_submit():
-        # Validate the company ID
-        try:
-            company_id = int(form.companyId.data)
-        except ValueError:
-            flash('Company ID is not valid. It should be a numeric value.')
-            return redirect(url_for('main.register'))
+#     form = RegistrationForm()
+#     if form.validate_on_submit():
+#         # Validate the company ID
+#         try:
+#             company_id = int(form.companyId.data)
+#         except ValueError:
+#             flash('Company ID is not valid. It should be a numeric value.')
+#             return redirect(url_for('main.register'))
 
-        # Check if the company ID exists
-        company = Company.query.get(company_id)
-        print(f"Queried company: {company}")  # Debug print
-        if company is None:
-            print("Company is None, flashing message and redirecting")  # Debug print
-            flash('Company ID is not valid. No such company exists.')
-            return redirect(url_for('main.register'))
+#         # Check if the company ID exists
+#         company = Company.query.get(company_id)
+#         print(f"Queried company: {company}")  # Debug print
+#         if company is None:
+#             print("Company is None, flashing message and redirecting")  # Debug print
+#             flash('Company ID is not valid. No such company exists.')
+#             return redirect(url_for('main.register'))
 
-        existing_email = User.query.filter_by(email=form.email.data).first()
-        if existing_email:
-            flash('Email already registered. Please use a different one or log in.')
-            return redirect(url_for('main.register'))
+#         existing_email = User.query.filter_by(email=form.email.data).first()
+#         if existing_email:
+#             flash('Email already registered. Please use a different one or log in.')
+#             return redirect(url_for('main.register'))
 
-        if form.password.data != form.password_confirm.data:
-            flash('Password and confirmation do not match. Please try again.')
-            return redirect(url_for('main.register'))
+#         if form.password.data != form.password_confirm.data:
+#             flash('Password and confirmation do not match. Please try again.')
+#             return redirect(url_for('main.register'))
 
-        user = User(email=form.email.data, 
-                    firstname=form.firstname.data,
-                    lastname=form.lastname.data,
-                    companyId=form.companyId.data)
-        user.set_password(form.password.data)
-        db.session.add(user)
-        db.session.commit()
-        flash('Registration successful.')
-        return redirect(url_for('main.select_manager'))
+#         user = User(email=form.email.data, 
+#                     firstname=form.firstname.data,
+#                     lastname=form.lastname.data,
+#                     companyId=form.companyId.data)
+#         user.set_password(form.password.data)
+#         db.session.add(user)
+#         db.session.commit()
+#         flash('Registration successful.')
+#         return redirect(url_for('main.select_manager'))
 
-    return render_template('register.html', form=form)
+#     return render_template('register.html', form=form)
 
 @main.route('/login', methods=['GET', 'POST'])
 def login():

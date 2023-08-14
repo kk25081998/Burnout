@@ -75,9 +75,18 @@
         {% endblock %}
 
         <script>
+            var currentOpenDropdown = null;  // Global variable to track the currently open dropdown
+        
             function toggleDetails(id, cardNumber) {
                 console.log("Toggling details for:", id);
                 
+                // If the clicked dropdown is already open, close it and return
+                if (currentOpenDropdown === id) {
+                    document.getElementById(id).style.display = 'none';
+                    currentOpenDropdown = null;
+                    return;
+                }
+        
                 // List of all dropdown IDs
                 var allDetails = ['evaluateDetails', 'supportDetails', 'activityDetails', 'exerciseDetails', 'sleepDetails', 'mindfulnessDetails'];
         
@@ -87,14 +96,23 @@
                 }
         
                 // Show the details of the clicked card
-                var details = document.getElementById(id);
-                if (details.style.display === "none" || details.style.display === "") {
-                    details.style.display = "block";
-                } else {
-                    details.style.display = "none";
-                }
+                document.getElementById(id).style.display = "block";
+                currentOpenDropdown = id;
             }
+        
+            // Event listener to detect clicks outside the currently open dropdown
+            document.addEventListener('click', function(event) {
+                // Check if the click was on a card or inside a dropdown
+                var clickedOnCard = event.target.closest('.card.h-100');
+                var clickedInsideDropdown = event.target.closest('.card.bg-light');
+        
+                if (!clickedOnCard && !clickedInsideDropdown && currentOpenDropdown) {
+                    document.getElementById(currentOpenDropdown).style.display = 'none';
+                    currentOpenDropdown = null;
+                }
+            });
         </script>
+        
         
         <!-- jQuery and Bootstrap Bundle (includes Popper) -->
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
