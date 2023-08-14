@@ -27,7 +27,7 @@
 
 - [ ] Figure out how to make the take test form once a month accessible only
 - [ ] Find 3-5 articles on first 3 solutions for the resources tab for mental well being (solutions.txt)
-- [ ] Create a page for resources tab
+- [ ] Create images AI gen for the 6 resources and put them in the card with the text
 
 ### Subtasks for G:
 

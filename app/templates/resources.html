@@ -193,7 +193,37 @@
     </div>
 
     <!-- Second row of cards -->
-    <div class="card bg-light mt-3" id="activityDetails" style="display: none;">
+    <div class="row">
+        <!-- Exercise card -->
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm" id="exerciseCard" style="cursor: pointer; border-radius: 10px;" onclick="toggleDetails('exerciseDetails')">
+                <div class="card-body d-flex flex-column justify-content-center">
+                    <h5 class="card-title text-center">Exercise</h5>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sleep card -->
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm" id="sleepCard" style="cursor: pointer; border-radius: 10px;" onclick="toggleDetails('sleepDetails')">
+                <div class="card-body d-flex flex-column justify-content-center">
+                    <h5 class="card-title text-center">Sleep</h5>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mindfulness card -->
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm" id="mindfulnessCard" style="cursor: pointer; border-radius: 10px;" onclick="toggleDetails('mindfulnessDetails')">
+                <div class="card-body d-flex flex-column justify-content-center">
+                    <h5 class="card-title text-center">Mindfulness</h5>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dropdown for Exercise -->
+    <div class="card bg-light mt-3" id="exerciseDetails" style="display: none;">
         <div class="card-body p-4">
             <h5>Exercise</h5>
             <p>Exercising has potential to be an effective burnout intervention. Different types of exercise may assist employees in different ways.</p>
@@ -238,11 +268,11 @@
         </div>
     </div>
 
-    <!-- Sleep Cards -->
-    <div class="card bg-light mt-3" id="activityDetails" style="display: none;">
+    <!-- Dropdown for Sleep -->
+    <div class="card bg-light mt-3" id="sleepDetails" style="display: none;">
         <div class="card-body p-4">
             <h5>Sleep</h5>
-            <p>Improving sleep quality and reducing burnout scores, and perceived stress. Sleep plays a cruical role in your mental wellbeing and improving one's productivity.</p>
+            <p>Improving sleep quality can significantly reduce burnout scores and perceived stress. Sleep plays a crucial role in mental well-being and improving one's productivity.</p>
             
             <!-- Article by Forbes -->
             <div class="card mb-3">
@@ -265,7 +295,7 @@
             <!-- Oura Ring -->
             <div class="card mb-3">
                 <div class="card-body">
-                    <h5 class="card-title">Oura Ring/h5>
+                    <h5 class="card-title">Oura Ring</h5>
                     <p class="card-text">Oura ring is a minimal device that helps you track your sleep and other vitals.</p>
                     <a href="https://ouraring.com/?g_acctid=553-919-5922&g_adgroupid=139082356777&g_adid=621632875186&g_adtype=search&g_campaign=sem_prosp_alwayson_nb_allgeo_en_broad_sleep&g_campaignid=18324137946&g_keyword=sleep%20tracking&g_keywordid=kwd-298756685196&g_network=g&utm_campaign=sem_prosp_alwayson_nb_allgeo_en_broad_sleep&utm_medium=cpc&utm_source=google&utm_source=google_search&gclid=Cj0KCQjwoeemBhCfARIsADR2QCt8MB9s3LDVN_6dAF6CrI1yjelFbxPPistyx2SDmrYZTqoS0sRbqfIaAulqEALw_wcB" 
                     class="btn btn-primary">Visit Oura Ring</a>
@@ -274,39 +304,37 @@
         </div>
     </div>
 
-     <!-- Mindfullness -->
-     <div class="card bg-light mt-3" id="activityDetails" style="display: none;">
+    <!-- Dropdown for Mindfulness -->
+    <div class="card bg-light mt-3" id="mindfulnessDetails" style="display: none;">
         <div class="card-body p-4">
             <h5>Mindfulness</h5>
-            <p>"Mindfulness anchors us in the present, dissolving life's chaos into moments of clarity, enhancing our well-being with every conscious breath.</p>
+            <p>Mindfulness anchors us in the present, dissolving life's chaos into moments of clarity, enhancing our well-being with every conscious breath.</p>
             
             <!-- Headspace -->
-            <!-- TODO: Decide to keep Headspace twice or not-->
             <div class="card mb-3">
                 <div class="card-body">
                     <h5 class="card-title">Headspace</h5>
                     <p class="card-text">Headspace offers guided meditations designed to reduce stress, improve sleep, and enhance focus.</p>
-                    <a href="https://www.headspace.com" 
-                    class="btn btn-primary">Visit Headspace</a>
+                    <a href="https://www.headspace.com" class="btn btn-primary">Visit Headspace</a>
                 </div>
             </div>
 
-            <!-- Mindfullness Masterclass -->
+            <!-- Mindfulness Masterclass -->
             <div class="card mb-3">
                 <div class="card-body">
-                    <h5 class="card-title">Mindfullness Masterclass</h5>
-                    <p class="card-text">Take an exceptional Masterclass by Jon Kabat-Zinn talking about mindfullness and meditation and its impact on the body.</p>
+                    <h5 class="card-title">Mindfulness Masterclass</h5>
+                    <p class="card-text">Take an exceptional Masterclass by Jon Kabat-Zinn talking about mindfulness and meditation and its impact on the body.</p>
                     <a href="https://www.masterclass.com/classes/jon-kabat-zinn-teaches-mindfulness-and-meditation?campaignid=18815197582&adgroupid=146742775841&adid=660277727679&utm_term=learn%20mindfulness%20online&utm_campaign=%5BMC%5D+%7C+Search+%7C+NonBrand+%7C+Wellness+%7C+USA+%7C+EN+%7C+tROAS+%7C+EG&utm_source=adwords&utm_medium=ppc&hsa_acc=9801000675&hsa_cam=18815197582&hsa_grp=146742775841&hsa_ad=660277727679&hsa_src=g&hsa_tgt=kwd-296044441582&hsa_kw=learn%20mindfulness%20online&hsa_mt=b&hsa_net=adwords&hsa_ver=3&gclid=Cj0KCQjwoeemBhCfARIsADR2QCv5lf244bQ1AiGY5QjE7xUj9ton3r9rStJG7YBUAAlpCcqJu5ATcdMaAri_EALw_wcB" 
                     class="btn btn-primary">Visit Masterclass</a>
                 </div>
             </div>
 
-            <!-- Article on Mindullness -->
+            <!-- Article on Mindfulness -->
             <div class="card mb-3">
                 <div class="card-body">
-                    <h5 class="card-title">Article on Mindfull</h5>
+                    <h5 class="card-title">Article on Mindfulness</h5>
                     <p class="card-text">The awareness that emerges through paying attention, on purpose, and nonjudgmentally to the unfolding of experience moment by moment.</p>
-                    <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4776732/" class="btn btn-primary">Visit National Library of Medecine</a>
+                    <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4776732/" class="btn btn-primary">Visit National Library of Medicine</a>
                 </div>
             </div>
 
@@ -314,7 +342,7 @@
             <div class="card mb-3">
                 <div class="card-body">
                     <h5 class="card-title">InsightTimer</h5>
-                    <p class="card-text">InsightTimer offers different talks on the impact of Mindfullness and one can incporate it their life.</p>
+                    <p class="card-text">InsightTimer offers different talks on the impact of Mindfulness and how one can incorporate it into their life.</p>
                     <a href="https://insighttimer.com" class="btn btn-primary">Visit InsightTimer</a>
                 </div>
             </div>

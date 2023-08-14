@@ -78,11 +78,14 @@
             function toggleDetails(id, cardNumber) {
                 console.log("Toggling details for:", id);
                 
+                // List of all dropdown IDs
+                var allDetails = ['evaluateDetails', 'supportDetails', 'activityDetails', 'exerciseDetails', 'sleepDetails', 'mindfulnessDetails'];
+        
                 // Hide all details
-                document.getElementById('evaluateDetails').style.display = 'none';
-                document.getElementById('supportDetails').style.display = 'none';
-                document.getElementById('activityDetails').style.display = 'none';
-
+                for (var i = 0; i < allDetails.length; i++) {
+                    document.getElementById(allDetails[i]).style.display = 'none';
+                }
+        
                 // Show the details of the clicked card
                 var details = document.getElementById(id);
                 if (details.style.display === "none" || details.style.display === "") {
