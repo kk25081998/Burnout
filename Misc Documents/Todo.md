@@ -25,10 +25,10 @@
 
 ### Subtasks for Kartik:
 
-- [ ] Figure out how to make the take test form once a month accessible only
-- [ ] Find 3-5 articles on first 3 solutions for the resources tab for mental well being (solutions.txt)
+- [X] Figure out how to make the take test form once a month accessible only
+- [X] Find 3-5 articles on first 3 solutions for the resources tab for mental well being (solutions.txt)
 - [ ] Create images AI gen for the 6 resources and put them in the card with the text
 
 ### Subtasks for G:
 
-- [ ] Find 3-5 articles on last 3 solutions for the resources tab for mental well being (solutions.txt)
+- [X] Find 3-5 articles on last 3 solutions for the resources tab for mental well being (solutions.txt)

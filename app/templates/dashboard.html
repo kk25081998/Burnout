@@ -5,53 +5,95 @@ Dashboard - Employee Burnout Prevention
 {% endblock %}
 
 {% block content %}
-<div class="container">
-    <div class="jumbotron">
+<div class="container mt-5">
+    <div class="jumbotron text-center">
         <h1 class="display-4">Welcome to your Dashboard!</h1>
         <p class="lead">Monitor your well-being and prevent burnout effectively.</p>
-        <hr class="my-4">
     </div>
     
-    <div class="row">
+    <div class="row mt-4">
         <div class="col-md-4">
-            <h2>Your Profile</h2>
-            
-            <!-- Add a profile picture -->
-            {% if current_user.image %}
-                <img src="{{ url_for('static', filename='profile_pics/' + current_user.image) }}" alt="Profile Picture" class="img-thumbnail" style="width: 200px; height: 200;">
-            {% else %}
-                <img src="{{ url_for('static', filename='profile_pics/default.jpg') }}" alt="Profile Picture" class="img-thumbnail" style="width: 200px; height: 200px;">
-            {% endif %}
-            
-            <!-- Replace with the actual user profile data -->
-            <p>Name: {{user.firstname}} {{user.lastname}}</p>
-            <p> Date of Birth: {{ user.date_of_birth.split(" ")[0] }}</p>
-            <p> Organization: {{user.company.name}}</p>
-            <p> Role: Software Engineer</p>
+            <div class="card">
+                <div class="card-header">
+                    <h3>Your Profile</h3>
+                </div>
+                <div class="card-body text-center">
+                    <!-- Add a profile picture -->
+                    {% if current_user.image %}
+                        <img src="{{ url_for('static', filename='profile_pics/' + current_user.image) }}" alt="Profile Picture" class="img-thumbnail mb-3" style="width: 200px; height: 200px;">
+                    {% else %}
+                        <img src="{{ url_for('static', filename='profile_pics/default.jpg') }}" alt="Profile Picture" class="img-thumbnail mb-3" style="width: 200px; height: 200px;">
+                    {% endif %}
+                    
+                    <!-- Display user profile data -->
+                    <h5>{{user.firstname}} {{user.lastname}}</h5>
+                    <p class="text-muted">
+                        {% if user.date_of_birth %}
+                            Date of Birth: {{ user.date_of_birth.split(" ")[0] }}<br>
+                        {% else %}
+                            Date of Birth: Not provided<br>
+                        {% endif %}
+                        Organization: {{user.company.name}}<br>
+                        Role: Software Engineer
+                    </p>
+                </div>
+            </div>
         </div>
         
         <div class="col-md-4">
-            <h2>Current Burnout Score</h2>
-            <!-- Replace with the actual burnout score -->
-            <p>Score: 70/100</p>
+            <div class="card bg-primary text-white">
+                <div class="card-header">
+                    <h3>Current Burnout Score</h3>
+                </div>
+                <div class="card-body text-center">
+                    <h1>
+                        {% if last_score %}
+                            {{ last_score.scoreA + last_score.scoreB + last_score.scoreC }}/100
+                        {% else %}
+                            N/A
+                        {% endif %}
+                    </h1>
+                </div>
+            </div>
         </div>
-        
+            
         <div class="col-md-4">
-            <h2>Score History</h2>
-            <!-- Replace with the actual burnout score history -->
-            <p>History: 65, 68, 70</p>
+            <div class="card">
+                <div class="card-header">
+                    <h3>Score History</h3>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group">
+                        {% for month in [two_months_ago, last_month, current_month] %}
+                            <li class="list-group-item d-flex justify-content-between">
+                                {{ ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][month-1] }}
+                                <span>
+                                    {% if scores_dict.get(month) %}
+                                        {{ scores_dict[month].scoreA + scores_dict[month].scoreB + scores_dict[month].scoreC }}/100
+                                    {% else %}
+                                        <span class="text-muted">--/--</span>
+                                    {% endif %}
+                                </span>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
         </div>
     </div>
     
-    <hr>
+    <hr class="mt-5">
     
-    <h2>Resources</h2>
-    <!-- Replace with actual resources -->
-    <p>Here are some resources to help you maintain your well-being:</p>
-    <ul>
-        <li><a href="#">Resource 1</a></li>
-        <li><a href="#">Resource 2</a></li>
-        <li><a href="#">Resource 3</a></li>
-    </ul>
+    <div class="resources-section mt-4 pb-5">
+        <h2>Resources</h2>
+        <p>Here are some resources to help you maintain your well-being:</p>
+        <ul class="list-group">
+            <li class="list-group-item"><a href="https://hbr.org/2021/01/how-to-tell-your-boss-youre-burned-out">Harvard Business Review: How to Tell Your Boss You’re Burned Out</a></li>
+            <li class="list-group-item"><a href="https://www.7cups.com/">7 Cups: Connect with trained listeners for free counseling and support</a></li>
+            <li class="list-group-item"><a href="https://www.headspace.com/">Headspace: Guided meditations designed to reduce stress, improve sleep, and enhance focus</a></li>
+        </ul>
+    </div>
+    
+    
 </div>
 {% endblock %}

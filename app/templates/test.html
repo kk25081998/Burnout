@@ -35,60 +35,71 @@
 {% endblock %}
 
 {% block content %}
-    <form method="POST" class="mt-4" id="testForm">
-        {{ form.hidden_tag() }}
-        <div class="container">
 
-            <h2>Section 1</h2>
-            {% for question in section1 %}
-                <div class="form-group question">
-                    <label>{{ question.label }}</label><br>
-                    {% for subfield in question %}
-                        <div class="custom-control custom-radio custom-control-inline">
-                            <input type="radio" id="{{ subfield.id }}" name="{{ subfield.name }}" value="{{ loop.index0 }}" class="custom-control-input">
-                            <label class="custom-control-label" for="{{ subfield.id }}">{{ subfield.label.text }}</label>
-                        </div>
-                    {% endfor %}
-                </div>
-            {% endfor %}
+<div class="container">
 
-            <h2>Section 2</h2>
-            {% for question in section2 %}
-                <div class="form-group question">
-                    <label>{{ question.label }}</label><br>
-                    {% for subfield in question %}
-                        <div class="custom-control custom-radio custom-control-inline">
-                            <input type="radio" id="{{ subfield.id }}" name="{{ subfield.name }}" value="{{ loop.index0 }}" class="custom-control-input">
-                            <label class="custom-control-label" for="{{ subfield.id }}">{{ subfield.label.text }}</label>
-                        </div>
-                    {% endfor %}
-                </div>
-            {% endfor %}
-
-            <h2>Section 3</h2>
-            {% for question in section3 %}
-                <div class="form-group question">
-                    <label>{{ question.label }}</label><br>
-                    {% for subfield in question %}
-                        <div class="custom-control custom-radio custom-control-inline">
-                            <input type="radio" id="{{ subfield.id }}" name="{{ subfield.name }}" value="{{ loop.index0 }}" class="custom-control-input">
-                            <label class="custom-control-label" for="{{ subfield.id }}">{{ subfield.label.text }}</label>
-                        </div>
-                    {% endfor %}
-                </div>
-            {% endfor %}
-
-            <div id="warningMsg" class="alert alert-danger hidden">
-                Oops, it seems like you've missed some questions. We need your response on all questions to provide the best results. Please check the highlighted questions and provide your answers. Thank you!
-            </div>            
-
-            <div class="form-group">
-                <button type="submit" class="btn btn-primary">{{ form.submit.label }}</button>
-                <button type="button" class="btn btn-secondary" id="resetBtn">Reset</button>
-            </div>
-
+    {% if next_eligible_date %}
+        <!-- Displayed when the user has already taken the test this month -->
+        <div class="alert alert-warning mt-4">
+            <h4>Wait a Moment!</h4>
+            <p>You can only take the burnout test once per calendar month. Please come back on {{ next_eligible_date.strftime("%B %d, %Y") }} to take the test again.</p>
         </div>
-    </form>
+    {% else %}
+        <form method="POST" class="mt-4" id="testForm">
+            {{ form.hidden_tag() }}
+            <div class="container">
+
+                <h2>Section 1</h2>
+                {% for question in section1 %}
+                    <div class="form-group question">
+                        <label>{{ question.label }}</label><br>
+                        {% for subfield in question %}
+                            <div class="custom-control custom-radio custom-control-inline">
+                                <input type="radio" id="{{ subfield.id }}" name="{{ subfield.name }}" value="{{ loop.index0 }}" class="custom-control-input">
+                                <label class="custom-control-label" for="{{ subfield.id }}">{{ subfield.label.text }}</label>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+
+                <h2>Section 2</h2>
+                {% for question in section2 %}
+                    <div class="form-group question">
+                        <label>{{ question.label }}</label><br>
+                        {% for subfield in question %}
+                            <div class="custom-control custom-radio custom-control-inline">
+                                <input type="radio" id="{{ subfield.id }}" name="{{ subfield.name }}" value="{{ loop.index0 }}" class="custom-control-input">
+                                <label class="custom-control-label" for="{{ subfield.id }}">{{ subfield.label.text }}</label>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+
+                <h2>Section 3</h2>
+                {% for question in section3 %}
+                    <div class="form-group question">
+                        <label>{{ question.label }}</label><br>
+                        {% for subfield in question %}
+                            <div class="custom-control custom-radio custom-control-inline">
+                                <input type="radio" id="{{ subfield.id }}" name="{{ subfield.name }}" value="{{ loop.index0 }}" class="custom-control-input">
+                                <label class="custom-control-label" for="{{ subfield.id }}">{{ subfield.label.text }}</label>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+
+                <div id="warningMsg" class="alert alert-danger hidden">
+                    Oops, it seems like you've missed some questions. We need your response on all questions to provide the best results. Please check the highlighted questions and provide your answers. Thank you!
+                </div>            
+
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">{{ form.submit.label }}</button>
+                    <button type="button" class="btn btn-secondary" id="resetBtn">Reset</button>
+                </div>
+
+            </div>
+        </form>
+    {% endif %}
 
     <script>
         document.getElementById('testForm').addEventListener('submit', function(event) {

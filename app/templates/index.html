@@ -1,14 +1,61 @@
 {% extends "base.html" %}
 
+
+{% block extra_css %}
+<style>
+    /* Custom styles for the landing page */
+    body {
+        background: linear-gradient(135deg, #e0f7fa, #80deea);  /* Gradient background */
+    }
+
+    .hero-section {
+        background-color: rgba(255, 255, 255, 0.8);  /* Slightly transparent white */
+        border-radius: 15px;
+        padding: 60px 0;
+        margin-bottom: 50px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);  /* Subtle shadow for depth */
+    }
+    
+    .hero-section h1 {
+        font-weight: bold;
+        color: #00695c;  /* Dark teal color */
+    }
+    
+    .hero-section p {
+        font-size: 1.2rem;
+        color: #00695c;  /* Dark teal color */
+    }
+    
+    .hero-section .btn {
+        background-color: #00897b;  /* Teal color */
+        border: none;
+        border-radius: 25px;
+        padding: 10px 25px;
+        font-size: 1.1rem;
+        transition: background-color 0.3s ease;
+    }
+    
+    .hero-section .btn:hover {
+        background-color: #00695c;  /* Dark teal color */
+    }
+
+    /* Icons for visual appeal */
+    .hero-section .lead i {
+        font-size: 1.5rem;
+        margin-right: 10px;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="container">
-    <div class="jumbotron">
+    <div class="hero-section text-center" style="padding-top: 100px;">
         <h1 class="display-4">Welcome to Employee Wellbeing App!</h1>
-        <p class="lead">This application helps to track, predict, and prevent employee burnout.</p>
+        <p class="lead mt-4"><i class="fas fa-heartbeat"></i> Ensuring your mental and emotional health in the workplace.</p>
         <hr class="my-4">
-        <p>Start by checking your burnout score, or explore the resources we have for maintaining workplace wellbeing.</p>
-        <p class="lead">
-            <a class="btn btn-primary btn-lg" href="{{ url_for('main.dashboard') }}" role="button">Dashboard</a>
+        <p><i class="fas fa-search"></i> Discover your burnout score and explore curated resources to enhance your well-being.</p>
+        <p class="lead mt-4">
+            <a class="btn btn-primary btn-lg" href="{{ url_for('main.login') }}" role="button"><i class="fas fa-play-circle"></i> Start Your Journey</a>
         </p>
     </div>
 </div>

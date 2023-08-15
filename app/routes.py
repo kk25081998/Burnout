@@ -12,7 +12,7 @@ from flask import current_app
 import json
 from app.personalization import save_picture
 from app.models import User, Company, Results
-import datetime
+from datetime import datetime
 
 login_manager = LoginManager()
 login_manager.login_view = 'main.login'
@@ -116,9 +116,20 @@ def logout():
 def dashboard():
     get_flashed_messages()
     user = User.query.filter_by(id=current_user.id).first()
-    return render_template('dashboard.html', user=user)
+    last_score = Results.query.filter_by(user_id=current_user.id).order_by(Results.testDate.desc()).first()
+    last_three_scores = Results.query.filter_by(user_id=current_user.id).order_by(Results.testDate.desc()).limit(3).all()
+    
+    # Fetch all results for the user to display in the chart
+    all_results = Results.query.filter_by(user_id=current_user.id).order_by(Results.testDate.asc()).all()
+    
+    current_month = datetime.now().month
+    last_month = (current_month - 1) % 12 or 12
+    two_months_ago = (current_month - 2) % 12 or 12
+    
+    scores_dict = {score.testDate.month: score for score in last_three_scores}
 
-
+    return render_template('dashboard.html', user=user, last_score=last_score, last_three_scores=last_three_scores, current_month=current_month, scores_dict=scores_dict, last_month=last_month, two_months_ago=two_months_ago)
+    
 @main.route('/view_profile', methods=['GET', 'POST'])
 @login_required
 def view_profile():
@@ -147,6 +158,15 @@ def view_profile():
 @login_required
 def test():
     form = TakeTest()
+    
+    # Fetch the most recent test date for the user
+    last_test = Results.query.filter_by(user_id=current_user.id).order_by(Results.testDate.desc()).first()
+
+    # Check if the user has taken the test in the current month
+    if last_test and last_test.testDate.month == datetime.now().month and last_test.testDate.year == datetime.now().year:
+        next_month = datetime(datetime.now().year, datetime.now().month % 12 + 1, 1)  # First day of next month
+        flash(f'You can only take the burnout test once per calendar month. Please come back on {next_month.strftime("%B %d, %Y")} to take the test again.', 'warning')
+        return render_template('test.html', title='test', form=form, next_eligible_date=next_month)
 
     # Questions grouped by section
     section1 = [form.q1, form.q2, form.q3, form.q4, form.q5, form.q6, form.q7]
