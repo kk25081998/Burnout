@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Terms of Service</h2>
+    <p>Thank you for using Flourish at Work. By accessing our services, you are agreeing to the terms outlined below.</p>
+
+    <h4>1. Acceptance of Terms</h4>
+    <p>By accessing or using Flourish at Work, you agree to be bound by these terms. If you do not agree to these terms, you should not use our services.</p>
+
+    <h4>2. Description of Service</h4>
+    <p>Flourish at Work provides tools and resources related to workplace wellness and productivity. These may include tests, resources, training modules, and more.</p>
+
+    <h4>3. User Responsibility</h4>
+    <p>Users are responsible for their activities on Flourish at Work and any content they upload or post. Users must ensure their content is not illegal, obscene, threatening, or in violation of intellectual property rights.</p>
+
+    <h4>4. Privacy</h4>
+    <p>Your privacy is important to us. Please refer to our <a href="{{ url_for('main.privacy_policy') }}">Privacy Policy</a> to understand how we collect, use, and share your information.</p>
+
+    <h4>5. Modifications to Service</h4>
+    <p>Flourish at Work reserves the right to modify or terminate its services, either temporarily or permanently, at any time, with or without notice. Users agree that the company will not be liable for any modifications, suspension, or discontinuance of the service.</p>
+
+    <h4>6. Termination</h4>
+    <p>Flourish at Work reserves the right to terminate users or deny access to its services for any violation of these terms or for any other reason at its sole discretion.</p>
+
+    <h4>7. Limitation of Liability</h4>
+    <p>In no event will Flourish at Work be liable for any direct, indirect, incidental, special, or consequential damages related to the use or inability to use our services, even if informed of the potential of such damages.</p>
+
+    <h4>8. Governing Law</h4>
+    <p>These terms and conditions are governed by and construed in accordance with the laws of [Country/State] and you irrevocably submit to the exclusive jurisdiction of the courts in that location.</p>
+
+    <h4>9. Changes to Terms</h4>
+    <p>Flourish at Work reserves the right to update these terms at any time. It is the responsibility of the user to regularly review these terms to stay informed of any changes.</p>
+
+    <p>If you have any questions about these Terms, please <a href="{{ url_for('main.contactus') }}">contact us</a>.</p>
+
+</div>
+{% endblock %}

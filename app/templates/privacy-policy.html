@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Privacy Policy</h2>
+    <p>Last Updated: 8/16/2023</p>
+    <p>At Flourish at Work, we value your privacy. This policy outlines our practices concerning the collection, use, and sharing of your personal information. By using our platform, you consent to the data practices described in this policy.</p>
+
+    <h4>1. Information We Collect</h4>
+    <p>We may collect personal and non-personal information when you use our platform. This includes:</p>
+    <ul>
+        <li><strong>Personal Information:</strong> This is information that can be used to identify you. Examples include your name, email address, and workplace details.</li>
+        <li><strong>Non-Personal Information:</strong> This refers to data that cannot be used to identify you personally, such as browser types, device types, and time-stamps.</li>
+    </ul>
+
+    <h4>2. How We Use Information</h4>
+    <p>We use the information we collect to provide, maintain, and improve our services, conduct research, and communicate with you.</p>
+
+    <h4>3. Data Sharing and Transfers</h4>
+    <p>We do not sell or share your personal information with third parties except to provide services you have requested, with your permission, or as required by law.</p>
+
+    <h4>4. Cookies and Trackers</h4>
+    <p>Our platform may use "cookies" to enhance user experience. You can choose to set your browser to refuse cookies, but doing so might affect certain functionality of the platform.</p>
+
+    <h4>5. Data Security</h4>
+    <p>We prioritize the protection of your personal information. While no method of electronic storage is 100% secure, we implement robust measures to protect against unauthorized access.</p>
+
+    <h4>6. Access and Control of Personal Data</h4>
+    <p>You have the right to access, correct, or delete your personal data. Please contact us to make such requests.</p>
+
+    <h4>7. Changes to This Policy</h4>
+    <p>We may update our Privacy Policy occasionally. We recommend reviewing this policy periodically to stay informed about our practices.</p>
+
+    <h4>8. Contact Us</h4>
+    <p>If you have questions or concerns about this Privacy Policy, please <a href="{{ url_for('main.contactus') }}">contact us</a>.</p>
+
+</div>
+{% endblock %}

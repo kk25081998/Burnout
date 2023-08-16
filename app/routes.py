@@ -259,3 +259,15 @@ def pricing():
 @main.route('/company')
 def company():
     return render_template('company.html')
+
+@main.route('/contactus')
+def contactus():
+    return render_template('contactus.html')
+
+@main.route('/termsofservice')
+def tos():
+    return render_template('termsofservice.html')
+
+@main.route('/privacy-policy')
+def privacy_policy():
+    return render_template('privacy-policy.html')
