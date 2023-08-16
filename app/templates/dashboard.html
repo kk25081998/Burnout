@@ -1,9 +1,5 @@
 {% extends "base.html" %}
 
-{% block title %}
-Dashboard - Employee Burnout Prevention
-{% endblock %}
-
 {% block content %}
 <div class="container mt-5">
     <div class="jumbotron text-center">
@@ -39,7 +35,6 @@ Dashboard - Employee Burnout Prevention
                 </div>
             </div>
         </div>
-        
         <div class="col-md-4">
             <div class="card bg-primary text-white">
                 <div class="card-header">
@@ -48,7 +43,8 @@ Dashboard - Employee Burnout Prevention
                 <div class="card-body text-center">
                     <h1>
                         {% if last_score %}
-                            {{ last_score.scoreA + last_score.scoreB + last_score.scoreC }}/100
+                            {% set scaled_score = (last_score.scoreA + last_score.scoreB + (48 - last_score.scoreC)) * 100 / 132 + 0.5 %}
+                            {{ scaled_score|int }}/100
                         {% else %}
                             N/A
                         {% endif %}
@@ -56,7 +52,7 @@ Dashboard - Employee Burnout Prevention
                 </div>
             </div>
         </div>
-            
+
         <div class="col-md-4">
             <div class="card">
                 <div class="card-header">
@@ -69,7 +65,8 @@ Dashboard - Employee Burnout Prevention
                                 {{ ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][month-1] }}
                                 <span>
                                     {% if scores_dict.get(month) %}
-                                        {{ scores_dict[month].scoreA + scores_dict[month].scoreB + scores_dict[month].scoreC }}/100
+                                        {% set scaled_score = (scores_dict[month].scoreA + scores_dict[month].scoreB + (48 - scores_dict[month].scoreC)) * 100 / 132 + 0.5 %}
+                                        {{ scaled_score|int }}/100
                                     {% else %}
                                         <span class="text-muted">--/--</span>
                                     {% endif %}

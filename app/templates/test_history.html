@@ -1,16 +1,7 @@
 {% extends "base.html" %}
 
-{% block title %}
-Dashboard - Employee Burnout Prevention
-{% endblock %}
-
 {% block content %}
 <div class="container">
-    <div class="jumbotron">
-        <h1 class="display-4">Burnout Test History</h1>
-        <p class="lead">Keep Track of your well-being and burnout effectively.</p>
-        <hr class="my-4">
-    </div>
 
     <!-- Chart.js Line Chart -->
     <div>
@@ -22,7 +13,7 @@ Dashboard - Employee Burnout Prevention
         <div class="card-body">
             <h5 class="card-title">Test Date: {{ result.testDate }}</h5>
             <p class="card-text">
-                Burnout Level: {{ result.scoreA }} - 
+                Burnout Level: 
                 {% if result.scoreA <= 17 %}
                     Low
                 {% elif result.scoreA > 17 and result.scoreA <= 29 %}
@@ -31,7 +22,7 @@ Dashboard - Employee Burnout Prevention
                     High
                 {% endif %}
                 <br>
-                Depersonalization Level: {{ result.scoreB }} - 
+                Depersonalization Level:
                 {% if result.scoreB <= 5 %}
                     Low
                 {% elif result.scoreB > 5 and result.scoreB <= 11 %}
@@ -40,16 +31,15 @@ Dashboard - Employee Burnout Prevention
                     High
                 {% endif %}
                 <br>
-                Personal Achievement Level: {{ result.scoreC }} - 
+                Personal Achievement Level:
                 {% if result.scoreC <= 33 %}
-                    High Burnout (Low Achievement)
+                    High 
                 {% elif result.scoreC > 33 and result.scoreC <= 39 %}
-                    Moderate Burnout (Moderate Achievement)
+                    Moderate 
                 {% else %}
-                    Low Burnout (High Achievement)
+                    Low 
                 {% endif %}
             </p>
-            <p class="card-text">Total: {{ result.scoreA + result.scoreB + result.scoreC }}</p>
             <p class="card-text">
                 Overall Burnout Risk: 
                 {% set highCount = (1 if result.scoreA > 30 else 0) + (1 if result.scoreB >= 12 else 0) + (1 if result.scoreC <= 33 else 0) %}
@@ -69,24 +59,98 @@ Dashboard - Employee Burnout Prevention
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
     var ctx = document.getElementById('lineChart').getContext('2d');
-    var lineChart = new Chart(ctx, {
-        type: 'line',
+    
+    function getGradientColor(value) {
+        var gradient = ctx.createLinearGradient(0, 0, 0, 400);
+    
+        if (value <= 33) {
+            gradient.addColorStop(0, 'lightgreen');
+            gradient.addColorStop(1, 'green');
+        } else if (value <= 66) {
+            gradient.addColorStop(0, 'yellow');
+            gradient.addColorStop(1, 'orange');
+        } else {
+            gradient.addColorStop(0, 'salmon');
+            gradient.addColorStop(1, 'red');
+        }
+    
+        return gradient;
+    }
+    
+    // Get the last 12 results
+    var last12Results = [
+        {% for result in results[:12] %}
+            {
+                'testDate': '{{ result.testDate.strftime('%b %y') }}',
+                'scoreA': {{ result.scoreA }},
+                'scoreB': {{ result.scoreB }},
+                'scoreC': {{ result.scoreC }}
+            },
+        {% endfor %}
+    ];
+
+    var dataValues = [];
+    var backgroundColors = [];
+    last12Results.forEach(function(result) {
+        var invertedScoreC = 48 - result.scoreC;
+        var totalScore = result.scoreA + result.scoreB + invertedScoreC;
+        var scaledScore = Math.round((totalScore / 132) * 100);
+        dataValues.push(scaledScore);
+        backgroundColors.push(getGradientColor(scaledScore));
+    });
+
+    var barChart = new Chart(ctx, {
+        type: 'bar',
         data: {
-            labels: [{% for result in results %}"{{ result.testDate }}",{% endfor %}], // X-axis data (test dates)
+            labels: last12Results.map(function(result) { return result.testDate; }),
             datasets: [{
-                label: 'Total Burnout',
-                data: [{% for result in results %}{{ result.scoreA + result.scoreB + result.scoreC }},{% endfor %}], // Y-axis data (total burnout scores)
-                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                label: 'Burnout Level',
+                data: dataValues,
+                backgroundColor: backgroundColors,
                 borderColor: 'rgba(75, 192, 192, 1)',
                 borderWidth: 1
             }]
         },
         options: {
+            indexAxis: 'x',
             scales: {
+                x: {
+                    stacked: false,
+                    grid: {
+                        display: false
+                    }
+                },
                 y: {
-                    beginAtZero: true
+                    beginAtZero: true,
+                    max: 100,
+                    ticks: {
+                        min: 0,
+                        max: 100,
+                        stepSize: 33,
+                        callback: function(value, index, values) {
+                            if (value === 0) return 'No Burnout';
+                            if (value === 33) return 'Low Burnout ';
+                            if (value === 66) return 'Moderate Burnout ';
+                            if (value === 100) return 'High Burnout';
+                            return '';
+                        }
+                    }
                 }
-            }
+            },
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            layout: {
+                padding: {
+                    left: 20,
+                    right: 20,
+                    top: 50,
+                    bottom: 50
+                }
+            },
+            barThickness: 20 // Adjust the bar thickness here
         }
     });
     </script>

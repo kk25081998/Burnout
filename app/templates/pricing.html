@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5" style="max-width: 1200px;">
+    <div class="row justify-content-center">
+
+        {% set plans = [
+            {
+                'title': 'Basic',
+                'subtitle': '(for small companies)',
+                'features': ['Up to 50 employees', 'Standard burnout monitoring', 'Basic reporting'],
+                'price': '$100/month',
+                'color': '#64B5F6'
+            },
+            {
+                'title': 'Pro',
+                'subtitle': '(for medium-sized companies)',
+                'features': ['Up to 200 employees', 'Advanced monitoring features', 'Detailed reporting & analytics'],
+                'price': '$350/month',
+                'color': '#81C784'
+            },
+            {
+                'title': 'Enterprise',
+                'subtitle': '(for large companies)',
+                'features': ['Unlimited employees', 'Pro features + premium support', 'Custom solutions & branding'],
+                'price': 'Contact for pricing',
+                'color': '#FFD54F'
+            }
+        ] %}
+
+        {% for plan in plans %}
+        <div class="col-md-4 mb-5">
+            <div class="card" style="border-radius: 15px; overflow: hidden; transition: transform 0.3s, box-shadow 0.3s; box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1); border: none;" onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0px 5px 25px rgba(0, 0, 0, 0.2)';" onmouseout="this.style.transform=''; this.style.boxShadow='0px 4px 15px rgba(0, 0, 0, 0.1)';">
+                <div class="card-body text-center">
+                    <div style="font-size: 1.5rem; font-weight: bold; padding: 15px 0; text-transform: uppercase; letter-spacing: 1px; background-color: {{ plan.color }}; color: {{ 'white' if plan.title != 'Enterprise' else 'black' }};">{{ plan.title }}</div>
+                    <div style="color: #777; font-style: italic; margin-bottom: 15px;">{{ plan.subtitle }}</div>
+                    {% for feature in plan.features %}
+                        <div style="margin: 15px 0; font-size: 0.95rem; color: #555;">{{ feature }}</div>
+                    {% endfor %}
+                    <div style="font-size: 1.8rem; font-weight: bold; margin-top: 20px; color: #444;">{{ plan.price }}</div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+
+    </div>
+</div>
+{% endblock %}

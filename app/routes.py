@@ -207,7 +207,7 @@ def test():
 @login_required
 def test_history():
     # Query the database for the user's results
-    results = Results.query.filter_by(user_id=current_user.id).all()
+    results = Results.query.filter_by(user_id=current_user.id).order_by(Results.testDate.desc()).all()
 
     return render_template('test_history.html', title='Test History', results=results)
 
@@ -249,3 +249,13 @@ def before_request():
 # @login_required
 def resources():
     return render_template('resources.html', title='Wellness Hub')
+
+
+@main.route('/pricing', methods=['GET'])
+def pricing():
+    return render_template('pricing.html', title='Pricing')
+
+
+@main.route('/company')
+def company():
+    return render_template('company.html')
