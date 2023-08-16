@@ -49,13 +49,25 @@
 
 {% block content %}
 <div class="container">
-    <div class="hero-section text-center" style="padding-top: 100px;">
-        <h1 class="display-4">Welcome to Employee Wellbeing App!</h1>
-        <p class="lead mt-4"><i class="fas fa-heartbeat"></i> Ensuring your mental and emotional health in the workplace.</p>
+    <div class="hero-section text-center" style="padding-top: 100px; padding-bottom: 50px;">
+        <!-- Company Logo or Image -->
+        <img src="/static/images/logo-n2.png" alt="Flourish at Work Logo" width="200">
+        
+        <!-- Main Headline -->
+        <h1 class="display-4 mt-4">Welcome to Flourish at Work!</h1>
+
+        <!-- Sub headline -->
+        <p class="lead mt-4" style="font-size: 1.5rem;">We are dedicated to your well-being in the workplace.</p>
+
+        <!-- Separator -->
         <hr class="my-4">
-        <p><i class="fas fa-search"></i> Discover your burnout score and explore curated resources to enhance your well-being.</p>
+
+        <!-- Brief Description -->
+        <p class="mb-4"><i class="fas fa-heartbeat"></i> Our mission is to provide tools and resources to ensure your mental and emotional health while working.</p>
+
+        <!-- Call to Action -->
         <p class="lead mt-4">
-            <a class="btn btn-primary btn-lg" href="{{ url_for('main.login') }}" role="button"><i class="fas fa-play-circle"></i> Start Your Journey</a>
+            <a class="btn btn-primary btn-lg" href="{{ url_for('main.login') }}" role="button"><i class="fas fa-play-circle"></i> Start Your Journey with Us</a>
         </p>
     </div>
 </div>

@@ -1,9 +1,78 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <div class="container">
-        <h1>About Our Company</h1>
-        <p>Welcome to our company page! Here you can find information about our history, mission, and team.</p>
-        <!-- Add more content about your company here -->
-    </div>
+<div class="container mt-5">
+
+    <!-- Introduction -->
+    <section id="introduction">
+        <h1>About Flourish at Work</h1>
+        <p>Welcome to Flourish at Work, a pioneering initiative launched in 2023. Our mission is clear: to transform workplaces into environments where employees' mental and emotional well-being is prioritized and nurtured.</p>
+        <hr>
+    </section>
+    
+    <!-- History and Origin -->
+    <section id="history" class="mt-5">
+        <h2>Our Beginning</h2>
+        <p>Flourish at Work was conceived by Kartik and Harsh, who envisioned a world where employee health is at the forefront of every organization's strategy. Driven by passion and commitment, we aim to revolutionize how businesses prioritize and address mental well-being in the workplace.</p>
+        <hr>
+    </section>
+    
+    <!-- Importance of Mental and Emotional Health -->
+    <section id="importance" class="mt-5">
+        <h2>The Imperative of Mental and Emotional Health in the Workplace</h2>
+        <p>In the hustle of the modern workplace, mental and emotional health often gets overshadowed. Yet, the significance of employee well-being cannot be overstated:</p>
+        <ul>
+            <li><strong>Boosting Productivity:</strong> An employee free from stress and anxiety can give their best.</li>
+            <li><strong>Enhancing Collaboration:</strong> Positive emotional health cultivates harmony and teamwork.</li>
+            <li><strong>Reducing Absenteeism:</strong> A mentally healthy employee is more motivated to contribute consistently.</li>
+        </ul>
+        <p>We're on a mission to shift the narrative, emphasizing the importance of individual well-being over mere metrics.</p>
+        <hr>
+    </section>
+
+    <!-- Our Vision and Expertise -->
+    <section id="expertise" class="mt-5">
+        <h2>Our Vision and Expertise</h2>
+        <p>We are a dedicated team of software engineers passionate about mental health. We're just starting, but our commitment is backed by sound scientific knowledge and a burning desire to make workplaces better. With us, you're not just adopting a service, but partnering in a vision to revolutionize workplace health.</p>
+        <hr>
+    </section>
+
+    <!-- Features and Offerings -->
+    <section id="features" class="mt-5">
+        <h2>Our Proposed Features</h2>
+        <ul>
+            <li><i class="fas fa-heartbeat"></i> <strong>Burnout Score:</strong> Assess mental well-being and get guidance tailored for you.</li>
+            <li><i class="fas fa-book-open"></i> <strong>Curated Resources:</strong> A collection of resources dedicated to enhancing employee well-being.</li>
+            <li><i class="fas fa-comments"></i> <strong>Expert Connect:</strong> Opportunity to engage with mental health professionals for advice.</li>
+            <li><i class="fas fa-users"></i> <strong>Community:</strong> A space for peers to connect, share and uplift each other.</li>
+        </ul>
+        <hr>
+    </section>
+
+    <!-- FAQs -->
+    <section id="faq" class="mt-5">
+        <h2>Anticipated Questions</h2>
+        <div><br></div>
+        <div class="faq-item">
+            <h4>How can Flourish at Work be integrated into our organization?</h4>
+            <p>While we're in the early stages, our vision includes a seamless onboarding process and dedicated support to ensure your organization reaps the benefits of our features.</p>
+        </div>
+        <div class="faq-item">
+            <h4>Will there be customizable plans?</h4>
+            <p>Absolutely! Recognizing that every organization has its unique challenges, we are keen to offer customizable plans that align with your specific needs.</p>
+        </div>
+        <!-- Add more FAQs as needed -->
+        <hr>
+    </section>
+
+    <!-- Conclusion and CTA -->
+    <section id="conclusion" class="mt-5 pb-5">
+        <h2>Be Part of the Change</h2>
+        <p>We're on a journey to bring about meaningful change in workplaces around the world. Will you join us? Let's prioritize well-being and craft a brighter, healthier future together.</p>
+        <div class="text-center mt-3"> <!-- This centers the button -->
+            <a class="btn btn-primary" href="{{ url_for('main.pricing') }}">Learn More About Our Vision</a>
+        </div>
+    </section>
+
+</div>
 {% endblock %}
