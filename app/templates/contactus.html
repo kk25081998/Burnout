@@ -1,9 +1,134 @@
 {% extends "base.html" %}
 
 {% block content %}
+<style>
+    /* Base styles */
+    body {
+        font-family: 'Arial', sans-serif;
+    }
+
+    .form-notice {
+        color: #757575;
+        font-size: 0.9em;
+        margin-bottom: 1.5em;
+        border-left: 4px solid #ffcc00;
+        padding-left: 10px;
+        background-color: #f9f9f9;
+    }
+
+    .required-asterisk {
+        color: #e74c3c;
+    }
+
+    .form-group {
+        margin-bottom: 1.5em;
+    }
+
+    /* Alert styles */
+    .alert {
+        border-radius: 5px;
+        padding: 10px 20px;
+        font-size: 0.9em;
+    }
+
+    .alert-success {
+        background-color: #a2d5c6;
+        color: #25564f;
+    }
+
+    .alert-danger {
+        background-color: #faa5a5;
+        color: #5c3030;
+    }
+</style>
+
+
 <div class="container mt-5">
     <h2>Contact Us</h2>
-    <p>If you have any questions, concerns, or feedback, please reach out to us at <a href="mailto:info@flourishatwork.com">info@flourishatwork.com</a>.</p>
-    <!-- You can also add a contact form here if needed -->
+    <p>If you have any questions, concerns, or feedback, please reach out to us via the form below.</p>
+
+    <!-- Required Fields Notice -->
+    <div class="form-notice">
+        Fields marked with an asterisk (<span class="required-asterisk">*</span>) are required.
+        <br>
+    </div>
+    
+    <!-- Display Success Message -->
+    {% if success_message %}
+    <div class="alert alert-success" role="alert">
+        {{ success_message }}
+    </div>
+    {% endif %}
+    
+    <!-- Display Error Message -->
+    {% if error_message %}
+    <div class="alert alert-danger" role="alert">
+        {{ error_message }}
+    </div>
+    {% endif %}
+    
+    <!-- Contact Form -->
+    <form method="post" action="{{ url_for('main.contact_us') }}">
+        {{ form.hidden_tag() }}
+
+        <!-- Name Field -->
+        <div class="form-group">
+            <label for="{{ form.name.id }}">Name <span class="required-asterisk">*</span></label>
+            {{ form.name(class="form-control" + (" is-invalid" if form.name.errors else "")) }}
+            {% if form.name.errors %}
+            <div class="invalid-feedback">
+                {{ form.name.errors[0] }}
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Email Field -->
+        <div class="form-group">
+            <label for="{{ form.email.id }}">Email <span class="required-asterisk">*</span></label>
+            {{ form.email(class="form-control" + (" is-invalid" if form.email.errors else "")) }}
+            {% if form.email.errors %}
+            <div class="invalid-feedback">
+                {{ form.email.errors[0] }}
+            </div>
+            {% endif %}
+        </div>        
+
+        <!-- Telephone Field -->
+        <div class="form-group">
+            <label for="{{ form.telephone.id }}">Telephone</label>
+            {{ form.telephone(class="form-control" + (" is-invalid" if form.telephone.errors else ""), placeholder="Enter a 10-12 digit phone number (no spaces or symbols)") }}
+            {% if form.telephone.errors %}
+            <div class="invalid-feedback">
+                {{ form.telephone.errors[0] }}
+            </div>
+            {% endif %}
+        </div>        
+
+        <!-- Reason Field -->
+        <div class="form-group">
+            <label for="{{ form.reason.id }}">Reason for Contact <span class="required-asterisk">*</span></label>
+            {{ form.reason(class="form-control" + (" is-invalid" if form.reason.errors else "")) }}
+            {% if form.reason.errors %}
+            <div class="invalid-feedback">
+                {{ form.reason.errors[0] }}
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Message Field -->
+        <div class="form-group">
+            <label for="{{ form.message.id }}">Message <span class="required-asterisk">*</span></label>
+            {{ form.message(class="form-control" + (" is-invalid" if form.message.errors else ""), rows="5") }}
+            {% if form.message.errors %}
+            <div class="invalid-feedback">
+                {{ form.message.errors[0] }}
+            </div>
+            {% endif %}
+        </div>
+
+        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="reset" class="btn btn-secondary">Reset</button> <!-- This is the reset button -->
+    </form>
+
 </div>
 {% endblock %}

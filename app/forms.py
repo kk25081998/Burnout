@@ -1,12 +1,11 @@
 # app/forms.py
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
-from wtforms.validators import DataRequired, ValidationError, Email, EqualTo, URL, NumberRange, InputRequired
+from wtforms.validators import DataRequired, ValidationError, Email, EqualTo, URL, NumberRange, InputRequired, Optional, Length, Regexp
 from app.models import User
 from wtforms import TextAreaField, SelectField
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, IntegerField, DateField, FileField, RadioField
 from datetime import datetime
-# from email_validator import validate_email, EmailNotValidError
 
 class RegistrationForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email(message='Please enter a valid email address')])
@@ -81,3 +80,28 @@ class TakeTest(FlaskForm):
 class SelectManagerForm(FlaskForm):
     manager = SelectField('Manager', coerce=int, choices=[(0, 'None')]) # default choice for None
     submit = SubmitField('Submit')
+
+def validate_length(form, field):
+    length = len(str(field.data))
+    if length < 10 or length > 12:
+        raise ValidationError('Field must be between 10 and 12 digits long.')
+        
+class ContactForm(FlaskForm):
+    name = StringField('Name', validators=[DataRequired(), Length(max=100)])
+    email = StringField('Email', validators=[DataRequired(), Email(), Length(max=150)])
+    telephone = StringField('Telephone', validators=[Optional(), validate_length])
+    reason = SelectField(
+        'Reason for Contact', 
+        choices=[
+            ('', 'Select Reason'),
+            ('get_quote', 'Get a Quote'),
+            ('general_inquiry', 'General Inquiry'),
+            ('bug_report', 'Bug Report')
+            # Add more options as needed
+        ], 
+        validators=[DataRequired()],
+        default='',
+        render_kw={"placeholder": "Please select a reason..."}
+    )
+    subject = StringField('Subject', validators=[Optional(), Length(max=200)], default='', render_kw={"placeholder": "Optional Subject..."})
+    message = TextAreaField('Message', validators=[DataRequired(), Length(max=1000)], render_kw={"placeholder": "Enter your message here..."})
