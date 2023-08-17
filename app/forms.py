@@ -76,7 +76,7 @@ class TakeTest(FlaskForm):
     q22 = RadioField('I feel refreshed when I have been close to my patients/clients at work.', choices=ratings, validators=[DataRequired()])
 
     # Global submit button
-    submit = SubmitField('Submit Responses')
+    submit = SubmitField('Submit')
 
 class SelectManagerForm(FlaskForm):
     manager = SelectField('Manager', coerce=int, choices=[(0, 'None')]) # default choice for None

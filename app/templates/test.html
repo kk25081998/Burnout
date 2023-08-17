@@ -3,9 +3,6 @@
 {% block extra_css %}
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <style>
-        .highlight {
-            background-color: #ffcccc;
-        }
         .btn {
             margin-right: 10px;
             border-radius: 20px;
@@ -38,91 +35,85 @@
 
 <div class="container">
 
-    {% if next_eligible_date %}
-        <!-- Displayed when the user has already taken the test this month -->
-        <div class="alert alert-warning mt-4">
-            <h4>Wait a Moment!</h4>
-            <p>You can only take the burnout test once per calendar month. Please come back on {{ next_eligible_date.strftime("%B %d, %Y") }} to take the test again.</p>
-        </div>
-    {% else %}
-        <form method="POST" class="mt-4" id="testForm">
-            {{ form.hidden_tag() }}
-            <div class="container">
+    <form method="POST" class="mt-4" id="testForm">
+        {{ form.hidden_tag() }}
+        <div class="container">
 
-                <h2>Section 1</h2>
-                {% for question in section1 %}
-                    <div class="form-group question">
-                        <label>{{ question.label }}</label><br>
-                        {% for subfield in question %}
-                            <div class="custom-control custom-radio custom-control-inline">
-                                <input type="radio" id="{{ subfield.id }}" name="{{ subfield.name }}" value="{{ loop.index0 }}" class="custom-control-input">
-                                <label class="custom-control-label" for="{{ subfield.id }}">{{ subfield.label.text }}</label>
-                            </div>
-                        {% endfor %}
-                    </div>
-                {% endfor %}
-
-                <h2>Section 2</h2>
-                {% for question in section2 %}
-                    <div class="form-group question">
-                        <label>{{ question.label }}</label><br>
-                        {% for subfield in question %}
-                            <div class="custom-control custom-radio custom-control-inline">
-                                <input type="radio" id="{{ subfield.id }}" name="{{ subfield.name }}" value="{{ loop.index0 }}" class="custom-control-input">
-                                <label class="custom-control-label" for="{{ subfield.id }}">{{ subfield.label.text }}</label>
-                            </div>
-                        {% endfor %}
-                    </div>
-                {% endfor %}
-
-                <h2>Section 3</h2>
-                {% for question in section3 %}
-                    <div class="form-group question">
-                        <label>{{ question.label }}</label><br>
-                        {% for subfield in question %}
-                            <div class="custom-control custom-radio custom-control-inline">
-                                <input type="radio" id="{{ subfield.id }}" name="{{ subfield.name }}" value="{{ loop.index0 }}" class="custom-control-input">
-                                <label class="custom-control-label" for="{{ subfield.id }}">{{ subfield.label.text }}</label>
-                            </div>
-                        {% endfor %}
-                    </div>
-                {% endfor %}
-
-                <div id="warningMsg" class="alert alert-danger hidden">
-                    Oops, it seems like you've missed some questions. We need your response on all questions to provide the best results. Please check the highlighted questions and provide your answers. Thank you!
-                </div>            
-
-                <div class="form-group">
-                    <button type="submit" class="btn btn-primary">{{ form.submit.label }}</button>
-                    <button type="button" class="btn btn-secondary" id="resetBtn">Reset</button>
+            <h2>Section 1</h2>
+            {% for question in section1 %}
+                <div class="form-group question">
+                    <span class="missed-indicator" style="display: none; color: red;">★ Incomplete</span><br><label>{{ question.label }}</label><br>
+                    {% for subfield in question %}
+                        <div class="custom-control custom-radio custom-control-inline">
+                            <input type="radio" id="{{ subfield.id }}" name="{{ subfield.name }}" value="{{ loop.index0 }}" class="custom-control-input">
+                            <label class="custom-control-label" for="{{ subfield.id }}">{{ subfield.label.text }}</label>
+                        </div>
+                    {% endfor %}
                 </div>
+            {% endfor %}
 
+            <h2>Section 2</h2>
+            {% for question in section2 %}
+                <div class="form-group question">
+                    <span class="missed-indicator" style="display: none; color: red;">★ Incomplete</span><br><label>{{ question.label }}</label><br>
+                    {% for subfield in question %}
+                        <div class="custom-control custom-radio custom-control-inline">
+                            <input type="radio" id="{{ subfield.id }}" name="{{ subfield.name }}" value="{{ loop.index0 }}" class="custom-control-input">
+                            <label class="custom-control-label" for="{{ subfield.id }}">{{ subfield.label.text }}</label>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+
+            <h2>Section 3</h2>
+            {% for question in section3 %}
+                <div class="form-group question">
+                    <span class="missed-indicator" style="display: none; color: red;">★ Incomplete</span><br><label>{{ question.label }}</label><br>
+                    {% for subfield in question %}
+                        <div class="custom-control custom-radio custom-control-inline">
+                            <input type="radio" id="{{ subfield.id }}" name="{{ subfield.name }}" value="{{ loop.index0 }}" class="custom-control-input">
+                            <label class="custom-control-label" for="{{ subfield.id }}">{{ subfield.label.text }}</label>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+
+            <div id="warningMsg" class="alert alert-danger" style="display: none;">
+                Oops, it seems like you've missed some questions. We need your response on all questions to provide the best results. Please check the starred questions and provide your answers. Thank you!
+            </div>                    
+
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Submit Responses</button>
+                <button type="button" class="btn btn-secondary" id="resetBtn">Reset</button>
             </div>
-        </form>
-    {% endif %}
+
+        </div>
+    </form>
 
     <script>
         document.getElementById('testForm').addEventListener('submit', function(event) {
+            //alert("Form is being submitted!");
             let questions = document.querySelectorAll('.question');
             let allAnswered = true;
 
             questions.forEach(question => {
                 let inputs = question.querySelectorAll('input[type="radio"]');
                 let answered = Array.from(inputs).some(input => input.checked);
+                let indicator = question.querySelector('.missed-indicator');
 
                 if (!answered) {
                     allAnswered = false;
-                    question.classList.add('highlight');
+                    indicator.style.display = 'inline';
                 } else {
-                    question.classList.remove('highlight');
+                    indicator.style.display = 'none';
                 }
             });
 
             if (!allAnswered) {
                 event.preventDefault();
-                document.getElementById('warningMsg').classList.remove('hidden');
+                document.getElementById('warningMsg').style.display = 'block';
             } else {
-                document.getElementById('warningMsg').classList.add('hidden');
+                document.getElementById('warningMsg').style.display = 'none';
             }
         });
 
@@ -134,7 +125,7 @@
             // Remove any highlighting
             let questions = document.querySelectorAll('.question');
             questions.forEach(question => {
-                question.classList.remove('highlight');
+                question.querySelector('.missed-indicator').style.display = 'none'
             });
 
             // Hide the warning message

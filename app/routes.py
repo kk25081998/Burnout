@@ -154,54 +154,115 @@ def view_profile():
     image = url_for('static', filename='profile_pics/' + current_user.image) if current_user.image else url_for('static', filename='images/profile.jpg')
     return render_template('view_profile.html', title='View Profile', image_file=image, form=form)
 
+# @main.route('/test', methods=['GET', 'POST'])
+# @login_required
+# def test():
+#     form = TakeTest()
+    
+#     # Fetch the most recent test date for the user
+#     last_test = Results.query.filter_by(user_id=current_user.id).order_by(Results.testDate.desc()).first()
+
+#     # Check if the user has taken the test in the current month
+#     if last_test and last_test.testDate.month == datetime.now().month and last_test.testDate.year == datetime.now().year:
+#         next_month = datetime(datetime.now().year, datetime.now().month % 12 + 1, 1)  # First day of next month
+#         flash(f'You can only take the burnout test once per calendar month. Please come back on {next_month.strftime("%B %d, %Y")} to take the test again.', 'warning')
+#         return render_template('test.html', title='test', form=form, next_eligible_date=next_month)
+
+#     # Questions grouped by section
+#     section1 = [form.q1, form.q2, form.q3, form.q4, form.q5, form.q6, form.q7]
+#     section2 = [form.q8, form.q9, form.q10, form.q11, form.q12, form.q13, form.q14]
+#     section3 = [form.q15, form.q16, form.q17, form.q18, form.q19, form.q20, form.q21, form.q22]
+
+#     print("Form data: ", form.data)
+#     print("Form errors: ", form.errors)
+
+#     if form.validate_on_submit():
+#         #debug
+#         print([question.data for question in section1])
+#         print([question.data for question in section2])
+#         print([question.data for question in section3])
+
+#         # Calculate scores for each section
+#         score1 = sum(int(question.data) for question in section1)
+#         score2 = sum(int(question.data) for question in section2)
+#         score3 = sum(int(question.data) for question in section3)
+#         date = datetime.datetime.now()
+
+#         # Save scores to database
+#         try:
+#             new_test_score = Results(user_id=current_user.id, testDate=date, scoreA=score1, scoreB=score2, scoreC=score3, )
+#             db.session.add(new_test_score)
+#             db.session.commit()
+#         except Exception as e:
+#             print(f"Error while saving test results: {e}")
+#             db.session.rollback()
+
+
+#         flash('Your test has been successfully submitted!')
+#         return redirect(url_for('main.test_history'))
+    
+#     return render_template('test.html', title='test', form=form, section1=section1, section2=section2, section3=section3)
+
 @main.route('/test', methods=['GET', 'POST'])
 @login_required
 def test():
     form = TakeTest()
     
-    # Fetch the most recent test date for the user
-    last_test = Results.query.filter_by(user_id=current_user.id).order_by(Results.testDate.desc()).first()
-
     # Check if the user has taken the test in the current month
-    if last_test and last_test.testDate.month == datetime.now().month and last_test.testDate.year == datetime.now().year:
+    if user_took_test_this_month(current_user.id):
         next_month = datetime(datetime.now().year, datetime.now().month % 12 + 1, 1)  # First day of next month
         flash(f'You can only take the burnout test once per calendar month. Please come back on {next_month.strftime("%B %d, %Y")} to take the test again.', 'warning')
-        return render_template('test.html', title='test', form=form, next_eligible_date=next_month)
+        return render_template('test_not_eligible.html', title='test', form=form, next_eligible_date=next_month)
+
+    if form.validate_on_submit():
+        # Process the form and save the results
+        if process_test_results(form):
+            flash('Your test has been successfully submitted!')
+            return redirect(url_for('main.test_history'))
 
     # Questions grouped by section
     section1 = [form.q1, form.q2, form.q3, form.q4, form.q5, form.q6, form.q7]
     section2 = [form.q8, form.q9, form.q10, form.q11, form.q12, form.q13, form.q14]
     section3 = [form.q15, form.q16, form.q17, form.q18, form.q19, form.q20, form.q21, form.q22]
 
-    print("Form data: ", form.data)
-    print("Form errors: ", form.errors)
-
-    if form.validate_on_submit():
-        #debug
-        print([question.data for question in section1])
-        print([question.data for question in section2])
-        print([question.data for question in section3])
-
-        # Calculate scores for each section
-        score1 = sum(int(question.data) for question in section1)
-        score2 = sum(int(question.data) for question in section2)
-        score3 = sum(int(question.data) for question in section3)
-        date = datetime.datetime.now()
-
-        # Save scores to database
-        try:
-            new_test_score = Results(user_id=current_user.id, testDate=date, scoreA=score1, scoreB=score2, scoreC=score3, )
-            db.session.add(new_test_score)
-            db.session.commit()
-        except Exception as e:
-            print(f"Error while saving test results: {e}")
-            db.session.rollback()
-
-
-        flash('Your test has been successfully submitted!')
-        return redirect(url_for('main.test_history'))
-    
     return render_template('test.html', title='test', form=form, section1=section1, section2=section2, section3=section3)
+
+def user_took_test_this_month(user_id):
+    """Check if user took test for the current month"""
+    last_test = Results.query.filter_by(user_id=user_id).order_by(Results.testDate.desc()).first()
+
+    if not last_test:
+        return False
+
+    current_month = datetime.now().month
+    current_year = datetime.now().year
+
+    return last_test.testDate.month == current_month and last_test.testDate.year == current_year
+
+def process_test_results(form):
+    """Process test form and save results to database"""
+    # Questions grouped by section
+    section1 = [form.q1, form.q2, form.q3, form.q4, form.q5, form.q6, form.q7]
+    section2 = [form.q8, form.q9, form.q10, form.q11, form.q12, form.q13, form.q14]
+    section3 = [form.q15, form.q16, form.q17, form.q18, form.q19, form.q20, form.q21, form.q22]
+
+    # Calculate scores for each section
+    score1 = sum(int(question.data) for question in section1)
+    score2 = sum(int(question.data) for question in section2)
+    score3 = sum(int(question.data) for question in section3)
+    date = datetime.now()
+
+    # Save scores to database
+    try:
+        new_test_score = Results(user_id=current_user.id, testDate=date, scoreA=score1, scoreB=score2, scoreC=score3)
+        db.session.add(new_test_score)
+        db.session.commit()
+        return True
+    except Exception as e:
+        print(f"Error while saving test results: {e}")
+        db.session.rollback()
+        return False
+
 
 @main.route('/test_history', methods=['GET'])
 @login_required

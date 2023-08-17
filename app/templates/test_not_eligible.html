@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="alert alert-warning mt-4">
+        <h4>Wait a Moment!</h4>
+        <p>You can only take the burnout test once per calendar month. Please come back on {{ next_eligible_date.strftime("%B %d, %Y") }} to take the test again.</p>
+    </div>
+</div>
+{% endblock %}
