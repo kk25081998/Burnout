@@ -20,7 +20,7 @@
                         {% if result.scoreA <= 17 %}
                             Low
                         {% elif result.scoreA > 17 and result.scoreA <= 29 %}
-                            Moderate
+                            Mild
                         {% else %}
                             High
                         {% endif %}
@@ -32,7 +32,7 @@
                         {% if result.scoreB <= 5 %}
                             Low
                         {% elif result.scoreB > 5 and result.scoreB <= 11 %}
-                            Moderate
+                            Mild
                         {% else %}
                             High
                         {% endif %}
@@ -44,7 +44,7 @@
                         {% if result.scoreC <= 33 %}
                             High 
                         {% elif result.scoreC > 33 and result.scoreC <= 39 %}
-                            Moderate 
+                            Mild 
                         {% else %}
                             Low 
                         {% endif %}
@@ -60,7 +60,7 @@
                         {% if scaledScore <= 33 %}
                             Low
                         {% elif scaledScore <= 66 %}
-                            Moderate
+                            Mild
                         {% else %}
                             High
                         {% endif %}
@@ -147,7 +147,7 @@
                         callback: function(value, index, values) {
                             if (value === 0) return 'No Burnout';
                             if (value === 33) return 'Low Burnout ';
-                            if (value === 66) return 'Moderate Burnout ';
+                            if (value === 66) return 'Mild Burnout ';
                             if (value === 100) return 'High Burnout';
                             return '';
                         }
