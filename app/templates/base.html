@@ -17,6 +17,11 @@
                 flex-direction: column;
                 height: 100%;
                 margin: 0;
+                overflow-y: scroll;
+            }
+            body::-webkit-scrollbar {
+                width: 0;
+                background: transparent;
             }
             .content-wrap {
                 flex: 1 0 auto;  /* Allow the content to grow or shrink, but not shrink below its base size */
@@ -77,7 +82,7 @@
             <!-- Navbar Collapse -->
             <div class="collapse navbar-collapse" id="navbarNav" style="width: 25%; top: 100%; right: 0; z-index: 2000;">
                 <!-- Left Section -->
-                <ul class="navbar-nav ml-auto" style="text-align: right;">
+                <ul class="navbar-nav" style="text-align: right;">
                     {% if current_user.is_authenticated %}
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url_for('main.dashboard') }}">Home</a>
