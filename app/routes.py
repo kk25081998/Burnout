@@ -1,7 +1,7 @@
 # app/routes.py
 print("Routes file loaded!")  # Add this line
 
-from flask import render_template, redirect, url_for, flash, abort, request, jsonify, session, get_flashed_messages
+from flask import render_template, redirect, url_for, flash, abort, request, jsonify, session, get_flashed_messages, send_from_directory
 from flask_login import login_user, logout_user, login_required, current_user, LoginManager
 from app import db, create_app
 from app.forms import RegistrationForm, LoginForm, EditProfileForm, TakeTest, SelectManagerForm, PasswordChangeForm
@@ -317,18 +317,42 @@ def pricing():
     return render_template('pricing.html', title='Pricing')
 
 
-@main.route('/company')
+@main.route('/company', methods=['GET'])
 def company():
     return render_template('company.html')
 
-@main.route('/contactus')
+@main.route('/contactus', methods=['GET'])
 def contactus():
     return render_template('contactus.html')
 
-@main.route('/termsofservice')
+@main.route('/termsofservice', methods=['GET'])
 def tos():
     return render_template('termsofservice.html')
 
-@main.route('/privacy-policy')
+@main.route('/privacy-policy', methods=['GET'])
 def privacy_policy():
     return render_template('privacy-policy.html')
+
+# Route to serve the favicon.ico file
+@main.route('/favicon.ico')
+def favicon():
+    user_agent = request.headers.get('User-Agent', '').lower()
+
+    if 'android' in user_agent:
+        return send_from_directory(
+            current_app.root_path,
+            'static/images/android-chrome-192x192.png',
+            mimetype='image/png'
+        )
+    elif 'apple' in user_agent:
+        return send_from_directory(
+            current_app.root_path,
+            'static/images/apple-touch-icon.png',
+            mimetype='image/png'
+        )
+    else:
+        return send_from_directory(
+            current_app.root_path,
+            'static/images/favicon.ico',
+            mimetype='image/vnd.microsoft.icon'
+        )
