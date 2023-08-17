@@ -1,16 +1,49 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container">
+<style>
+    /* Custom Styles */
+    .sign-in-card {
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        transition: transform .2s;
+    }
+    
+    .sign-in-card:hover {
+        transform: scale(1.03);
+    }
+
+    .sign-in-card-header {
+        background-color: #343a40; /* Bootstrap Dark */
+        color: #ffffff;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+        text-align: center;
+    }
+
+    .alert {
+        margin-top: 10px;
+    }
+
+    .btn-primary {
+        background-color: #007BFF;
+        border: none;
+        padding: 10px 20px;
+        font-weight: 600;
+    }
+</style>
+
+<div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-6">
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="mb-0">Sign In</h3>
+            <div class="card sign-in-card">
+                <div class="card-header sign-in-card-header">
+                    <h3 class="mb-0">Login</h3>
                 </div>
                 <div class="card-body">
                     <form method="POST">
                         {{ form.hidden_tag() }}
+
                         {% with messages = get_flashed_messages(with_categories=true) %}
                             {% if messages %}
                                 {% for category, message in messages %}
@@ -20,6 +53,7 @@
                                 {% endfor %}
                             {% endif %}
                         {% endwith %}
+
                         <div class="form-group">
                             {{ form.email.label(class="form-label") }}
                             {{ form.email(class="form-control") }}
@@ -29,14 +63,17 @@
                                 {% endfor %}
                             {% endif %}
                         </div>
+
                         <div class="form-group">
                             {{ form.password.label(class="form-label") }}
                             {{ form.password(class="form-control") }}
                         </div>
-                        <div class="form-check">
+
+                        <div class="form-check mb-4">
                             {{ form.remember_me(class="form-check-input") }}
                             {{ form.remember_me.label(class="form-check-label") }}
                         </div>
+
                         {% with messages = get_flashed_messages(with_categories=true) %}
                             {% if messages %}
                                 {% for category, message in messages %}
@@ -46,9 +83,7 @@
                                 {% endfor %}
                             {% endif %}
                         {% endwith %}
-                        <div>
-                            <br>
-                        </div>
+
                         <div class="form-group text-center">
                             <input type="submit" class="btn btn-primary" value="Sign In">
                         </div>                        
