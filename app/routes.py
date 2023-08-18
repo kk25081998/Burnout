@@ -94,6 +94,14 @@ def view_profile():
     form = EditProfileForm(obj=current_user)
     message = None
     message_type = None
+    image = url_for('static', filename='profile_pics/' + current_user.image) if current_user.image else url_for('static', filename='images/profile.jpg')
+
+    if request.method == 'GET':
+        form.email.data = current_user.email
+        form.firstname.data = current_user.firstname
+        form.lastname.data = current_user.lastname
+        form.date_of_birth.data = current_user.date_of_birth
+        return render_template('view_profile.html', title='View Profile', image_file=image, form=form, message='', message_type='')
 
     if form.validate_on_submit():
         try:
@@ -102,14 +110,21 @@ def view_profile():
                 picture_file = save_picture(form.image.data, current_user.email, current_user.id)
                 current_user.image = picture_file
 
-            current_user.email = form.email.data
-            current_user.firstname = form.firstname.data
-            current_user.lastname = form.lastname.data
-            current_user.date_of_birth = form.date_of_birth.data
-            db.session.commit()
+            new_email = form.email.data
 
-            message = 'Your changes have been saved.'
-            message_type = 'success'
+            # Check if the new email already exists in the database
+            user_with_new_email = User.query.filter_by(email=new_email).first()
+            if user_with_new_email and user_with_new_email.id != current_user.id:
+                message = "The email address is already in use. Please choose a different one."
+                message_type = "danger"
+            else:
+                current_user.email = form.email.data
+                current_user.firstname = form.firstname.data
+                current_user.lastname = form.lastname.data
+                current_user.date_of_birth = form.date_of_birth.data
+                db.session.commit()
+                message = 'Your changes have been saved.'
+                message_type = 'success'
             
         except SQLAlchemyError:
             db.session.rollback()
@@ -117,15 +132,15 @@ def view_profile():
             message_type = 'danger'
 
         return render_template('view_profile.html', title='View Profile', form=form, image_file=image, message=message, message_type=message_type)
+    elif not form.validate_on_submit():
+        if form.errors:
+            message = next(iter(form.errors.values()))[0]
+            message_type = 'danger'
+        else:
+            message = 'An error occurred while saving your changes. Please check if inputs make sense.'
+            message_type = 'danger'
+        return render_template('view_profile.html', title='View Profile', form=form, image_file=image, message=message, message_type=message_type)
 
-    elif request.method == 'GET':
-        form.email.data = current_user.email
-        form.firstname.data = current_user.firstname
-        form.lastname.data = current_user.lastname
-        form.date_of_birth.data = current_user.date_of_birth
-
-    image = url_for('static', filename='profile_pics/' + current_user.image) if current_user.image else url_for('static', filename='images/profile.jpg')
-    return render_template('view_profile.html', title='View Profile', image_file=image, form=form, message=message, message_type=message_type)
 
 @main.route('/test', methods=['GET', 'POST'])
 @login_required

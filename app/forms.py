@@ -35,7 +35,7 @@ class PasswordChangeForm(FlaskForm):
     submit = SubmitField('Change Password')
 
 class EditProfileForm(FlaskForm):
-    email = StringField('Email', validators=[DataRequired(), Email()])
+    email = StringField('Email', validators=[DataRequired(), Email(message="Invalid email was entered" )])
     firstname = StringField('First Name')
     lastname = StringField('Last Name')
     date_of_birth = DateField('Date of Birth', format='%Y-%m-%d')
