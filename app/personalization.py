@@ -4,8 +4,16 @@ from PIL import Image
 from flask import current_app
 from werkzeug.utils import secure_filename
 import requests
-from app.models import Results
 from datetime import datetime
+from flask import render_template, redirect, url_for, flash, abort, request, jsonify, session, get_flashed_messages, send_from_directory
+from flask_login import login_user, logout_user, login_required, current_user, LoginManager
+from app import db, create_app
+from app.forms import RegistrationForm, LoginForm, EditProfileForm, TakeTest, SelectManagerForm, PasswordChangeForm, ContactForm
+from datetime import datetime
+from werkzeug.exceptions import HTTPException  # import HTTPException instead of abort
+from flask import Blueprint
+import json
+from app.models import User, Company, Results
 
 def save_picture(form_picture, user_email, user_id):
     _, f_ext = os.path.splitext(form_picture.filename)
