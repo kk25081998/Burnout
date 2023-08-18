@@ -4,6 +4,8 @@ from PIL import Image
 from flask import current_app
 from werkzeug.utils import secure_filename
 import requests
+from app.models import Results
+from datetime import datetime
 
 def save_picture(form_picture, user_email, user_id):
     _, f_ext = os.path.splitext(form_picture.filename)

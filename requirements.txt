@@ -8,3 +8,6 @@ WTForms
 email-validator
 SQLAlchemy
 python-dotenv
+requests
+json
+Pillow
