@@ -15,12 +15,12 @@
                 </div>
                 <div class="card-body text-center">
                     <!-- Add a profile picture -->
-                    {% if current_user.image %}
-                        <img src="{{ url_for('static', filename='profile_pics/' + current_user.image) }}" alt="Profile Picture" class="img-thumbnail mb-3" style="width: 200px; height: 200px;">
-                    {% else %}
-                        <img src="{{ url_for('static', filename='profile_pics/default.jpg') }}" alt="Profile Picture" class="img-thumbnail mb-3" style="width: 200px; height: 200px;">
-                    {% endif %}
-                    
+                {% if current_user.image %}
+                    <img src="{{ url_for('static', filename='profile_pics/' + current_user.image) }}" alt="Profile Picture" class="img-thumbnail mb-3" style="max-width: 250px; max-height: 250px;">
+                {% else %}
+                    <img src="{{ url_for('static', filename='profile_pics/default.jpg') }}" alt="Profile Picture" class="img-thumbnail mb-3" style="max-width: 250px; max-height: 250px;">
+                {% endif %}
+
                     <!-- Display user profile data -->
                     <h5>{{user.firstname}} {{user.lastname}}</h5>
                     <p class="text-muted">

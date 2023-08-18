@@ -86,7 +86,6 @@ def dashboard():
 
     return render_template('dashboard.html', user=user, last_score=last_score, last_three_scores=last_three_scores, current_month=current_month, scores_dict=scores_dict, last_month=last_month, two_months_ago=two_months_ago)
     
-from sqlalchemy.exc import SQLAlchemyError
 
 @main.route('/view_profile', methods=['GET', 'POST'])
 @login_required
