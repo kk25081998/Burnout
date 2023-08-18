@@ -15,6 +15,7 @@ class User(UserMixin, db.Model):
     results = db.relationship('Results', backref='user', lazy='dynamic')
     subordinates = db.relationship('User', backref=db.backref('manager', remote_side=[id]), lazy='dynamic')
     first_login = db.Column(db.Boolean, default=True)
+    role_id = db.Column(db.Integer, db.ForeignKey('role.id'))
 
     def __repr__(self):
         return f'<User {self.firstname} {self.lastname}>'
@@ -46,6 +47,11 @@ class Results(db.Model):
 
     def __repr__(self):
         return f'<Results {self.id}>'
+
+class Role(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(64), unique=True)
+    users = db.relationship('User', backref='role', lazy='dynamic')
 
 @login_manager.user_loader
 def load_user(id):
