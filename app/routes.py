@@ -11,6 +11,7 @@ import json
 from app.personalization import save_picture, send_contact_email, user_took_test_this_month, process_test_results
 from app.models import User, Company, Results
 from datetime import datetime
+from sqlalchemy.exc import SQLAlchemyError
 
 login_manager = LoginManager()
 login_manager.login_view = 'main.login'
@@ -85,29 +86,46 @@ def dashboard():
 
     return render_template('dashboard.html', user=user, last_score=last_score, last_three_scores=last_three_scores, current_month=current_month, scores_dict=scores_dict, last_month=last_month, two_months_ago=two_months_ago)
     
+from sqlalchemy.exc import SQLAlchemyError
+
 @main.route('/view_profile', methods=['GET', 'POST'])
 @login_required
 def view_profile():
     form = EditProfileForm(obj=current_user)
+    message = None
+    message_type = None
+
     if form.validate_on_submit():
-        # Ensure there is a file in the request and that it's not empty
-        if 'image' in request.files and request.files['image'].filename != '':
-            picture_file = save_picture(form.image.data, current_user.email, current_user.id)
-            current_user.image = picture_file
-        current_user.email = form.email.data
-        current_user.firstname = form.firstname.data
-        current_user.lastname = form.lastname.data
-        current_user.date_of_birth = form.date_of_birth.data
-        db.session.commit()
-        flash('Your changes have been saved.')
-        return redirect(url_for('main.view_profile'))
+        try:
+            # Ensure there is a file in the request and that it's not empty
+            if 'image' in request.files and request.files['image'].filename != '':
+                picture_file = save_picture(form.image.data, current_user.email, current_user.id)
+                current_user.image = picture_file
+
+            current_user.email = form.email.data
+            current_user.firstname = form.firstname.data
+            current_user.lastname = form.lastname.data
+            current_user.date_of_birth = form.date_of_birth.data
+            db.session.commit()
+
+            message = 'Your changes have been saved.'
+            message_type = 'success'
+            
+        except SQLAlchemyError:
+            db.session.rollback()
+            message = 'An error occurred while saving your changes. Please try again.'
+            message_type = 'danger'
+
+        return render_template('view_profile.html', title='View Profile', form=form, image_file=image, message=message, message_type=message_type)
+
     elif request.method == 'GET':
         form.email.data = current_user.email
         form.firstname.data = current_user.firstname
         form.lastname.data = current_user.lastname
         form.date_of_birth.data = current_user.date_of_birth
+
     image = url_for('static', filename='profile_pics/' + current_user.image) if current_user.image else url_for('static', filename='images/profile.jpg')
-    return render_template('view_profile.html', title='View Profile', image_file=image, form=form)
+    return render_template('view_profile.html', title='View Profile', image_file=image, form=form, message=message, message_type=message_type)
 
 @main.route('/test', methods=['GET', 'POST'])
 @login_required
