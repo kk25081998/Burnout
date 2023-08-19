@@ -82,3 +82,45 @@ Warm Regards,
 
 The FlorishatWork Team
 '''
+
+'''
+Admin:
+Overview: Has the highest level of access and is responsible for configuring and managing the burnout application.
+
+Full System Access: Ability to view, modify, delete any data.
+User Management: Can add, modify, or delete users, and set or modify their roles.
+Settings & Configuration: Access to all system settings, including survey frequencies, reminders, etc.
+Reporting: Generate system-wide reports on burnout trends, feedback, etc.
+Data Backup & Recovery: Ensure data integrity and backups.
+System Updates & Maintenance: Oversee app updates, especially with new burnout detection methodologies.
+Audit Trails: View logs or audit trails of all system activities.
+Content Management: Add, edit, or remove resources for burnout prevention.
+
+HR:
+Overview: Ensures employee well-being, understands burnout trends, and implements preventive measures.
+
+Employee Burnout Data: View aggregated, non-identifiable data on employee burnout levels.
+Intervention Initiatives: Launch and manage programs to reduce burnout based on the data.
+Reporting: Generate reports on departmental burnout trends.
+Feedback & Suggestions: Receive suggestions or feedback on improving work-life balance.
+Resource Distribution: Share resources (articles, videos) about handling stress and burnout.
+Anonymous Communication: Facilitate channels where employees can discuss their stress anonymously.
+
+Manager:
+Overview: Keeps a check on their team's well-being, ensuring that the work environment is conducive to mental health.
+
+Team Burnout Data: View aggregated, non-identifiable data on their team's burnout levels.
+Check-ins: Conduct regular check-ins with team members to discuss work-life balance.
+Resource Sharing: Share resources on managing workload, stress, and ensuring a balanced work environment.
+Workload Management: Adjust workloads based on feedback and burnout data.
+Communication: Discuss team members' concerns privately and anonymously, if needed.
+
+User (Regular Employee):
+Overview: Provides feedback on their stress and burnout levels, accesses resources, and receives support.
+
+Burnout Surveys: Regularly fill out surveys or feedback forms to rate their burnout levels.
+Profile Management: Update personal settings, such as survey frequencies or reminders.
+Resource Access: Browse articles, videos, and other resources on handling burnout.
+Anonymous Feedback: Provide feedback on work stressors without revealing their identity.
+Peer Support: Access to chat rooms or forums where employees discuss stress and provide mutual support.
+'''
