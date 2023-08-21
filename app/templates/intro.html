@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<!-- Hero Section -->
+<div class="hero-section text-center gradient-bg">
+    <div class="container" style="padding-top: 100px; padding-bottom: 50px;">
+        <!-- Company Logo or Image -->
+        <img src="/static/images/logo-n2.png" alt="Flourish at Work Logo" width="200">
+        
+        <!-- Main Headline -->
+        <h1 class="display-4 mt-4">Welcome to Flourish at Work!</h1>
+
+        <!-- Sub headline -->
+        <p class="lead mt-4" style="font-size: 1.5rem; color: white;">We are dedicated to your well-being in the workplace.</p>
+
+        <!-- Separator -->
+        <hr class="my-4" style="border-color: white;">
+
+        <!-- Brief Description -->
+        <p class="mb-4" style="color: white;"><i class="fas fa-heartbeat"></i> Our mission is to provide tools and resources to ensure your mental and emotional health while working.</p>
+
+        <!-- Call to Action -->
+        <p class="lead mt-4">
+            <a class="btn btn-light btn-lg" href="{{ url_for('main.login') }}" role="button"><i class="fas fa-play-circle"></i> Start Your Journey with Us</a>
+        </p>
+    </div>
+</div>
+
+<!-- Features Section -->
+<div class="features-section text-center">
+    <div class="container">
+        <h2>Our Proposed Features</h2>
+        <div class="row mt-5 d-flex align-items-stretch"> <!-- Added align-items-stretch -->
+            <div class="col-md-3 d-flex"> <!-- Added d-flex -->
+                <div class="feature-box p-4 d-flex flex-column">
+                    <div>
+                        <i class="fas fa-heartbeat fa-2x mb-3"></i>
+                        <h4>Burnout Score</h4>
+                    </div>
+                    <p class="mb-auto">Assess mental well-being and get guidance tailored for you.</p> <!-- Added mb-auto -->
+                </div>
+            </div>
+            <div class="col-md-3 d-flex"> <!-- Added d-flex -->
+                <div class="feature-box p-4 d-flex flex-column">
+                    <div>
+                        <i class="fas fa-book-open fa-2x mb-3"></i>
+                        <h4>Key Curations</h4>
+                    </div>
+                    <p class="mb-auto">A collection of resources dedicated to enhancing employee well-being.</p> <!-- Added mb-auto -->
+                </div>
+            </div>
+            <div class="col-md-3 d-flex"> <!-- Added d-flex -->
+                <div class="feature-box p-4 d-flex flex-column">
+                    <div>
+                        <i class="fas fa-comments fa-2x mb-3"></i>
+                        <h4>Expert Connect</h4>
+                    </div>
+                    <p class="mb-auto">Opportunity to engage with mental health professionals for advice.</p> <!-- Added mb-auto -->
+                </div>
+            </div>
+            <div class="col-md-3 d-flex"> <!-- Added d-flex -->
+                <div class="feature-box p-4 d-flex flex-column">
+                    <div>
+                        <i class="fas fa-users fa-2x mb-3"></i>
+                        <h4>Community</h4>
+                    </div>
+                    <p class="mb-auto">A space for peers to connect, share and uplift each other.</p> <!-- Added mb-auto -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

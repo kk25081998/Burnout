@@ -1,7 +1,15 @@
 {% extends "base.html" %}
-<link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" type="text/css">
 
 {% block content %}
+<link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" type="text/css">
+
+<style>
+    body {
+        font-family: 'Arial', sans-serif;
+        background: linear-gradient(45deg, #020014, #09033F);
+    }
+</style>
+
 <div class="container">
     <h2>User Management</h2>
     
@@ -42,25 +50,18 @@
     </table>
 </div>
 
-{% endblock %}
-
-
-{% block scripts %}
-    <!-- CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest"></script>
-    <!-- Initialize DataTables -->
-    <script>
-        jQuery(document).ready(function($) {
-            $('#hrUserTable').DataTable({
-                "pageLength": 10,
-                "searching": true,
-                "ordering": true,
-                "info": true,
-                "lengthChange": false
-            });
+<!-- CDN -->
+<script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest"></script>
+<!-- Initialize DataTables -->
+<script>
+    jQuery(document).ready(function($) {
+        $('#hrUserTable').DataTable({
+            "pageLength": 10,
+            "searching": true,
+            "ordering": true,
+            "info": true,
+            "lengthChange": false
         });
-    </script>    
+    });
+</script> 
 {% endblock %}
-
-
-

@@ -26,6 +26,18 @@ def save_picture(form_picture, user_email, user_id):
     i.save(picture_path)
 
     return picture_fn
+    
+def save_company_logo(form_logo):
+    _, f_ext = os.path.splitext(form_logo.filename)
+    logo_filename = secure_filename(f'company-{current_user.company.id}{f_ext}')
+    logo_path = os.path.join(current_app.root_path, 'static/company_logo', logo_filename)
+
+    output_size = (300, 300)
+    i = Image.open(form_logo)
+    i.thumbnail(output_size)
+    i.save(logo_path)
+
+    return logo_filename
 
 def send_contact_email(name, email, telephone, reason, message):
     url = "https://rapidprod-sendgrid-v1.p.rapidapi.com/mail/send"

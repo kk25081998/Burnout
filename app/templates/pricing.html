@@ -1,6 +1,13 @@
 {% extends "base.html" %}
 
 {% block content %}
+<style>
+    body {
+        font-family: 'Arial', sans-serif;
+        background: linear-gradient(45deg, #020014, #09033F);
+    }
+</style>
+
 <div class="container mt-5" style="max-width: 1200px;">
     <div class="row justify-content-center">
 
@@ -37,7 +44,7 @@
                     {% for feature in plan.features %}
                         <div style="margin: 15px 0; font-size: 0.95rem; color: #555;">{{ feature }}</div>
                     {% endfor %}
-                    <div style="font-size: 1.8rem; font-weight: bold; margin-top: 20px; color: #444;">{{ plan.price }}</div>
+                    <a href="{{ url_for('main.contact_us') }}" class="btn btn-outline-dark" style="font-size: 1.2rem; font-weight: bold; margin-top: 20px; color: #182e68; border-color: #182e68;">{{ plan.price }}</a>
                 </div>
             </div>
         </div>

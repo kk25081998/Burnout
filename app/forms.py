@@ -162,6 +162,6 @@ class CompanySettingsForm(FlaskForm):
                                             ('2_weeks', '2 Weeks'),
                                             ('1_month', '1 Month'),
                                             ('2_months', '2 Months')])
-    companyLogo = FileField('Upload Company Logo', [Optional()])  # Assumes logo upload is optional
+    companyLogo = FileField('Upload Company Logo', validators=[Optional(), FileAllowed(['jpg', 'png'])])
     submit_settings = SubmitField('Update Settings')
  

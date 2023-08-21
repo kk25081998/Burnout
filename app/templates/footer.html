@@ -1,4 +1,4 @@
-<div class="footer py-4 d-flex flex-column justify-content-center align-items-center">
+<!-- <div class="footer py-4 d-flex flex-column justify-content-center align-items-center">
     <div class="text-center mb-2">
         <a href="{{ url_for('main.contact_us') }}">Contact Us</a> | 
         <a href="{{ url_for('main.tos') }}">Terms of Service</a> |
@@ -7,4 +7,23 @@
     <div class="text-center">
         <small>&copy; 2023 Flourish at Work. All rights reserved.</small>
     </div>
-</div>
+</div> -->
+
+<!-- Footer -->
+<footer class="text-center py-4">
+    <div class="container d-flex flex-column justify-content-center align-items-center">
+        <!-- Links -->
+        <div class="text-center mb-2">
+            <a href="{{ url_for('main.contact_us') }}" class="mr-3">Contact Us</a>
+            <span>|</span>
+            <a href="{{ url_for('main.tos') }}" class="ml-3 mr-3">Terms of Service</a>
+            <span>|</span>
+            <a href="{{ url_for('main.privacy_policy') }}" class="ml-3">Privacy Policy</a>
+        </div>
+
+        <!-- Copyright -->
+        <div class="text-center mt-2">
+            <small>&copy; 2023 Flourish at Work. All rights reserved.</small>
+        </div>
+    </div>
+</footer>

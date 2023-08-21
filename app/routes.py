@@ -8,11 +8,11 @@ from werkzeug.exceptions import HTTPException  # import HTTPException instead of
 from flask import Blueprint
 from flask import current_app
 import json
-from app.personalization import save_picture, send_contact_email, user_took_test_this_month, process_test_results, get_burnout_trends, get_department_burnout_data, get_team_burnout_data, redirect_next_or_dashboard
+from app.personalization import save_picture, send_contact_email, user_took_test_this_month, process_test_results, get_burnout_trends, get_department_burnout_data, get_team_burnout_data, save_company_logo, redirect_next_or_dashboard
 from app.models import User, Company, Results, Feedback
 from datetime import datetime
 from sqlalchemy.exc import SQLAlchemyError
-from sqlalchemy import func
+from sqlalchemy import extract, func
 
 login_manager = LoginManager()
 login_manager.login_view = 'main.login'
@@ -21,7 +21,7 @@ main = Blueprint('main', __name__)
 @main.route('/')
 def index():
     get_flashed_messages()
-    return render_template('index.html')
+    return render_template('intro.html')
 
 
 @main.route('/login', methods=['GET', 'POST'])
@@ -325,36 +325,98 @@ def company_dashboard():
     # Fetch company-related data that you want to display on the dashboard
     # For demonstration, I'm fetching all users belonging to the company
     company_users = User.query.filter_by(companyId=current_user.companyId).all()
-    
+    # Assuming `company_users` is a list of user objects for a specific company
+    user_ids = [user.id for user in company_users]
+    results = Results.query.filter(Results.user_id.in_(user_ids)).all()
+
     burnout_trends = get_burnout_trends()
     department_data = get_department_burnout_data()
     team_data = get_team_burnout_data()
 
+    adminCount = User.query.filter_by(companyId=current_user.companyId, role_id=2).count()
+    hrCount = User.query.filter_by(companyId=current_user.companyId, role_id=3).count()
+    managerCount = User.query.filter_by(companyId=current_user.companyId, role_id=4).count()
+    userCount = User.query.filter_by(companyId=current_user.companyId, role_id=5).count()
+
+    def get_monthly_avg_for_roles(role_ids_mapping):
+        """Returns monthly averages for different roles."""
+        monthly_avg_by_role = {role: [0] * 12 for role in role_ids_mapping.keys()}
+
+        for role, user_ids in role_ids_mapping.items():
+            results = (
+                db.session.query(
+                    extract('month', Results.testDate).label('month'), 
+                    func.avg(Results.scoreA + Results.scoreB + Results.scoreC).label('avg_value')
+                )
+                .filter(Results.user_id.in_(user_ids))
+                .group_by(extract('month', Results.testDate))
+                .all()
+            )
+
+            for month, avg_value in results:
+                monthly_avg_by_role[role][month-1] = avg_value
+
+        return monthly_avg_by_role
+
+
+    # Mapping roles to their respective user IDs
+    role_ids_mapping = {
+        'regular_users': [user.id for user in company_users if user.role_id == 5],
+        'managers': [user.id for user in company_users if user.role_id == 4],
+    }
+
+    monthly_avgs = get_monthly_avg_for_roles(role_ids_mapping)
+
+
     # Pass all data to the template
-    return render_template('admindashboard.html', 
+    return render_template('admindashboard.html',
+                            results=results, 
                            company_users=company_users, 
                            burnout_trends=burnout_trends,
                            department_data=department_data, 
-                           team_data=team_data)
+                           team_data=team_data,
+                           adminCount=adminCount,
+                           hrCount=hrCount,
+                           managerCount=managerCount,
+                           userCount=userCount,
+                           regular_users_avg=monthly_avgs['regular_users'],
+                           manager_avg=monthly_avgs['managers'])
 
 @main.route('/company/settings', methods=['GET', 'POST'])
 @login_required
 def company_settings():
-    # Make sure the current user is allowed to edit the company settings
+    # Ensure the current user is authorized to edit the company settings
     if not current_user.role_id == 2:
         abort(403)
 
-    # You can use a Flask-WTF form to capture the settings
+    message_type = ''
+    message = ''
+
     form = CompanySettingsForm()
 
     if form.validate_on_submit():
-        # Save the company settings. For demonstration, I'm just updating the company name.
-        current_user.company.name = form.company_name.data
+        # Save company details
+        current_user.company.name = form.companyName.data
+        current_user.company.description = form.companyDescription.data
+        current_user.company.size = form.companySize.data
+        current_user.company.frequency = form.companyFrequency.data
+
+        # Save the company logo if it was uploaded
+        if form.companyLogo.data:
+            logo_file = save_company_logo(form.companyLogo.data)
+            current_user.company.image = logo_file
+        
         db.session.commit()
-        flash('Company settings updated successfully!')
+        message_type = 'Success'
+        message = 'Company settings updated successfully!'
         return redirect(url_for('main.company_settings'))
 
-    return render_template('adminsettingsconfig.html', form=form)
+    elif form.errors:
+        message_type = 'danger'
+        message = 'Please correct the following errors before proceeding.'
+
+    return render_template('adminsettingsconfig.html', form=form, message_type=message_type, message=message)
+
 
 @main.route('/company/users', methods=['GET', 'POST'])
 @login_required
@@ -375,47 +437,6 @@ def company_users():
         return render_template('hrusermanagement.html', users=company_users)
 
     return render_template('adminusermanagement.html', users=company_users)
-
-# @main.route('/edit_user/<int:user_id>', methods=['GET', 'POST'])
-# @login_required
-# def edit_user(user_id):
-
-#     if not (current_user.role_id == 3 or current_user.role_id == 2):
-#         abort(403)
-
-#     user = User.query.get_or_404(user_id)
-
-#     # Retrieve manager's email if a manager is set for the user
-#     if user.manager:
-#         manager_email = user.manager.email
-#     else:
-#         manager_email = ""  # set to empty string instead of None
-
-    
-#     # form = UnifiedUserForm(original_email=user.email, obj=user, manager_email=manager_email)
-#     form = UnifiedUserForm(user=user)
-    
-#     if form.validate_on_submit():
-#         user.email = form.email.data
-#         user.firstname = form.firstname.data
-#         user.lastname = form.lastname.data
-#         user.date_of_birth = form.date_of_birth.data
-#         user.role_id = int(form.role.data)
-#         user.title = form.title.data  
-#         user.department = form.department.data  
-
-#         # Updating the manager_id based on the manager's email
-#         manager = User.query.filter_by(email=form.manager_email.data).first()
-#         if manager:
-#             user.manager_id = manager.id
-#         else:
-#             user.manager_id = None
-
-#         db.session.commit()
-#         flash('User details have been updated.')
-#         return redirect(url_for('main.edit_user', user_id=user.id))
-
-#     return render_template('edituser.html', title='Edit User', form=form, user=user)
 
 @main.route('/edit_user/<int:user_id>', methods=['GET', 'POST'])
 @login_required
@@ -555,6 +576,11 @@ def change_feedback_status(feedback_id):
 
     flash('Feedback status updated!', 'success')
     return redirect(url_for('main.hr_feedback'))
+
+@main.route('/testhtml', methods=['GET', 'POST'])
+def testhtml():
+    return render_template('intro.html')
+
 
 # @main.route('/test', methods=['GET', 'POST'])
 # @login_required

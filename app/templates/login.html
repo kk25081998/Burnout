@@ -4,21 +4,22 @@
 <style>
     /* Custom Styles */
     .sign-in-card {
-        border-radius: 10px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        border-radius: 10.5px;
         transition: transform .2s;
+        border: none; /* Remove the border from the card */
     }
-    
+
     .sign-in-card:hover {
-        transform: scale(1.03);
+        transform: scale(1.05);
     }
 
     .sign-in-card-header {
-        background-color: #343a40; /* Bootstrap Dark */
+        background-color: #007bff; /* Bootstrap Dark */
         color: #ffffff;
-        border-top-left-radius: 10px;
-        border-top-right-radius: 10px;
+        border-top-left-radius: 10px; /* Match the border-radius of the card */
+        border-top-right-radius: 10px; /* Match the border-radius of the card */
         text-align: center;
+        border: none; /* Remove the border from the card header */
     }
 
     .alert {
@@ -30,6 +31,10 @@
         border: none;
         padding: 10px 20px;
         font-weight: 600;
+    }
+    body {
+        font-family: 'Arial', sans-serif;
+        background: linear-gradient(45deg, #020014, #09033F);
     }
 </style>
 
@@ -54,7 +59,7 @@
                             {% endif %}
                         {% endwith %}
 
-                        <div class="form-group">
+                        <div class="form-group" style="color: black;">
                             {{ form.email.label(class="form-label") }}
                             {{ form.email(class="form-control") }}
                             {% if form.email.errors %}
@@ -64,12 +69,12 @@
                             {% endif %}
                         </div>
 
-                        <div class="form-group">
+                        <div class="form-group" style="color: black;">
                             {{ form.password.label(class="form-label") }}
                             {{ form.password(class="form-control") }}
                         </div>
 
-                        <div class="form-check mb-4">
+                        <div class="form-check mb-4" style="color: black;">
                             {{ form.remember_me(class="form-check-input") }}
                             {{ form.remember_me.label(class="form-check-label") }}
                         </div>

@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        <!-- Bootstrap CSS -->
+        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+        <!-- jQuery and Bootstrap Bundle (includes Popper) -->
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+        <style>
+            html, body {
+                height: 100%;
+                margin: 0;
+            }
+            body {
+                display: flex;
+                flex-direction: column;
+                height: 100%;
+                margin: 0;
+                overflow-y: scroll;
+            }
+            body::-webkit-scrollbar {
+                width: 0;
+                background: transparent;
+            }
+            .content-wrap {
+                flex: 1 0 auto;  /* Allow the content to grow or shrink, but not shrink below its base size */
+            }
+            .footer {
+                height: 80px;  /* Set the fixed height of the footer here */
+                background-color: #f5f5f5;
+            }
+            .navbar {
+                background-color: #343a40; /* Dark background */
+            }
+            .navbar-brand {
+                font-size: 1.75rem; /* Increased from 1.5rem */
+                padding: 10px 15px;
+            }
+
+            .navbar-nav .nav-link {
+                color: white;
+                font-size: 1.2rem; /* Increase this for larger text in navbar items */
+                margin: 10px 10px; /* Adding left and right margin for spacing between items */
+            }
+
+        </style>
+    </head>
+    <body>
+        <nav class="navbar navbar-expand-lg navbar-dark">
+            <!-- Navbar Header -->
+            {% if current_user.is_authenticated %}
+                <a class="navbar-brand" href="{{ url_for('main.login') }}">
+                    <img src="/static/images/logo-n2.png" alt="Company Logo" height="50">
+                </a>
+            {% else %}
+                <a class="navbar-brand" href="{{ url_for('main.index') }}">
+                    <img src="/static/images/logo-n2.png" alt="Company Logo" height="50">
+                </a>
+            {% endif %}
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <!-- Navbar Collapse -->
+            <div class="collapse navbar-collapse" id="navbarNav">
+                {% if current_user.is_authenticated %}
+                    <!-- For SuperUser role_id = 1 -->
+                    {% if current_user.role_id == 1 %}
+                        <!-- Insert Navbar for SuperUser here -->
+                        
+                    <!-- For Admin role_id = 2 -->
+                    {% elif current_user.role_id == 2 %}
+                        <ul class="navbar-nav ml-auto" style="text-align: center;">
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('main.company_dashboard') }}">Company Dashboard</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('main.company_settings') }}">Company Settings</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('main.company_users') }}">Manage Users</a>
+                            </li>
+                            <!-- You can add more links/routes for the Admin role here -->
+                        </ul>
+                        
+                    <!-- For HR role_id = 3 -->
+                    {% elif current_user.role_id == 3 %}
+                        <ul class="navbar-nav ml-auto" style="text-align: center;">
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('main.hr_overview') }}">HR Overview</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('main.hr_burnout_report') }}">Burnout Report</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('main.hr_feedback') }}">Feedback</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('main.company_users') }}">Manage Users</a>
+                            </li>
+                        </ul>
+            
+                    <!-- For Manager role_id = 4 -->
+                    {% elif current_user.role_id == 4 %}
+                        <!-- Insert Navbar for Manager here -->
+                        <ul class="navbar-nav ml-auto" style="text-align: center;">
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('main.dashboard') }}">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('main.test') }}">Take Test</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('main.test_history') }}">Test History</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('main.resources') }}">Wellness Hub</a>
+                            </li>
+                            {% if current_user.subordinates.count() > 0 %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('main.team_test_history') }}">Team Test History</a>
+                            </li>
+                            {% endif %}
+                        </ul>
+                        
+                    <!-- For User role_id = 5 -->
+                    {% elif current_user.role_id == 5 %}
+                        <!-- Insert Navbar for User here -->
+                        <ul class="navbar-nav ml-auto" style="text-align: center;">
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('main.dashboard') }}">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('main.test') }}">Take Test</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('main.test_history') }}">Test History</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('main.resources') }}">Wellness Hub</a>
+                            </li>
+                            {% if current_user.subordinates.count() > 0 %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('main.team_test_history') }}">Team Test History</a>
+                            </li>
+                            {% endif %}
+                        </ul>
+            
+                    {% endif %}
+
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('main.view_profile', username=current_user.username) }}">
+                                View Profile <i class="fa fa-user-circle"></i>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('main.logout') }}">
+                                Logout
+                            </a>
+                        </li>
+                    </ul>
+            
+                {% else %}
+                    <!-- Center Section for Unauthenticated users -->
+                    <ul class="navbar-nav mx-auto" style="text-align: center; padding-right: 108px;">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('main.company') }}">Company</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('main.pricing') }}">Pricing</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('main.login') }}">Login</a>
+                        </li>
+                    </ul>
+                {% endif %}
+            </div>
+        </nav>
+
+        <div class="content-wrap">
+            {% block content %}
+            {% endblock %}
+        </div>
+    
+        {% include "footer.html" %}
+
+        <script>
+            var currentOpenDropdown = null;  // Global variable to track the currently open dropdown
+        
+            function toggleDetails(id, cardNumber) {
+                console.log("Toggling details for:", id);
+                
+                // If the clicked dropdown is already open, close it and return
+                if (currentOpenDropdown === id) {
+                    document.getElementById(id).style.display = 'none';
+                    currentOpenDropdown = null;
+                    return;
+                }
+        
+                // List of all dropdown IDs
+                var allDetails = ['evaluateDetails', 'supportDetails', 'activityDetails', 'exerciseDetails', 'sleepDetails', 'mindfulnessDetails'];
+        
+                // Hide all details
+                for (var i = 0; i < allDetails.length; i++) {
+                    document.getElementById(allDetails[i]).style.display = 'none';
+                }
+        
+                // Show the details of the clicked card
+                document.getElementById(id).style.display = "block";
+                currentOpenDropdown = id;
+            }
+        
+            // Event listener to detect clicks outside the currently open dropdown
+            document.addEventListener('click', function(event) {
+                // Check if the click was on a card or inside a dropdown
+                var clickedOnCard = event.target.closest('.card.h-100');
+                var clickedInsideDropdown = event.target.closest('.card.bg-light');
+        
+                if (!clickedOnCard && !clickedInsideDropdown && currentOpenDropdown) {
+                    document.getElementById(currentOpenDropdown).style.display = 'none';
+                    currentOpenDropdown = null;
+                }
+            });
+        </script>
+        
+        
+    </body>
+</html>

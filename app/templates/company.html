@@ -1,75 +1,131 @@
 {% extends "base.html" %}
 
 {% block content %}
+<style>
+    /* Additional styles for beautification */
+    .section-header {
+        color: #ffffff; /* Dark blue color */
+        margin-bottom: 30px;
+    }
+
+    .section-content {
+        margin-bottom: 40px;
+    }
+
+    .icon-style {
+        color: #007bff; /* Dark blue color */
+        margin-right: 15px;
+    }
+
+    .faq-item h4 {
+        margin-top: 20px;
+    }
+
+    .cta-section {
+        background-color: #f4f4f4; /* Light grey background */
+        padding: 40px 0;
+        border-radius: 10px;
+        box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    body {
+        font-family: 'Arial', sans-serif;
+        background: linear-gradient(45deg, #020014, #09033F);
+    }
+</style>
+
 <div class="container mt-5">
 
     <!-- Introduction -->
-    <section id="introduction">
-        <h1>About Flourish at Work</h1>
-        <p>Welcome to Flourish at Work, a pioneering initiative launched in 2023. Our mission is clear: to transform workplaces into environments where employees' mental and emotional well-being is prioritized and nurtured.</p>
-        <hr>
+    <section id="introduction" class="py-5">
+        <h1 class="section-header display-4">About Flourish at Work</h1>
+        <p class="lead section-content">Welcome to Flourish at Work, a pioneering initiative launched in 2023. Our mission is clear: to transform workplaces into environments where employees' mental and emotional well-being is prioritized and nurtured.</p>
     </section>
+
+    <!-- Placeholder Image for History -->
+    <div class="text-center my-5">
+        <img src="https://via.placeholder.com/800x400?text=History" alt="Image representing our history" class="img-fluid rounded">
+    </div>
     
     <!-- History and Origin -->
-    <section id="history" class="mt-5">
-        <h2>Our Beginning</h2>
-        <p>Flourish at Work was conceived by Kartik and Harsh, who envisioned a world where employee health is at the forefront of every organization's strategy. Driven by passion and commitment, we aim to revolutionize how businesses prioritize and address mental well-being in the workplace.</p>
-        <hr>
+    <section id="history" class="py-5">
+        <h2 class="section-header display-5">Our Beginning</h2>
+        <p class="section-content">Flourish at Work was conceived by Kartik, who envisioned a world where employee health is at the forefront of every organization's strategy. Driven by passion and commitment, we aim to revolutionize how businesses prioritize and address mental well-being in the workplace.</p>
     </section>
+
+    <div class="text-center my-5">
+        <img src="https://via.placeholder.com/800x400?text=Importance" alt="Image representing the importance of mental health" class="img-fluid rounded">
+    </div>
     
     <!-- Importance of Mental and Emotional Health -->
-    <section id="importance" class="mt-5">
-        <h2>The Imperative of Mental and Emotional Health in the Workplace</h2>
-        <p>In the hustle of the modern workplace, mental and emotional health often gets overshadowed. Yet, the significance of employee well-being cannot be overstated:</p>
-        <ul>
-            <li><strong>Boosting Productivity:</strong> An employee free from stress and anxiety can give their best.</li>
-            <li><strong>Enhancing Collaboration:</strong> Positive emotional health cultivates harmony and teamwork.</li>
-            <li><strong>Reducing Absenteeism:</strong> A mentally healthy employee is more motivated to contribute consistently.</li>
-        </ul>
-        <p>We're on a mission to shift the narrative, emphasizing the importance of individual well-being over mere metrics.</p>
-        <hr>
-    </section>
+    <section id="importance" class="py-5">
+        <h2 class="section-header display-5">The Imperative of Mental and Emotional Health in the Workplace</h2>
+        <p class="section-content">In the hustle of the modern workplace, mental and emotional health often gets overshadowed. Yet, the significance of employee well-being cannot be overstated:</p>
+        
+        <div class="mb-3">
+            <i class="icon-style fas fa-check-circle"></i>
+            <strong>Boosting Productivity:</strong> An employee free from stress and anxiety can give their best.
+        </div>
+        <div class="mb-3">
+            <i class="icon-style fas fa-check-circle"></i>
+            <strong>Enhancing Collaboration:</strong> Positive emotional health cultivates harmony and teamwork.
+        </div>
+        <div class="mb-3">
+            <i class="icon-style fas fa-check-circle"></i>
+            <strong>Reducing Absenteeism:</strong> A mentally healthy employee is more motivated to contribute consistently.
+        </div>
+        
+        <p class="section-content">We're on a mission to shift the narrative, emphasizing the importance of individual well-being over mere metrics.</p>
+    </section>   
+    
+    <div class="text-center my-5">
+        <img src="https://via.placeholder.com/800x400?text=Expertise" alt="Image representing our expertise" class="img-fluid rounded">
+    </div>
 
     <!-- Our Vision and Expertise -->
-    <section id="expertise" class="mt-5">
-        <h2>Our Vision and Expertise</h2>
-        <p>We are a dedicated team of software engineers passionate about mental health. We're just starting, but our commitment is backed by sound scientific knowledge and a burning desire to make workplaces better. With us, you're not just adopting a service, but partnering in a vision to revolutionize workplace health.</p>
-        <hr>
+    <section id="expertise" class="py-5">
+        <h2 class="section-header display-5">Our Vision and Expertise</h2>
+        <p class="section-content">We are a dedicated team of software engineers passionate about mental health. We're just starting, but our commitment is backed by sound scientific knowledge and a burning desire to make workplaces better. With us, you're not just adopting a service, but partnering in a vision to revolutionize workplace health.</p>
     </section>
+
+    <div class="text-center my-5">
+        <img src="https://via.placeholder.com/800x400?text=Features" alt="Image representing our features" class="img-fluid rounded">
+    </div>
 
     <!-- Features and Offerings -->
-    <section id="features" class="mt-5">
-        <h2>Our Proposed Features</h2>
-        <ul>
-            <li><i class="fas fa-heartbeat"></i> <strong>Burnout Score:</strong> Assess mental well-being and get guidance tailored for you.</li>
-            <li><i class="fas fa-book-open"></i> <strong>Curated Resources:</strong> A collection of resources dedicated to enhancing employee well-being.</li>
-            <li><i class="fas fa-comments"></i> <strong>Expert Connect:</strong> Opportunity to engage with mental health professionals for advice.</li>
-            <li><i class="fas fa-users"></i> <strong>Community:</strong> A space for peers to connect, share and uplift each other.</li>
+    <section id="features" class="py-5">
+        <h2 class="section-header display-5">Our Proposed Features</h2>
+        <ul class="list-unstyled mb-4">
+            <li class="mb-3"><i class="icon-style fas fa-heartbeat"></i><strong>Burnout Score:</strong> Assess mental well-being and get guidance tailored for you.</li>
+            <li class="mb-3"><i class="icon-style fas fa-book-open"></i><strong>Curated Resources:</strong> A collection of resources dedicated to enhancing employee well-being.</li>
+            <li class="mb-3"><i class="icon-style fas fa-comments"></i><strong>Expert Connect:</strong> Opportunity to engage with mental health professionals for advice.</li>
+            <li class="mb-3"><i class="icon-style fas fa-users"></i><strong>Community:</strong> A space for peers to connect, share and uplift each other.</li>
         </ul>
-        <hr>
     </section>
 
+    <!-- Placeholder Image for FAQs -->
+    <div class="text-center my-5">
+        <img src="https://via.placeholder.com/800x400?text=FAQs" alt="Image representing frequently asked questions" class="img-fluid rounded">
+    </div>
+
     <!-- FAQs -->
-    <section id="faq" class="mt-5">
-        <h2>Anticipated Questions</h2>
-        <div><br></div>
-        <div class="faq-item">
+    <section id="faq" class="py-5">
+        <h2 class="section-header display-5">Anticipated Questions</h2>
+        <div class="faq-item mb-4">
             <h4>How can Flourish at Work be integrated into our organization?</h4>
             <p>While we're in the early stages, our vision includes a seamless onboarding process and dedicated support to ensure your organization reaps the benefits of our features.</p>
         </div>
-        <div class="faq-item">
+        <div class="faq-item mb-4">
             <h4>Will there be customizable plans?</h4>
             <p>Absolutely! Recognizing that every organization has its unique challenges, we are keen to offer customizable plans that align with your specific needs.</p>
         </div>
-        <!-- Add more FAQs as needed -->
-        <hr>
     </section>
 
     <!-- Conclusion and CTA -->
-    <section id="conclusion" class="mt-5 pb-5">
-        <h2>Be Part of the Change</h2>
-        <p>We're on a journey to bring about meaningful change in workplaces around the world. Will you join us? Let's prioritize well-being and craft a brighter, healthier future together.</p>
-        <div class="text-center mt-3"> <!-- This centers the button -->
+    <section id="conclusion" class="py-5">
+        <h2 class="section-header display-5">Be Part of the Change</h2>
+        <p class="section-content">We're on a journey to bring about meaningful change in workplaces around the world. Will you join us? Let's prioritize well-being and craft a brighter, healthier future together.</p>
+        <div class="text-center mt-3">
             <a class="btn btn-primary" href="{{ url_for('main.pricing') }}">Learn More About Our Vision</a>
         </div>
     </section>

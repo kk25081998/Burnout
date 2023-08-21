@@ -1,13 +1,20 @@
 {% extends "base.html" %}
 
 {% block content %}
+<style>
+    body {
+        font-family: 'Arial', sans-serif;
+        background: linear-gradient(45deg, #020014, #09033F);
+    }
+</style>
 <div class="container mt-5">
-    <div class="jumbotron text-center">
-        <h1 class="display-4">Settings & Configuration</h1>
-        <p class="lead">Update and modify {{ current_user.company.name }}'s specific settings.</p>
-    </div>
+    <div class="jumbotron text-center bg-white" style="padding: 1rem 2rem;">
+        <h1 class="display-4" style="color: #182e68">Settings & Configuration</h1>
+        <p class="lead" style="color: #182e68">Update and modify {{ current_user.company.name }}'s specific settings.</p>
+    </div>       
 
     <form action="{{ url_for('main.company_settings') }}" method="post" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
         <div class="form-group">
             <label for="companyName">Company Name</label>
             <input type="text" class="form-control" id="companyName" name="companyName" value="{{ current_user.company.name }}">
@@ -34,11 +41,33 @@
         </div>        
 
         <!-- Additional company-specific settings can be added here. -->
-
         <div class="form-group">
-            <label for="companyLogo">Upload Company Logo</label>
-            <input type="file" class="form-control-file" id="companyLogo" name="companyLogo">
+            <label for="companyLogo" class="mr-3">Upload Company Logo</label>
+            <div class="form-group d-flex align-items-center">
+            
+                <!-- Display current logo if it exists -->
+                {% if current_user.company.image %}
+                    <div class="mb-2 mr-3">
+                        <img src="{{ url_for('static', filename='company_logo/' + current_user.company.image) }}" alt="Current Company Logo" width="100">
+                    </div>
+                {% endif %}
+                
+                <div>
+                    <input type="file" class="form-control-file" id="companyLogo" name="companyLogo">
+                    {% if form.companyLogo.errors %}
+                        <span class="text-danger d-block mt-1">{{ form.companyLogo.errors[0] }}</span>
+                    {% endif %}
+                </div>
+            </div>    
         </div>
+        
+        
+
+        {% if message %}
+            <div class="alert alert-{{ message_type }}">
+                {{ message }}
+            </div>
+        {% endif %}
 
         <button type="submit" class="btn btn-primary">Update Settings</button>
     </form>

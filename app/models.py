@@ -36,6 +36,7 @@ class Company(db.Model):
     size = db.Column(db.Integer, nullable=True)
     users = db.relationship('User', backref='company', lazy='dynamic') 
     frequency = db.Column(db.String(64), nullable=True)
+    image = db.Column(db.String(128), nullable=True)  
     
     def __repr__(self):
         return f'<Company {self.name}>'

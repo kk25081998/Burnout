@@ -1,51 +1,207 @@
 {% extends "base.html" %}
 
 {% block content %}
+<style>
+    body {
+        font-family: 'Arial', sans-serif;
+        background: linear-gradient(45deg, #020014, #09033F);
+    }
+
+    .custom-card {
+        background-color: #2a2a2a;
+        color: white;
+    }
+
+    .custom-card-body {
+        height: 230px; /* Adjust the height as needed */
+    }
+    .custom-jumbotron {
+        background-color: #2a2a2a;
+        color: white;
+        padding: 2rem;
+        border-radius: 10px;
+    }
+    .userStatsChart2 {
+        width: 100%;
+        height: 500px; /* Or any other desired height */
+    }
+</style>
+
 <div class="container mt-5">
-    <div class="jumbotron text-center">
-        <h1 class="display-4">Admin Dashboard</h1>
-        <p class="lead">Manage, monitor, and maintain the well-being platform.</p>
+
+    <!-- Card with white background -->
+    <div class="card bg-white mb-4">
+        <div class="card-body">
+
+            <!-- Title for Company Stats Chart -->
+            <h4 class="text-center mb-4" style="color: #09033F;">User Count</h4>
+
+            <!-- Chart for Company Stats -->
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <canvas id="userStatsChart"></canvas>
+                </div>
+            </div>
+
+            <hr class="mt-5">
+
+            <!-- Title for User and Manager Average Scores Chart -->
+            <h4 class="text-center mb-4" style="color: #09033F;">Average Scores for Users and Managers</h4>
+
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <canvas id="userStatsChart2"></canvas>
+                </div>
+            </div>
+
+        </div>
     </div>
 
-    <!-- Dashboard Tiles -->
-    <div class="row mt-4">
-        
-        <!-- Full System Access -->
-        <div class="col-md-3">
-            <div class="card">
-                <div class="card-body text-center">
-                    <i class="fa fa-desktop fa-3x mb-3" aria-hidden="true"></i>
-                    <h5>Full System Access</h5>
-                    <p>View and manage all system data</p>
-                </div>
-            </div>
-        </div>
 
-        <!-- User Management -->
-        <div class="col-md-3">
-            <div class="card">
-                <div class="card-body text-center">
-                    <i class="fa fa-users fa-3x mb-3" aria-hidden="true"></i>
-                    <h5>User Management</h5>
-                    <p>Add, modify, or delete users</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Settings & Configuration -->
-        <div class="col-md-3">
-            <div class="card">
-                <div class="card-body text-center">
-                    <i class="fa fa-cogs fa-3x mb-3" aria-hidden="true"></i>
-                    <h5>Settings & Configuration</h5>
-                    <p>Manage system settings and survey frequencies</p>
-                </div>
-            </div>
-        </div>
-
-    </div>
-    
-    <hr class="mt-5">
-    
 </div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Use the data passed from Flask for the chart
+    var userCounts = {{ company_users|length }}; 
+    var managerCount = {{ managerCount }};
+    var hrCount = {{ hrCount }};
+    var adminCount = {{ adminCount }};
+    var regularUserCount = {{ userCount }};
+
+    var ctx = document.getElementById('userStatsChart').getContext('2d');
+    var userStatsChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Total Users', 'Admins', 'HRs', 'Managers', 'Employees'],
+            datasets: [{
+                label: 'User Statistics',
+                data: [userCounts, adminCount, hrCount, managerCount, regularUserCount],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            },
+            plugins: {
+                legend: {
+                    position: 'right',
+                    display: false
+                }
+            },
+            backgroundColor: 'rgba(255, 255, 255, 1)'
+        }
+    });
+</script>
+
+<script>
+    var regularUsersAvg = {{ regular_users_avg|tojson }};
+    var managerAvg = {{ manager_avg|tojson }};
+
+    var ctx2 = document.getElementById('userStatsChart2').getContext('2d');
+
+    function getGradientColor(value) {
+        var gradient = ctx2.createLinearGradient(0, 0, 0, 400);
+
+        if (value <= 33) {
+            gradient.addColorStop(0, 'lightgreen');
+            gradient.addColorStop(1, 'green');
+        } else if (value <= 66) {
+            gradient.addColorStop(0, 'yellow');
+            gradient.addColorStop(1, 'orange');
+        } else {
+            gradient.addColorStop(0, 'salmon');
+            gradient.addColorStop(1, 'red');
+        }
+
+        return gradient;
+    }
+
+    var regularUsersAvg = {{ regular_users_avg|tojson }};
+    var managerAvg = {{ manager_avg|tojson }};
+
+    // Assign gradient colors based on the average value
+    var regularUsersBackgroundColors = regularUsersAvg.map(getGradientColor);
+    var managerBackgroundColors = managerAvg.map(getGradientColor);
+
+    var userStatsChart2 = new Chart(ctx2, {
+        type: 'bar',
+        data: {
+            labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+            datasets: [
+                {
+                    label: 'Employees Avg',
+                    data: regularUsersAvg,
+                    backgroundColor: regularUsersBackgroundColors,
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 1
+                },
+                {
+                    label: 'Manager Avg',
+                    data: managerAvg,
+                    backgroundColor: managerBackgroundColors,
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }
+            ]
+        },
+        options: {
+            indexAxis: 'x',
+            scales: {
+                x: {
+                    barPercentage: 0.5,      // Adjusts the width of the bars relative to the space between bars
+                    categoryPercentage: 0.7  // Adjusts the width of the bars relative to the space between categories (or months in this case)
+                },
+                y: {
+                    beginAtZero: true,
+                    max: 100,
+                    ticks: {
+                        min: 0,
+                        max: 100,
+                        stepSize: 33,
+                        callback: function(value, index, values) {
+                            if (value === 0) return 'No Burnout';
+                            if (value === 33) return 'Low Burnout ';
+                            if (value === 66) return 'Mild Burnout ';
+                            if (value === 100) return 'High Burnout';
+                            return '';
+                        }
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false,
+                    position: 'right'
+                }
+            },
+            layout: {
+                padding: {
+                    left: 20,
+                    right: 20,
+                    top: 50,
+                    bottom: 50
+                }
+            },
+            barThickness: 10
+        }
+    });
+
+</script>
 {% endblock %}
