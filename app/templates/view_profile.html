@@ -51,10 +51,14 @@
                                 <img src="{{ url_for('static', filename='profile_pics/default.jpg') }}" alt="Profile Picture" class="img-thumbnail mb-3 mr-3" style="max-width: 150px; max-height: 150px;">
                             {% endif %}
                             {{ form.image(class="form-control-file") }}
-                        </div>    
+                        </div>
+                        <a href="/change_password" class="btn btn-link mb-3">Change Password</a> <!-- Link to change password -->    
                         <div class="form-group">
                             {{ form.submit(class="btn btn-primary mt-2 px-4") }}
-                        </div>                    
+                        </div>
+                        {% if form.errors['__all__'] %}
+                            <span class="text-danger">{{ form.errors['__all__'][0] }}</span>
+                        {% endif %}
                     </form>
                 </div>
             </div>

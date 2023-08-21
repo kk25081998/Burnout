@@ -105,3 +105,63 @@ class ContactForm(FlaskForm):
     )
     subject = StringField('Subject', validators=[Optional(), Length(max=200)], default='', render_kw={"placeholder": "Optional Subject..."})
     message = TextAreaField('Message', validators=[DataRequired(), Length(max=1000)], render_kw={"placeholder": "Enter your message here..."})
+
+
+class UnifiedUserForm(FlaskForm):
+    email = StringField('Email', validators=[DataRequired(), Email(message="Invalid email was entered")])
+    firstname = StringField('First Name', validators=[DataRequired(), Length(min=2, max=50)])
+    lastname = StringField('Last Name', validators=[DataRequired(), Length(min=2, max=50)])
+    date_of_birth = StringField('Date of Birth', validators=[DataRequired()])
+    title = StringField('Title', validators=[DataRequired(), Length(min=2, max=100)])
+    department = StringField('Department', validators=[DataRequired(), Length(min=2, max=100)])
+    manager_email = StringField('Manager Email', validators=[Optional(), Length(max=120)])
+    
+    role = SelectField('Role', coerce=int, choices=[
+        (5, 'User'), 
+        (2, 'Admin'), 
+        (3, 'HR'), 
+        (4, 'Manager')
+    ], validators=[DataRequired()])
+    
+    submit = SubmitField('Update User Details')
+    delete = SubmitField('Delete User')
+
+    def __init__(self, original_email=None, *args, **kwargs):
+        super(UnifiedUserForm, self).__init__(*args, **kwargs)
+        self.original_email = original_email
+
+    def validate_email(self, email):
+        if email.data != self.original_email:
+            user = User.query.filter_by(email=self.email.data).first()
+            if user is not None:
+                raise ValidationError('Please use a different email address.')
+
+    def validate_manager_email(self, manager_email):
+        if manager_email.data:
+            # Check if email format is valid
+            if not Email().validate(manager_email):
+                raise ValidationError('Invalid email was entered.')
+
+            # Check if email is present in the user database (i.e., a valid manager)
+            user = User.query.filter_by(email=manager_email.data).first()
+            if user is None:
+                raise ValidationError('Please enter a valid manager email.')
+
+
+class FeedbackForm(FlaskForm):
+    feedback = TextAreaField('Feedback', validators=[DataRequired(), Length(min=5, max=1000)])
+    submit = SubmitField('Submit')
+
+
+class CompanySettingsForm(FlaskForm):
+    companyName = StringField('Company Name', [DataRequired(), Length(min=1, max=200)])
+    companyDescription = StringField('Company Description', [DataRequired(), Length(min=1, max=500)])
+    companySize = IntegerField('Company Size', [DataRequired(), NumberRange(min=1, max=10000)])
+    companyFrequency = SelectField('Feedback Frequency', [DataRequired()],
+                                   choices=[('1_week', '1 Week'),
+                                            ('2_weeks', '2 Weeks'),
+                                            ('1_month', '1 Month'),
+                                            ('2_months', '2 Months')])
+    companyLogo = FileField('Upload Company Logo', [Optional()])  # Assumes logo upload is optional
+    submit_settings = SubmitField('Update Settings')
+ 

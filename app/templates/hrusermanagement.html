@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+<link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" type="text/css">
+
+{% block content %}
+<div class="container">
+    <h2>User Management</h2>
+    
+    <table class="table table-bordered table-hover" id="hrUserTable">
+        <thead>
+            <tr>
+                <th>Email</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Date of Birth</th>
+                <th>Role</th>
+                <th>Title</th>
+                <th>Department</th>
+                <th>Manager Email</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users.items %}
+            <tr>
+                <td>{{ user.email }}</td>
+                <td>{{ user.firstname }}</td>
+                <td>{{ user.lastname }}</td>
+                <td>{{ user.date_of_birth if user.date_of_birth else 'N/A' }}</td>
+                <td>{{ user.role.name }}</td>
+                <td>{{ user.title }}</td> 
+                <td>{{ user.department }}</td>
+                <td>{{ user.manager_email }}</td>
+                <td>
+                    <a href="{{ url_for('main.edit_user', user_id=user.id) }}" class="btn btn-sm btn-primary">Edit</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}
+
+
+{% block scripts %}
+    <!-- CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest"></script>
+    <!-- Initialize DataTables -->
+    <script>
+        jQuery(document).ready(function($) {
+            $('#hrUserTable').DataTable({
+                "pageLength": 10,
+                "searching": true,
+                "ordering": true,
+                "info": true,
+                "lengthChange": false
+            });
+        });
+    </script>    
+{% endblock %}
+
+
+

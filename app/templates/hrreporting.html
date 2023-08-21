@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h2>HR Burnout Report</h2>
+    
+    <section class="department-data">
+        <h3>Department Burnout Data</h3>
+        <!-- Display department burnout data here. Ideally, you'd format it and possibly show graphs or charts -->
+        <div>{{ department_data }}</div> <!-- Placeholder; you'll format and display the data appropriately -->
+    </section>
+    
+    <section class="team-data">
+        <h3>Team Burnout Data</h3>
+        <!-- Display team burnout data here. -->
+        <div>{{ team_data }}</div> <!-- Placeholder; again, you'll format and display the data as needed -->
+    </section>
+</div>
+{% endblock %}

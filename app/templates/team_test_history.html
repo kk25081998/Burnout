@@ -6,62 +6,176 @@ Team Test History - Employee Burnout Prevention
 
 {% block content %}
 <div class="container">
-    <div class="jumbotron">
-        <h1 class="display-4">Team Burnout Test History</h1>
-        <p class="lead">Keep Track of your team's well-being and burnout effectively.</p>
-        <hr class="my-4">
+
+    <!-- Chart.js Line Chart -->
+    <div class="mb-4">
+        <canvas id="lineChart"></canvas>
     </div>
 
-    <!-- Subordinates' results -->
-    <h2>Team Results</h2>
-
-    {% for result in subordinates_results %}
-    <div class="card" style="margin-bottom: 1em;">
-        <div class="card-body">
-            <h5 class="card-title">User: {{ result.user.firstname }} {{ result.user.lastname }} - Test Date: {{ result.testDate }}</h5>
-            <p class="card-text">
-                Burnout Level: {{ result.scoreA }} - 
-                {% if result.scoreA <= 17 %}
-                    Low
-                {% elif result.scoreA > 17 and result.scoreA <= 29 %}
-                    Moderate
-                {% else %}
-                    High
-                {% endif %}
-                <br>
-                Depersonalization Level: {{ result.scoreB }} - 
-                {% if result.scoreB <= 5 %}
-                    Low
-                {% elif result.scoreB > 5 and result.scoreB <= 11 %}
-                    Moderate
-                {% else %}
-                    High
-                {% endif %}
-                <br>
-                Personal Achievement Level: {{ result.scoreC }} - 
-                {% if result.scoreC <= 33 %}
-                    High Burnout (Low Achievement)
-                {% elif result.scoreC > 33 and result.scoreC <= 39 %}
-                    Moderate Burnout (Moderate Achievement)
-                {% else %}
-                    Low Burnout (High Achievement)
-                {% endif %}
-            </p>
-            <p class="card-text">Total: {{ result.scoreA + result.scoreB + result.scoreC }}</p>
-            <p class="card-text">
-                Overall Burnout Risk: 
-                {% set highCount = (1 if result.scoreA > 30 else 0) + (1 if result.scoreB >= 12 else 0) + (1 if result.scoreC <= 33 else 0) %}
-                {% set moderateCount = (1 if result.scoreA > 17 and result.scoreA <= 30 else 0) + (1 if result.scoreB > 5 and result.scoreB <= 11 else 0) + (1 if result.scoreC > 33 and result.scoreC <= 39 else 0) %}
-                {% if highCount >= 2 %}
-                    High
-                {% elif highCount == 1 and moderateCount >= 1 %}
-                    Moderate
-                {% else %}
-                    Low
-                {% endif %}
-            </p>  
+    <div class="row">
+        {% for result in aggregated_results %}
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Test Date: {{ result.testDate }}</h5>
+                    <div class="d-flex justify-content-between">
+                        <span>Emotional Fatigue:</span>
+                        <strong>
+                        {% if result.avg_scoreA <= 17 %}
+                            Low
+                        {% elif result.avg_scoreA > 17 and result.avg_scoreA <= 29 %}
+                            Mild
+                        {% else %}
+                            High
+                        {% endif %}
+                        </strong>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span>Cynicism & Detachment:</span>
+                        <strong>
+                        {% if result.avg_scoreB <= 5 %}
+                            Low
+                        {% elif result.avg_scoreB > 5 and result.avg_scoreB <= 11 %}
+                            Mild
+                        {% else %}
+                            High
+                        {% endif %}
+                        </strong>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span>Diminished Job Drive:</span>
+                        <strong>
+                        {% if result.avg_scoreC <= 33 %}
+                            High 
+                        {% elif result.avg_scoreC > 33 and result.avg_scoreC <= 39 %}
+                            Mild 
+                        {% else %}
+                            Low 
+                        {% endif %}
+                        </strong>
+                    </div>
+                    <hr>
+                    <div class="d-flex justify-content-between font-weight-bold">
+                        <span>Overall Burnout Risk:</span>
+                        <span>
+                        {% set invertedScoreC = 48 - result.avg_scoreC %}
+                        {% set totalScore = result.avg_scoreA + result.avg_scoreB + invertedScoreC %}
+                        {% set scaledScore = (totalScore / 132) * 100 %}
+                        {% if scaledScore <= 33 %}
+                            Low
+                        {% elif scaledScore <= 66 %}
+                            Mild
+                        {% else %}
+                            High
+                        {% endif %}
+                        </span>
+                    </div>
+                </div>
+            </div>
         </div>
+        {% endfor %}
     </div>
-    {% endfor %}
+
+    <!-- Same Chart.js script section as provided by you -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+    var ctx = document.getElementById('lineChart').getContext('2d');
+
+    function getGradientColor(value) {
+        var gradient = ctx.createLinearGradient(0, 0, 0, 400);
+
+        if (value <= 33) {
+            gradient.addColorStop(0, 'lightgreen');
+            gradient.addColorStop(1, 'green');
+        } else if (value <= 66) {
+            gradient.addColorStop(0, 'yellow');
+            gradient.addColorStop(1, 'orange');
+        } else {
+            gradient.addColorStop(0, 'salmon');
+            gradient.addColorStop(1, 'red');
+        }
+
+        return gradient;
+    }
+
+    // Assuming you are showing the last 12 aggregated results
+    var last12Results = [
+        {% for result in aggregated_results[:12] %}
+            {
+                'testDate': '{{ result.testDate.strftime('%b %y') }}',
+                'avg_scoreA': {{ result.avg_scoreA }},
+                'avg_scoreB': {{ result.avg_scoreB }},
+                'avg_scoreC': {{ result.avg_scoreC }}
+            },
+        {% endfor %}
+    ];
+
+    var dataValues = [];
+    var backgroundColors = [];
+    last12Results.forEach(function(result) {
+        var invertedScoreC = 48 - result.avg_scoreC;
+        var totalScore = result.avg_scoreA + result.avg_scoreB + invertedScoreC;
+        var scaledScore = Math.round((totalScore / 132) * 100);
+        dataValues.push(scaledScore);
+        backgroundColors.push(getGradientColor(scaledScore));
+    });
+
+    var barChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: last12Results.map(function(result) { return result.testDate; }),
+            datasets: [{
+                label: 'Burnout Level',
+                data: dataValues,
+                backgroundColor: backgroundColors,
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            indexAxis: 'x',
+            scales: {
+                x: {
+                    stacked: false,
+                    grid: {
+                        display: false
+                    }
+                },
+                y: {
+                    beginAtZero: true,
+                    max: 100,
+                    ticks: {
+                        min: 0,
+                        max: 100,
+                        stepSize: 33,
+                        callback: function(value, index, values) {
+                            if (value === 0) return 'No Burnout';
+                            if (value === 33) return 'Low Burnout ';
+                            if (value === 66) return 'Mild Burnout ';
+                            if (value === 100) return 'High Burnout';
+                            return '';
+                        }
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            layout: {
+                padding: {
+                    left: 20,
+                    right: 20,
+                    top: 50,
+                    bottom: 50
+                }
+            },
+            barThickness: 20
+        }
+    });
+    </script>
+
+
 </div>
 {% endblock %}

@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="jumbotron text-center">
+        <h1 class="display-4">Full System Access</h1>
+        <p class="lead">Overview of {{ current_user.company.name }}'s system components.</p>
+    </div>
+
+    <div class="row">
+        <div class="col-md-3">
+            <h3>Users</h3>
+            <p>Registered users in {{ current_user.company.name }}: {{ users_count }}</p>
+        </div>
+
+        <div class="col-md-3">
+            <h3>Roles</h3>
+            <p>Defined roles in {{ current_user.company.name }}: {{ roles_count }}</p>
+        </div>
+
+        <div class="col-md-3">
+            <h3>Permissions</h3>
+            <p>Assigned permissions in {{ current_user.company.name }}: {{ permissions_count }}</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

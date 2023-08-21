@@ -1,6 +1,7 @@
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 from app import db, login_manager
+from datetime import datetime
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -15,6 +16,8 @@ class User(UserMixin, db.Model):
     results = db.relationship('Results', backref='user', lazy='dynamic')
     subordinates = db.relationship('User', backref=db.backref('manager', remote_side=[id]), lazy='dynamic')
     first_login = db.Column(db.Boolean, default=True)
+    department = db.Column(db.String(128), nullable=True)
+    title = db.Column(db.String(128), nullable=True)
     role_id = db.Column(db.Integer, db.ForeignKey('role.id'))
 
     def __repr__(self):
@@ -32,7 +35,8 @@ class Company(db.Model):
     description = db.Column(db.String(128), nullable=True)
     size = db.Column(db.Integer, nullable=True)
     users = db.relationship('User', backref='company', lazy='dynamic') 
-
+    frequency = db.Column(db.String(64), nullable=True)
+    
     def __repr__(self):
         return f'<Company {self.name}>'
 
@@ -70,3 +74,14 @@ class Permission(db.Model):
 @login_manager.user_loader
 def load_user(id):
     return User.query.get(int(id))
+
+
+class Feedback(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    company_id = db.Column(db.Integer, db.ForeignKey('company.id')) 
+    date_submitted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    description = db.Column(db.Text, nullable=False)  # Text field to allow longer feedback
+    status = db.Column(db.String(64), default="Pending")  # Useful to track feedback status
+
+    def __repr__(self):
+        return f'<Feedback {self.id} for Company {self.company_id}>'

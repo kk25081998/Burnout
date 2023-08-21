@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="jumbotron text-center">
+        <h1 class="display-4">Admin Dashboard</h1>
+        <p class="lead">Manage, monitor, and maintain the well-being platform.</p>
+    </div>
+
+    <!-- Dashboard Tiles -->
+    <div class="row mt-4">
+        
+        <!-- Full System Access -->
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body text-center">
+                    <i class="fa fa-desktop fa-3x mb-3" aria-hidden="true"></i>
+                    <h5>Full System Access</h5>
+                    <p>View and manage all system data</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- User Management -->
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body text-center">
+                    <i class="fa fa-users fa-3x mb-3" aria-hidden="true"></i>
+                    <h5>User Management</h5>
+                    <p>Add, modify, or delete users</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings & Configuration -->
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body text-center">
+                    <i class="fa fa-cogs fa-3x mb-3" aria-hidden="true"></i>
+                    <h5>Settings & Configuration</h5>
+                    <p>Manage system settings and survey frequencies</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    
+    <hr class="mt-5">
+    
+</div>
+{% endblock %}

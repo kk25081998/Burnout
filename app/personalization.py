@@ -102,3 +102,62 @@ def process_test_results(form):
         print(f"Error while saving test results: {e}")
         db.session.rollback()
         return False
+
+### Reporting/Processing Company Wide Data
+def get_burnout_trends():
+    # Get the current user's company ID
+    company_id = current_user.companyId
+    
+    # Fetch burnout trends only for the current company
+    # For SQLite, use strftime('%m', Results.testDate) to get the month
+    last_six_months = db.session.query(
+        db.func.strftime('%m', Results.testDate), 
+        db.func.avg(Results.scoreA),
+        db.func.avg(Results.scoreB),
+        db.func.avg(Results.scoreC)
+    ).join(User, User.id == Results.user_id).filter(User.companyId == company_id).group_by(db.func.strftime('%m', Results.testDate)).order_by(Results.testDate.desc()).limit(6).all()
+
+    return last_six_months
+
+
+def get_department_burnout_data():
+    # Get the current user's company ID
+    company_id = current_user.companyId
+
+    departments = db.session.query(User.department,
+        db.func.avg(Results.scoreA),
+        db.func.avg(Results.scoreB),
+        db.func.avg(Results.scoreC)
+    ).join(Results, User.id == Results.user_id).filter(User.companyId == company_id).group_by(User.department).all()
+
+    return departments
+
+def get_team_burnout_data():
+    # Get the current user's company ID
+    company_id = current_user.companyId
+
+    teams = db.session.query(User.manager_id,
+        db.func.avg(Results.scoreA),
+        db.func.avg(Results.scoreB),
+        db.func.avg(Results.scoreC)
+    ).join(Results, User.id == Results.user_id).filter(User.companyId == company_id).group_by(User.manager_id).all()
+
+    return teams
+
+# Function to redirect to appropriate dashboard based on user role_id
+def redirect_next_or_dashboard():
+    # If there's a next URL provided, redirect there first
+    next_page = request.args.get('next')
+    if next_page:
+        return redirect(next_page)
+    
+    # Otherwise, determine the dashboard based on the role
+    if current_user.role_id == 4 or current_user.role_id == 5:
+        return redirect(url_for('main.dashboard'))
+    elif current_user.role_id == 3:
+        return redirect(url_for('main.hr_overview'))
+    elif current_user.role_id == 2:
+        return redirect(url_for('main.company_dashboard'))
+    else:
+        # Fallback to default dashboard or some other page if needed
+        return redirect(url_for('main.dashboard'))

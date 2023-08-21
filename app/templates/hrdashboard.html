@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h2>HR Overview</h2>
+    <section class="burnout-trends">
+        <h3>Burnout Trends</h3>
+        <!-- Display burnout trends here. It can be charts or textual representation depending on your data and UI design -->
+        <div>{{ burnout_trends }}</div> <!-- This is just an example. You might want to iterate over burnout_trends if it's a list or display it in a more graphical manner -->
+    </section>
+</div>
+{% endblock %}

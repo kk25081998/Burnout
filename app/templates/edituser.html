@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>Edit User</h2>
+<form method="post" action="{{ url_for('main.edit_user', user_id=user.id) }}">
+    {{ form.hidden_tag() }}
+
+    <div class="form-group">
+        {{ form.firstname.label }}<br>
+        {{ form.firstname(class="form-control") }}
+        {% if form.firstname.errors %}
+            <span class="text-danger">{{ form.firstname.errors[0] }}</span>
+        {% endif %}
+    </div>
+
+    <div class="form-group">
+        {{ form.lastname.label }}<br>
+        {{ form.lastname(class="form-control") }}
+        {% if form.lastname.errors %}
+            <span class="text-danger">{{ form.lastname.errors[0] }}</span>
+        {% endif %}
+    </div>
+
+    <div class="form-group">
+        {{ form.email.label }}<br>
+        {{ form.email(class="form-control") }}
+        {% if form.email.errors %}
+            <span class="text-danger">{{ form.email.errors[0] }}</span>
+        {% endif %}
+    </div>
+
+    <!-- Date of Birth Field -->
+    <div class="form-group">
+        {{ form.date_of_birth.label }}<br>
+        {{ form.date_of_birth(class="form-control", type="date", placeholder="YYYY-MM-DD") }}
+        {% if form.date_of_birth.errors %}
+            <span class="text-danger">{{ form.date_of_birth.errors[0] }}</span>
+        {% endif %}
+    </div>
+
+
+    <div class="form-group">
+        {{ form.role.label }}<br>
+        {{ form.role(class="form-control") }}
+        {% if form.role.errors %}
+            <span class="text-danger">{{ form.role.errors[0] }}</span>
+        {% endif %}
+    </div>
+
+    <div class="form-group">
+        {{ form.title.label }}<br>
+        {{ form.title(class="form-control") }}
+        {% if form.title.errors %}
+            <span class="text-danger">{{ form.title.errors[0] }}</span>
+        {% endif %}
+    </div>
+    
+    <div class="form-group">
+        {{ form.department.label }}<br>
+        {{ form.department(class="form-control") }}
+        {% if form.department.errors %}
+            <span class="text-danger">{{ form.department.errors[0] }}</span>
+        {% endif %}
+    </div>
+    
+    <div class="form-group">
+        {{ form.manager_email.label }}<br>
+        {{ form.manager_email(class="form-control") }}
+        {% if form.manager_email.errors %}
+            <span class="text-danger">{{ form.manager_email.errors[0] }}</span>
+        {% endif %}
+    </div>    
+
+    <div class="form-group">
+        {{ form.submit(class="btn btn-primary") }}
+    </div>
+</form>
+
+{% endblock %}

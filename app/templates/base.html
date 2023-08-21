@@ -7,6 +7,9 @@
 
         <!-- Bootstrap CSS -->
         <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+        <!-- jQuery and Bootstrap Bundle (includes Popper) -->
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
         <style>
             html, body {
                 height: 100%;
@@ -50,7 +53,7 @@
         <nav class="navbar navbar-expand-lg navbar-dark">
             <!-- Navbar Header -->
             {% if current_user.is_authenticated %}
-                <a class="navbar-brand" href="{{ url_for('main.dashboard') }}">
+                <a class="navbar-brand" href="{{ url_for('main.login') }}">
                     <img src="/static/images/logo-n2.png" alt="Company Logo" height="50">
                 </a>
             {% else %}
@@ -64,37 +67,105 @@
             <!-- Navbar Collapse -->
             <div class="collapse navbar-collapse" id="navbarNav">
                 {% if current_user.is_authenticated %}
-                    <!-- Left Section -->
-                    <ul class="navbar-nav ml-auto" style="text-align: center;">
+                    <!-- For SuperUser role_id = 1 -->
+                    {% if current_user.role_id == 1 %}
+                        <!-- Insert Navbar for SuperUser here -->
+                        
+                    <!-- For Admin role_id = 2 -->
+                    {% elif current_user.role_id == 2 %}
+                        <ul class="navbar-nav ml-auto" style="text-align: center;">
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('main.company_dashboard') }}">Company Dashboard</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('main.company_settings') }}">Company Settings</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('main.company_users') }}">Manage Users</a>
+                            </li>
+                            <!-- You can add more links/routes for the Admin role here -->
+                        </ul>
+                        
+                    <!-- For HR role_id = 3 -->
+                    {% elif current_user.role_id == 3 %}
+                        <ul class="navbar-nav ml-auto" style="text-align: center;">
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('main.hr_overview') }}">HR Overview</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('main.hr_burnout_report') }}">Burnout Report</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('main.hr_feedback') }}">Feedback</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('main.company_users') }}">Manage Users</a>
+                            </li>
+                        </ul>
+            
+                    <!-- For Manager role_id = 4 -->
+                    {% elif current_user.role_id == 4 %}
+                        <!-- Insert Navbar for Manager here -->
+                        <ul class="navbar-nav ml-auto" style="text-align: center;">
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('main.dashboard') }}">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('main.test') }}">Take Test</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('main.test_history') }}">Test History</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('main.resources') }}">Wellness Hub</a>
+                            </li>
+                            {% if current_user.subordinates.count() > 0 %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('main.team_test_history') }}">Team Test History</a>
+                            </li>
+                            {% endif %}
+                        </ul>
+                        
+                    <!-- For User role_id = 5 -->
+                    {% elif current_user.role_id == 5 %}
+                        <!-- Insert Navbar for User here -->
+                        <ul class="navbar-nav ml-auto" style="text-align: center;">
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('main.dashboard') }}">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('main.test') }}">Take Test</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('main.test_history') }}">Test History</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('main.resources') }}">Wellness Hub</a>
+                            </li>
+                            {% if current_user.subordinates.count() > 0 %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('main.team_test_history') }}">Team Test History</a>
+                            </li>
+                            {% endif %}
+                        </ul>
+            
+                    {% endif %}
+
+                    <ul class="navbar-nav ml-auto">
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('main.dashboard') }}">Home</a>
+                            <a class="nav-link" href="{{ url_for('main.view_profile', username=current_user.username) }}">
+                                View Profile <i class="fa fa-user-circle"></i>
+                            </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('main.test') }}">Take Test</a>
+                            <a class="nav-link" href="{{ url_for('main.logout') }}">
+                                Logout
+                            </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('main.test_history') }}">Test History</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('main.resources') }}">Wellness Hub</a>
-                        </li>
-                        {% if current_user.subordinates.count() > 0 %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('main.team_test_history') }}">Team Test History</a>
-                        </li>
-                        {% endif %}
                     </ul>
-                    <!-- Right Section -->
-                    <ul class="navbar-nav ml-auto" style="text-align: center;">
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('main.view_profile') }}">View Profile</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('main.logout') }}">Logout</a>
-                        </li>
-                    </ul>
+            
                 {% else %}
-                    <!-- Center Section -->
+                    <!-- Center Section for Unauthenticated users -->
                     <ul class="navbar-nav mx-auto" style="text-align: center; padding-right: 108px;">
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url_for('main.company') }}">Company</a>
@@ -157,8 +228,5 @@
         </script>
         
         
-        <!-- jQuery and Bootstrap Bundle (includes Popper) -->
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
     </body>
 </html>

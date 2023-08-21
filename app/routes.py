@@ -2,16 +2,17 @@
 from flask import render_template, redirect, url_for, flash, abort, request, jsonify, session, get_flashed_messages, send_from_directory
 from flask_login import login_user, logout_user, login_required, current_user, LoginManager
 from app import db, create_app
-from app.forms import RegistrationForm, LoginForm, EditProfileForm, TakeTest, SelectManagerForm, PasswordChangeForm, ContactForm
+from app.forms import RegistrationForm, LoginForm, EditProfileForm, TakeTest, SelectManagerForm, PasswordChangeForm, ContactForm, UnifiedUserForm, FeedbackForm, CompanySettingsForm
 from datetime import datetime
 from werkzeug.exceptions import HTTPException  # import HTTPException instead of abort
 from flask import Blueprint
 from flask import current_app
 import json
-from app.personalization import save_picture, send_contact_email, user_took_test_this_month, process_test_results
-from app.models import User, Company, Results
+from app.personalization import save_picture, send_contact_email, user_took_test_this_month, process_test_results, get_burnout_trends, get_department_burnout_data, get_team_burnout_data, redirect_next_or_dashboard
+from app.models import User, Company, Results, Feedback
 from datetime import datetime
 from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy import func
 
 login_manager = LoginManager()
 login_manager.login_view = 'main.login'
@@ -26,7 +27,7 @@ def index():
 @main.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
-        return redirect(url_for('main.dashboard'))  # Redirect to dashboard if user is already logged in
+        return redirect_next_or_dashboard()  # Redirect to appropriate dashboard if user is already logged in
 
     form = LoginForm()
     if form.validate_on_submit():
@@ -41,9 +42,10 @@ def login():
         if user.first_login:
             return redirect(url_for('main.change_password'))  # Redirect to password change form on first login
 
-        return redirect(url_for('main.dashboard'))  # Redirect to dashboard after successful login
+        return redirect_next_or_dashboard()  # Redirect to appropriate dashboard after successful login
 
     return render_template('login.html', form=form)
+
 
 @main.route('/change_password', methods=['GET', 'POST'])
 @login_required
@@ -58,7 +60,7 @@ def change_password():
         current_user.first_login = False  # Set first_login attribute to False
         db.session.commit()
         flash('Your password has been updated.')
-        return redirect(url_for('main.dashboard'))
+        return redirect_next_or_dashboard()  # Redirect to appropriate dashboard after successful login
     return render_template('change_password.html', form=form)
 
 
@@ -173,39 +175,63 @@ def test_history():
 
     return render_template('test_history.html', title='Test History', results=results)
 
+@main.route('/feedback', methods=['GET', 'POST'])
+@login_required
+def feedback():
+    form = FeedbackForm()
+    if form.validate_on_submit():
+        new_feedback = Feedback(
+            companyId=current_user.companyId, 
+            description=form.description.data
+        )
+        db.session.add(new_feedback)
+        db.session.commit()
+        flash('Thank you for your feedback!', 'success')
+        return redirect(url_for('feedback'))
+    return render_template('feedback.html', form=form)
+
+
+# manager specific
 @main.route('/team_test_history', methods=['GET'])
 @login_required
 def team_test_history():
-    # Query the database for the current user's subordinates' results
-    subordinates_results = (
-        Results.query
+    # Aggregate the results by testDate
+    aggregated_results = (
+        db.session.query(
+            Results.testDate,
+            func.avg(Results.scoreA).label('avg_scoreA'),
+            func.avg(Results.scoreB).label('avg_scoreB'),
+            func.avg(Results.scoreC).label('avg_scoreC')
+        )
         .join(User, User.id == Results.user_id)
         .filter(User.manager_id == current_user.id)
+        .group_by(Results.testDate)
         .order_by(Results.testDate.desc())
+        .all()
     )
 
     return render_template(
-        'team_test_history.html', 
-        title='Team Test History', 
-        subordinates_results=subordinates_results
+        'team_test_history.html',
+        title='Team Test History',
+        aggregated_results=aggregated_results
     )
 
-@main.route('/select_manager', methods=['GET', 'POST'])
-@login_required
-def select_manager():
-    form = SelectManagerForm()
-    form.manager.choices = [(0, 'None')] + [(u.id, f'{u.firstname} {u.lastname}') for u in User.query.filter_by(companyId=current_user.companyId).all() if u.id != current_user.id]
-    if form.validate_on_submit():
-        current_user.manager_id = form.manager.data
-        db.session.commit()
-        flash('Your manager has been selected.')
-        return redirect(url_for('main.index'))  # redirect to the index page or any other page after manager selection
-    return render_template('select_manager.html', form=form)
+# @main.route('/select_manager', methods=['GET', 'POST'])
+# @login_required
+# def select_manager():
+#     form = SelectManagerForm()
+#     form.manager.choices = [(0, 'None')] + [(u.id, f'{u.firstname} {u.lastname}') for u in User.query.filter_by(companyId=current_user.companyId).all() if u.id != current_user.id]
+#     if form.validate_on_submit():
+#         current_user.manager_id = form.manager.data
+#         db.session.commit()
+#         flash('Your manager has been selected.')
+#         return redirect(url_for('main.index'))  # redirect to the index page or any other page after manager selection
+#     return render_template('select_manager.html', form=form)
 
-@main.before_request
-def before_request():
-    if current_user.is_authenticated and current_user.manager_id is None and request.endpoint not in ['main.select_manager', 'main.logout']:
-        return redirect(url_for('main.select_manager'))
+# @main.before_request
+# def before_request():
+#     if current_user.is_authenticated and current_user.manager_id is None and request.endpoint not in ['main.select_manager', 'main.logout']:
+#         return redirect(url_for('main.select_manager'))
 
 @main.route('/resources', methods=['GET'])
 # @login_required
@@ -256,8 +282,6 @@ def contact_us():
 
 
 
-
-
 @main.route('/termsofservice', methods=['GET'])
 def tos():
     return render_template('termsofservice.html')
@@ -290,7 +314,247 @@ def favicon():
             mimetype='image/vnd.microsoft.icon'
         )
 
+#admin routes below
+@main.route('/company/dashboard')
+@login_required
+def company_dashboard():
+    # Make sure the current user is allowed to view the company dashboard (e.g., a company admin)
+    if not current_user.role_id == 2:
+        abort(403)
 
+    # Fetch company-related data that you want to display on the dashboard
+    # For demonstration, I'm fetching all users belonging to the company
+    company_users = User.query.filter_by(companyId=current_user.companyId).all()
+    
+    burnout_trends = get_burnout_trends()
+    department_data = get_department_burnout_data()
+    team_data = get_team_burnout_data()
+
+    # Pass all data to the template
+    return render_template('admindashboard.html', 
+                           company_users=company_users, 
+                           burnout_trends=burnout_trends,
+                           department_data=department_data, 
+                           team_data=team_data)
+
+@main.route('/company/settings', methods=['GET', 'POST'])
+@login_required
+def company_settings():
+    # Make sure the current user is allowed to edit the company settings
+    if not current_user.role_id == 2:
+        abort(403)
+
+    # You can use a Flask-WTF form to capture the settings
+    form = CompanySettingsForm()
+
+    if form.validate_on_submit():
+        # Save the company settings. For demonstration, I'm just updating the company name.
+        current_user.company.name = form.company_name.data
+        db.session.commit()
+        flash('Company settings updated successfully!')
+        return redirect(url_for('main.company_settings'))
+
+    return render_template('adminsettingsconfig.html', form=form)
+
+@main.route('/company/users', methods=['GET', 'POST'])
+@login_required
+def company_users():
+    # Make sure the current user is allowed to manage company users
+    if not (current_user.role_id == 3 or current_user.role_id == 2):
+        abort(403)
+
+    # Get page number from request arguments (or default to page 1 if not provided)
+    page = request.args.get('page', 1, type=int)
+
+    # Fetch paginated users from the company
+    users_per_page = 25
+    company_users = User.query.filter_by(companyId=current_user.companyId) \
+        .paginate(page=page, per_page=users_per_page, error_out=False)
+
+    if current_user.role_id == 3:
+        return render_template('hrusermanagement.html', users=company_users)
+
+    return render_template('adminusermanagement.html', users=company_users)
+
+# @main.route('/edit_user/<int:user_id>', methods=['GET', 'POST'])
+# @login_required
+# def edit_user(user_id):
+
+#     if not (current_user.role_id == 3 or current_user.role_id == 2):
+#         abort(403)
+
+#     user = User.query.get_or_404(user_id)
+
+#     # Retrieve manager's email if a manager is set for the user
+#     if user.manager:
+#         manager_email = user.manager.email
+#     else:
+#         manager_email = ""  # set to empty string instead of None
+
+    
+#     # form = UnifiedUserForm(original_email=user.email, obj=user, manager_email=manager_email)
+#     form = UnifiedUserForm(user=user)
+    
+#     if form.validate_on_submit():
+#         user.email = form.email.data
+#         user.firstname = form.firstname.data
+#         user.lastname = form.lastname.data
+#         user.date_of_birth = form.date_of_birth.data
+#         user.role_id = int(form.role.data)
+#         user.title = form.title.data  
+#         user.department = form.department.data  
+
+#         # Updating the manager_id based on the manager's email
+#         manager = User.query.filter_by(email=form.manager_email.data).first()
+#         if manager:
+#             user.manager_id = manager.id
+#         else:
+#             user.manager_id = None
+
+#         db.session.commit()
+#         flash('User details have been updated.')
+#         return redirect(url_for('main.edit_user', user_id=user.id))
+
+#     return render_template('edituser.html', title='Edit User', form=form, user=user)
+
+@main.route('/edit_user/<int:user_id>', methods=['GET', 'POST'])
+@login_required
+def edit_user(user_id):
+    if not (current_user.role_id == 3 or current_user.role_id == 2):
+        abort(403)
+
+    user = User.query.get_or_404(user_id)
+
+    # Retrieve manager's email if a manager is set for the user
+    manager_email = user.manager.email if user.manager else ""
+
+    form = UnifiedUserForm(original_email=user.email, obj=user)
+
+    # For GET request
+    if request.method == 'GET':
+        form.role.data = user.role_id
+        return render_template('edituser.html', title='Edit User', form=form, user=user)
+    
+    # For POST request
+    if request.method == 'POST':
+        
+        # Form validation
+        if not form.validate():
+            print(form.errors)
+            return render_template('edituser.html', title='Edit User', form=form, user=user)
+        
+        # Check if the new email already exists in the database and it's not the same as the original
+        if form.email.data != user.email and User.query.filter_by(email=form.email.data).first():
+            flash('This email is already in use. Please use a different one.', 'error')
+            return render_template('edituser.html', title='Edit User', form=form, user=user)
+
+        user.email = form.email.data
+        user.firstname = form.firstname.data
+        user.lastname = form.lastname.data
+        user.date_of_birth = form.date_of_birth.data
+        user.role_id = int(form.role.data)
+        user.title = form.title.data
+        user.department = form.department.data
+
+        # Updating the manager_id based on the manager's email
+        manager = User.query.filter_by(email=form.manager_email.data).first()
+        if manager:
+            user.manager_id = manager.id
+        else:
+            user.manager_id = None
+
+        db.session.commit()
+        flash('User details have been updated.')
+        return redirect(url_for('main.edit_user', user_id=user.id))
+
+
+
+@main.route('/delete_user/<int:user_id>', methods=['POST'])
+@login_required
+def delete_user(user_id):
+
+    if not (current_user.role_id == 2):
+        abort(403)
+
+    user = User.query.get_or_404(user_id)
+    db.session.delete(user)
+    db.session.commit()
+    flash(f'User {user.email} has been deleted.')
+    return redirect(url_for('main.company_users'))  # Or whichever route you want to redirect to after deletion
+
+
+#hr routes below
+
+@main.route('/hr/overview')
+@login_required
+def hr_overview():
+    if not current_user.role_id == 3:
+        abort(403)
+
+    # Assuming you have a function or method to calculate the burnout trends or statistics
+    burnout_trends = get_burnout_trends()
+
+    return render_template('hrdashboard.html', burnout_trends=burnout_trends)
+
+@main.route('/hr/burnout-report')
+@login_required
+def hr_burnout_report():
+    if not current_user.role_id == 3:
+        abort(403)
+
+    # Assuming you have functions to aggregate employee burnout data
+    department_data = get_department_burnout_data()
+    team_data = get_team_burnout_data()
+
+    return render_template('hrreporting.html', department_data=department_data, team_data=team_data)
+
+
+@main.route('/hr/edit-user/<int:user_id>', methods=['GET', 'POST'])
+@login_required
+def hr_edit_user(user_id):
+    if not current_user.role_id == 3:
+        abort(403)
+
+    user = User.query.get_or_404(user_id)
+    form = HREditUserForm(obj=user)  # Use the new form here
+
+    if form.validate_on_submit():
+        user.email = form.email.data
+        user.firstname = form.firstname.data
+        user.lastname = form.lastname.data
+        user.date_of_birth = form.date_of_birth.data
+        user.role = form.role.data
+
+        db.session.commit()
+        flash('User details updated!', 'success')
+        return redirect(url_for('hr_user_management'))
+
+    return render_template('edituser.html', form=form, user=user)
+
+@main.route('/hr/feedback', methods=['GET', 'POST'])
+@login_required
+def hr_feedback():
+    if not current_user.role_id == 3:
+        abort(403)
+    
+    feedbacks = Feedback.query.filter_by(company_id=current_user.companyId).order_by(Feedback.date_submitted.desc()).all()
+
+    return render_template('hrfeedback.html', feedbacks=feedbacks)
+
+@main.route('/hr/feedback/change_status/<int:feedback_id>', methods=['POST'])
+@login_required
+def change_feedback_status(feedback_id):
+    if not current_user.role_id == 3:
+        abort(403)
+
+    feedback = Feedback.query.get_or_404(feedback_id)
+
+    # In a real-world scenario, you'd probably have a dropdown or some form mechanism to capture the new status
+    feedback.status = "Reviewed"  # Example status change, this would actually come from a form or other input mechanism
+    db.session.commit()
+
+    flash('Feedback status updated!', 'success')
+    return redirect(url_for('main.hr_feedback'))
 
 # @main.route('/test', methods=['GET', 'POST'])
 # @login_required

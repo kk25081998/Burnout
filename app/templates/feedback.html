@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    /* Base styles */
+    body {
+        font-family: 'Arial', sans-serif;
+    }
+
+    .form-notice {
+        color: #757575;
+        font-size: 0.9em;
+        margin-bottom: 1.5em;
+        border-left: 4px solid #ffcc00;
+        padding-left: 10px;
+        background-color: #f9f9f9;
+    }
+
+    .required-asterisk {
+        color: #e74c3c;
+    }
+
+    .form-group {
+        margin-bottom: 1.5em;
+    }
+
+    /* Alert styles */
+    .alert {
+        border-radius: 5px;
+        padding: 10px 20px;
+        font-size: 0.9em;
+    }
+
+    .alert-success {
+        background-color: #a2d5c6;
+        color: #25564f;
+    }
+
+    .alert-danger {
+        background-color: #faa5a5;
+        color: #5c3030;
+    }
+</style>
+
+<div class="container mt-5">
+    <h2>Provide Your Feedback</h2>
+    <p>Your feedback is valuable to us. Kindly fill out the form below to share your thoughts.</p>
+
+    <!-- Required Fields Notice -->
+    <div class="form-notice">
+        Fields marked with an asterisk (<span class="required-asterisk">*</span>) are required.
+        <br>
+    </div>
+    
+    <!-- Display Success Message -->
+    {% if success_message %}
+    <div class="alert alert-success" role="alert">
+        {{ success_message }}
+    </div>
+    {% endif %}
+    
+    <!-- Display Error Message -->
+    {% if error_message %}
+    <div class="alert alert-danger" role="alert">
+        {{ error_message }}
+    </div>
+    {% endif %}
+    
+    <!-- Feedback Form -->
+    <form method="post" action="{{ url_for('feedback') }}"> <!-- Assuming the route's endpoint name is 'feedback' -->
+        {{ form.hidden_tag() }}
+
+        <!-- Description Field -->
+        <div class="form-group">
+            <label for="{{ form.description.id }}">Feedback Description <span class="required-asterisk">*</span></label>
+            {{ form.description(class="form-control" + (" is-invalid" if form.description.errors else ""), rows="5") }}
+            {% if form.description.errors %}
+            <div class="invalid-feedback">
+                {{ form.description.errors[0] }}
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Status Field (optional for the user to see, but included here for completeness) -->
+        <!-- Typically, you might want to set a default status like 'Pending' and not show this field to the user -->
+        <!-- If you decide to show it, here's how: -->
+        <!-- <div class="form-group">
+            <label for="{{ form.status.id }}">Status</label>
+            {{ form.status(class="form-control" + (" is-invalid" if form.status.errors else "")) }}
+            {% if form.status.errors %}
+            <div class="invalid-feedback">
+                {{ form.status.errors[0] }}
+            </div>
+            {% endif %}
+        </div> -->
+
+        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="reset" class="btn btn-secondary">Reset</button>
+    </form>
+
+</div>
+{% endblock %}

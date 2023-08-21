@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="jumbotron text-center">
+        <h1 class="display-4">Settings & Configuration</h1>
+        <p class="lead">Update and modify {{ current_user.company.name }}'s specific settings.</p>
+    </div>
+
+    <form action="{{ url_for('main.company_settings') }}" method="post" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="companyName">Company Name</label>
+            <input type="text" class="form-control" id="companyName" name="companyName" value="{{ current_user.company.name }}">
+        </div>
+
+        <div class="form-group">
+            <label for="companyDescription">Company Description</label>
+            <input type="text" class="form-control" id="companyDescription" name="companyDescription" value="{{ current_user.company.description }}">
+        </div>
+
+        <div class="form-group">
+            <label for="companySize">Company Size</label>
+            <input type="number" class="form-control" id="companySize" name="companySize" value="{{ current_user.company.size }}">
+        </div>
+
+        <div class="form-group">
+            <label for="companyFrequency">Feedback Frequency</label>
+            <select class="form-control" id="companyFrequency" name="companyFrequency">
+                <option value="1_week" {% if current_user.company.frequency == '1_week' %} selected {% endif %}>1 Week</option>
+                <option value="2_weeks" {% if current_user.company.frequency == '2_weeks' %} selected {% endif %}>2 Weeks</option>
+                <option value="1_month" {% if current_user.company.frequency == '1_month' or not current_user.company.frequency %} selected {% endif %}>1 Month</option>
+                <option value="2_months" {% if current_user.company.frequency == '2_months' %} selected {% endif %}>2 Months</option>
+            </select>
+        </div>        
+
+        <!-- Additional company-specific settings can be added here. -->
+
+        <div class="form-group">
+            <label for="companyLogo">Upload Company Logo</label>
+            <input type="file" class="form-control-file" id="companyLogo" name="companyLogo">
+        </div>
+
+        <button type="submit" class="btn btn-primary">Update Settings</button>
+    </form>
+
+    <hr>
+    <!-- <h3>Other Configurations:</h3>
+
+    <div class="form-group form-check">
+        <input type="checkbox" class="form-check-input" id="enableModuleA" name="enableModuleA" {% if current_user.company.moduleA_enabled %} checked {% endif %}>
+        <label class="form-check-label" for="enableModuleA">Enable Module A for Company</label>
+    </div>
+
+    <div class="form-group form-check">
+        <input type="checkbox" class="form-check-input" id="enableModuleB" name="enableModuleB" {% if current_user.company.moduleB_enabled %} checked {% endif %}>
+        <label class="form-check-label" for="enableModuleB">Enable Module B for Company</label>
+    </div>
+
+    <button type="submit" class="btn btn-secondary">Save Configurations</button> -->
+</div>
+{% endblock %}
