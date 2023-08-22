@@ -4,84 +4,99 @@
 <style>
     /* Custom Styles */
     .terms-section {
-        margin-bottom: 30px;
+        margin-bottom: 0px;
     }
 
     .terms-header {
         font-weight: bold;
-        color: #ffffff; /* Dark blue color for headers */
-        margin-bottom: 15px;
+        color: #09033F; /* Dark blue color for headers */
+        margin-bottom: 10px;
         position: relative;
         padding-left: 30px;
     }
 
-
     .terms-content {
         margin-left: 30px;
-        color: #ffffff;
+        color: #09033F;
     }
 
     .highlight-link {
         color: #007BFF;
         text-decoration: underline;
     }
+
+    .white-card {
+        background-color: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* optional box-shadow for better appearance */
+    }
+
     body {
         font-family: 'Arial', sans-serif;
         background: linear-gradient(45deg, #020014, #09033F);
     }
+    .intro-text, .outro-text {
+        color: #09033F;
+        padding-left: 30px;
+    }
 </style>
 
 <div class="container mt-5">
-    <h2 class="mb-4" style="color: #ffffff; font-weight: bold;">Terms of Service</h2>
-    <p class="mb-5">Thank you for using Flourish at Work. By accessing our services, you are agreeing to the terms outlined below.</p>
+    <div class="white-card">
+        <h2 class="mb-4 intro-text" style="font-weight: bold;"> Terms of Service</h2>
+        <p class="mb-4 intro-text"> Thank you for using Flourish at Work. By accessing our services, you are agreeing to the terms outlined below.</p>
 
-    <div class="terms-section">
-        <h4 class="terms-header">1. Acceptance of Terms</h4>
-        <p class="terms-content">By accessing or using Flourish at Work, you agree to be bound by these terms. If you do not agree to these terms, you should not use our services.</p>
+
+        <div class="terms-section">
+            <h5 class="terms-header">1. Acceptance of Terms</h5>
+            <p class="terms-content">By accessing or using Flourish at Work, you agree to be bound by these terms. If you do not agree to these terms, you should not use our services.</p>
+        </div>
+
+        <div class="terms-section">
+            <h5 class="terms-header">2. Description of Service</h5>
+            <p class="terms-content">Flourish at Work provides tools and resources related to workplace wellness and productivity. These may include tests, resources, training modules, and more.</p>
+        </div>
+
+        <div class="terms-section">
+            <h5 class="terms-header">3. User Responsibility</h5>
+            <p class="terms-content">Users are responsible for their activities on Flourish at Work and any content they upload or post. Users must ensure their content is not illegal, obscene, threatening, or in violation of intellectual property rights.</p>
+        </div>
+
+        <div class="terms-section">
+            <h5 class="terms-header">4. Privacy</h5>
+            <p class="terms-content">Your privacy is important to us. Please refer to our <a href="{{ url_for('main.privacy_policy') }}" class="highlight-link">Privacy Policy</a> to understand how we collect, use, and share your information.</p>
+        </div>
+
+        <div class="terms-section">
+            <h5 class="terms-header">5. Modifications to Service</h5>
+            <p class="terms-content">Flourish at Work reserves the right to modify or terminate its services, either temporarily or permanently, at any time, with or without notice. Users agree that the company will not be liable for any modifications, suspension, or discontinuance of the service.</p>
+        </div>
+
+        <div class="terms-section">
+            <h5 class="terms-header">6. Termination</h5>
+            <p class="terms-content">Flourish at Work reserves the right to terminate users or deny access to its services for any violation of these terms or for any other reason at its sole discretion.</p>
+        </div>
+
+        <div class="terms-section">
+            <h5 class="terms-header">7. Limitation of Liability</h5>
+            <p class="terms-content">In no event will Flourish at Work be liable for any direct, indirect, incidental, special, or consequential damages related to the use or inability to use our services, even if informed of the potential of such damages.</p>
+        </div>
+
+        <div class="terms-section">
+            <h5 class="terms-header">8. Governing Law</h5>
+            <p class="terms-content">These terms and conditions are governed by and construed in accordance with the laws of [Country/State] and you irrevocably submit to the exclusive jurisdiction of the courts in that location.</p>
+        </div>    
+
+        <div class="terms-section">
+            <h5 class="terms-header">9. Changes to Terms</h5>
+            <p class="terms-content">Flourish at Work reserves the right to update these terms at any time. It is the responsibility of the user to regularly review these terms to stay informed of any changes.</p>
+        </div>
+
+        <p class="mt-4 outro-text">If you have any questions about these Terms, please <a href="{{ url_for('main.contact_us') }}" class="highlight-link">contact us</a>.</p>
+
     </div>
-
-    <div class="terms-section">
-        <h4 class="terms-header">2. Description of Service</h4>
-        <p class="terms-content">Flourish at Work provides tools and resources related to workplace wellness and productivity. These may include tests, resources, training modules, and more.</p>
-    </div>
-
-    <div class="terms-section">
-        <h4 class="terms-header">3. User Responsibility</h4>
-        <p class="terms-content">Users are responsible for their activities on Flourish at Work and any content they upload or post. Users must ensure their content is not illegal, obscene, threatening, or in violation of intellectual property rights.</p>
-    </div>
-
-    <div class="terms-section">
-        <h4 class="terms-header">4. Privacy</h4>
-        <p class="terms-content">Your privacy is important to us. Please refer to our <a href="{{ url_for('main.privacy_policy') }}" class="highlight-link">Privacy Policy</a> to understand how we collect, use, and share your information.</p>
-    </div>
-
-    <div class="terms-section">
-        <h4 class="terms-header">5. Modifications to Service</h4>
-        <p class="terms-content">Flourish at Work reserves the right to modify or terminate its services, either temporarily or permanently, at any time, with or without notice. Users agree that the company will not be liable for any modifications, suspension, or discontinuance of the service.</p>
-    </div>
-
-    <div class="terms-section">
-        <h4 class="terms-header">6. Termination</h4>
-        <p class="terms-content">Flourish at Work reserves the right to terminate users or deny access to its services for any violation of these terms or for any other reason at its sole discretion.</p>
-    </div>
-
-    <div class="terms-section">
-        <h4 class="terms-header">7. Limitation of Liability</h4>
-        <p class="terms-content">In no event will Flourish at Work be liable for any direct, indirect, incidental, special, or consequential damages related to the use or inability to use our services, even if informed of the potential of such damages.</p>
-    </div>
-
-    <div class="terms-section">
-        <h4 class="terms-header">8. Governing Law</h4>
-        <p class="terms-content">These terms and conditions are governed by and construed in accordance with the laws of [Country/State] and you irrevocably submit to the exclusive jurisdiction of the courts in that location.</p>
-    </div>    
-
-    <div class="terms-section">
-        <h4 class="terms-header">9. Changes to Terms</h4>
-        <p class="terms-content">Flourish at Work reserves the right to update these terms at any time. It is the responsibility of the user to regularly review these terms to stay informed of any changes.</p>
-    </div>
-
-    <p class="mt-5">If you have any questions about these Terms, please <a href="{{ url_for('main.contact_us') }}" class="highlight-link">contact us</a>.</p>
-    <br>
-
 </div>
+
+<br>
 {% endblock %}

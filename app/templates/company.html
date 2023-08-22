@@ -2,63 +2,109 @@
 
 {% block content %}
 <style>
-    /* Additional styles for beautification */
+    /* Improved Typography and Layout */
+    body {
+        font-family: 'Arial', sans-serif;
+        background: linear-gradient(45deg, #020014, #09033F);
+        color: #f1f1f1; /* Lighter text for better contrast against dark background */
+        line-height: 1.6;
+    }
+    
+    .container {
+        max-width: 900px; /* Narrower for better readability */
+    }
+
     .section-header {
-        color: #ffffff; /* Dark blue color */
-        margin-bottom: 30px;
+        color: #ffffff; /* Lighter color for headings */
+        margin-bottom: 20px;
+        font-weight: bold;
     }
 
     .section-content {
-        margin-bottom: 40px;
+        font-size: 18px;
+        padding-bottom: 0%;
     }
 
     .icon-style {
-        color: #007bff; /* Dark blue color */
+        color: #007bff;
         margin-right: 15px;
+        transition: color 0.3s; /* subtle transition for icon color change */
+    }
+
+    .icon-style:hover {
+        color: #0056b3; /* darker shade of blue on hover */
     }
 
     .faq-item h4 {
         margin-top: 20px;
+        font-weight: bold;
     }
 
     .cta-section {
-        background-color: #f4f4f4; /* Light grey background */
-        padding: 40px 0;
+        background-color: #f4f4f4;
+        padding: 0px 0;
         border-radius: 10px;
         box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
     }
 
-    body {
-        font-family: 'Arial', sans-serif;
-        background: linear-gradient(45deg, #020014, #09033F);
+    .white-divider {
+        border-color: #ffffff;
+    }
+
+    /* Improved button styles for interaction */
+    .btn {
+        transition: background-color 0.3s, transform 0.3s; /* subtle transition for button interaction */
+    }
+
+    .btn:hover {
+        background-color: #0056b3; /* darker shade of blue on hover */
+        transform: scale(1.05); /* subtle zoom on hover */
+    }
+
+    .btn:active {
+        transform: scale(1); /* return to normal size on active */
+    }
+
+    img.img-fluid {
+        border-radius: 10px; /* rounded corners for images */
+        box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1); /* subtle shadow for depth */
+    }
+
+    /* Reduced padding for sections */
+    .reduced-padding {
+        padding: 1.5rem 0; /* Adjust this value as needed */
     }
 </style>
+
+<link href="https://cdn.rawgit.com/michalsnik/aos/2.1.1/dist/aos.css" rel="stylesheet">
+<script src="https://cdn.rawgit.com/michalsnik/aos/2.1.1/dist/aos.js"></script>
+<script>
+    AOS.init({
+      duration: 800,
+      easing: 'slide'
+    });
+</script>
 
 <div class="container mt-5">
 
     <!-- Introduction -->
-    <section id="introduction" class="py-5">
-        <h1 class="section-header display-4">About Flourish at Work</h1>
+    <section id="introduction" class="reduced-padding" data-aos="fade-up" data-aos-delay="0">
+        <h1 class="section-header display-4">About Us</h1>
         <p class="lead section-content">Welcome to Flourish at Work, a pioneering initiative launched in 2023. Our mission is clear: to transform workplaces into environments where employees' mental and emotional well-being is prioritized and nurtured.</p>
     </section>
 
-    <!-- Placeholder Image for History -->
-    <div class="text-center my-5">
-        <img src="https://via.placeholder.com/800x400?text=History" alt="Image representing our history" class="img-fluid rounded">
-    </div>
+    <hr class="my-5 white-divider">
     
     <!-- History and Origin -->
-    <section id="history" class="py-5">
+    <section id="history" class="reduced-padding" data-aos="fade-up" data-aos-delay="0">
         <h2 class="section-header display-5">Our Beginning</h2>
         <p class="section-content">Flourish at Work was conceived by Kartik, who envisioned a world where employee health is at the forefront of every organization's strategy. Driven by passion and commitment, we aim to revolutionize how businesses prioritize and address mental well-being in the workplace.</p>
     </section>
 
-    <div class="text-center my-5">
-        <img src="https://via.placeholder.com/800x400?text=Importance" alt="Image representing the importance of mental health" class="img-fluid rounded">
-    </div>
+    <hr class="my-5 white-divider">
     
     <!-- Importance of Mental and Emotional Health -->
-    <section id="importance" class="py-5">
+    <section id="importance" class="reduced-padding" data-aos="fade-up" data-aos-delay="0">
         <h2 class="section-header display-5">The Imperative of Mental and Emotional Health in the Workplace</h2>
         <p class="section-content">In the hustle of the modern workplace, mental and emotional health often gets overshadowed. Yet, the significance of employee well-being cannot be overstated:</p>
         
@@ -76,24 +122,20 @@
         </div>
         
         <p class="section-content">We're on a mission to shift the narrative, emphasizing the importance of individual well-being over mere metrics.</p>
-    </section>   
+    </section> 
     
-    <div class="text-center my-5">
-        <img src="https://via.placeholder.com/800x400?text=Expertise" alt="Image representing our expertise" class="img-fluid rounded">
-    </div>
+    <hr class="my-5 white-divider">
 
     <!-- Our Vision and Expertise -->
-    <section id="expertise" class="py-5">
+    <section id="expertise" class="reduced-padding" data-aos="fade-up" data-aos-delay="0">
         <h2 class="section-header display-5">Our Vision and Expertise</h2>
         <p class="section-content">We are a dedicated team of software engineers passionate about mental health. We're just starting, but our commitment is backed by sound scientific knowledge and a burning desire to make workplaces better. With us, you're not just adopting a service, but partnering in a vision to revolutionize workplace health.</p>
     </section>
 
-    <div class="text-center my-5">
-        <img src="https://via.placeholder.com/800x400?text=Features" alt="Image representing our features" class="img-fluid rounded">
-    </div>
+    <hr class="my-5 white-divider">
 
     <!-- Features and Offerings -->
-    <section id="features" class="py-5">
+    <section id="features" class="reduced-padding" data-aos="fade-up" data-aos-delay="0">
         <h2 class="section-header display-5">Our Proposed Features</h2>
         <ul class="list-unstyled mb-4">
             <li class="mb-3"><i class="icon-style fas fa-heartbeat"></i><strong>Burnout Score:</strong> Assess mental well-being and get guidance tailored for you.</li>
@@ -103,31 +145,17 @@
         </ul>
     </section>
 
-    <!-- Placeholder Image for FAQs -->
-    <div class="text-center my-5">
-        <img src="https://via.placeholder.com/800x400?text=FAQs" alt="Image representing frequently asked questions" class="img-fluid rounded">
-    </div>
-
-    <!-- FAQs -->
-    <section id="faq" class="py-5">
-        <h2 class="section-header display-5">Anticipated Questions</h2>
-        <div class="faq-item mb-4">
-            <h4>How can Flourish at Work be integrated into our organization?</h4>
-            <p>While we're in the early stages, our vision includes a seamless onboarding process and dedicated support to ensure your organization reaps the benefits of our features.</p>
-        </div>
-        <div class="faq-item mb-4">
-            <h4>Will there be customizable plans?</h4>
-            <p>Absolutely! Recognizing that every organization has its unique challenges, we are keen to offer customizable plans that align with your specific needs.</p>
-        </div>
-    </section>
+    <hr class="my-5 white-divider">
 
     <!-- Conclusion and CTA -->
-    <section id="conclusion" class="py-5">
+    <section id="conclusion" class="reduced-padding" data-aos="fade-up" data-aos-delay="0">
         <h2 class="section-header display-5">Be Part of the Change</h2>
         <p class="section-content">We're on a journey to bring about meaningful change in workplaces around the world. Will you join us? Let's prioritize well-being and craft a brighter, healthier future together.</p>
+        <br>
         <div class="text-center mt-3">
-            <a class="btn btn-primary" href="{{ url_for('main.pricing') }}">Learn More About Our Vision</a>
+            <a class="btn btn-primary" href="{{ url_for('main.pricing') }}">Explore Our Plans</a>
         </div>
+        <br>
     </section>
 
 </div>

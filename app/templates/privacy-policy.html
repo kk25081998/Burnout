@@ -2,44 +2,99 @@
 
 {% block content %}
 <style>
+    /* Custom Styles */
+    .terms-section {
+        margin-bottom: 0px;
+    }
+
+    .terms-header {
+        font-weight: bold;
+        color: #09033F; /* Dark blue color for headers */
+        margin-bottom: 15px;
+        position: relative;
+        padding-left: 30px;
+    }
+
+    .terms-content {
+        margin-left: 30px;
+        color: #09033F;
+    }
+
+    .highlight-link {
+        color: #007BFF;
+        text-decoration: underline;
+    }
+
+    .white-card {
+        background-color: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* optional box-shadow for better appearance */
+    }
+
     body {
         font-family: 'Arial', sans-serif;
         background: linear-gradient(45deg, #020014, #09033F);
     }
+    .intro-text, .outro-text {
+        color: #09033F;
+        padding-left: 30px;
+    }
 </style>
 
 <div class="container mt-5">
-    <h2>Privacy Policy</h2>
-    <p>Last Updated: 8/16/2023</p>
-    <p>At Flourish at Work, we value your privacy. This policy outlines our practices concerning the collection, use, and sharing of your personal information. By using our platform, you consent to the data practices described in this policy.</p>
+    <div class="white-card">
+        <h2 class="mb-4 intro-text" style="font-weight: bold;">Privacy Policy</h2>
+        <p class="mb-4 terms-content">At Flourish at Work, we value your privacy. This policy outlines our practices concerning the collection, use, and sharing of your personal information. By using our platform, you consent to the data practices described in this policy.</p>
 
-    <h4>1. Information We Collect</h4>
-    <p>We may collect personal and non-personal information when you use our platform. This includes:</p>
-    <ul>
-        <li><strong>Personal Information:</strong> This is information that can be used to identify you. Examples include your name, email address, and workplace details.</li>
-        <li><strong>Non-Personal Information:</strong> This refers to data that cannot be used to identify you personally, such as browser types, device types, and time-stamps.</li>
-    </ul>
+        <div class="terms-section">
+            <h5 class="terms-header">1. Information We Collect</h5>
+            <p class="terms-content">We may collect personal and non-personal information when you use our platform. This includes:</p>
+            <ul class="terms-content">
+                <li><strong>Personal Information:</strong> This is information that can be used to identify you. Examples include your name, email address, and workplace details.</li>
+                <li><strong>Non-Personal Information:</strong> This refers to data that cannot be used to identify you personally, such as browser types, device types, and time-stamps.</li>
+            </ul>
+        </div>
 
-    <h4>2. How We Use Information</h4>
-    <p>We use the information we collect to provide, maintain, and improve our services, conduct research, and communicate with you.</p>
+        <div class="terms-section">
+            <h5 class="terms-header">2. How We Use Information</h5>
+            <p class="terms-content">We use the information we collect to provide, maintain, and improve our services, conduct research, and communicate with you.</p>
+        </div>
 
-    <h4>3. Data Sharing and Transfers</h4>
-    <p>We do not sell or share your personal information with third parties except to provide services you have requested, with your permission, or as required by law.</p>
+        <div class="terms-section">
+            <h5 class="terms-header">3. Data Sharing and Transfers</h5>
+            <p class="terms-content">We do not sell or share your personal information with third parties except to provide services you have requested, with your permission, or as required by law.</p>
+        </div>
 
-    <h4>4. Cookies and Trackers</h4>
-    <p>Our platform may use "cookies" to enhance user experience. You can choose to set your browser to refuse cookies, but doing so might affect certain functionality of the platform.</p>
+        <div class="terms-section">
+            <h5 class="terms-header">4. Cookies and Trackers</h5>
+            <p class="terms-content">Our platform may use "cookies" to enhance user experience. You can choose to set your browser to refuse cookies, but doing so might affect certain functionality of the platform.</p>
+        </div>
 
-    <h4>5. Data Security</h4>
-    <p>We prioritize the protection of your personal information. While no method of electronic storage is 100% secure, we implement robust measures to protect against unauthorized access.</p>
+        <div class="terms-section">
+            <h5 class="terms-header">5. Data Security</h5>
+            <p class="terms-content">We prioritize the protection of your personal information. While no method of electronic storage is 100% secure, we implement robust measures to protect against unauthorized access.</p>
+        </div>
 
-    <h4>6. Access and Control of Personal Data</h4>
-    <p>You have the right to access, correct, or delete your personal data. Please contact us to make such requests.</p>
+        <div class="terms-section">
+            <h5 class="terms-header">6. Access and Control of Personal Data</h5>
+            <p class="terms-content">You have the right to access, correct, or delete your personal data. Please contact us to make such requests.</p>
+        </div>
 
-    <h4>7. Changes to This Policy</h4>
-    <p>We may update our Privacy Policy occasionally. We recommend reviewing this policy periodically to stay informed about our practices.</p>
+        <div class="terms-section">
+            <h5 class="terms-header">7. Changes to This Policy</h5>
+            <p class="terms-content">We may update our Privacy Policy occasionally. We recommend reviewing this policy periodically to stay informed about our practices.</p>
+        </div>
 
-    <h4>8. Contact Us</h4>
-    <p>If you have questions or concerns about this Privacy Policy, please <a href="{{ url_for('main.contact_us') }}">contact us</a>.</p>
+        <div class="terms-section">
+            <h5 class="terms-header">8. Contact Us</h5>
+            <p class="terms-content">If you have questions or concerns about this Privacy Policy, please <a href="{{ url_for('main.contact_us') }}" class="highlight-link">contact us</a>.</p>
+        </div>
 
+        <p class="mb-4 intro-text">Last Updated: 8/16/2023</p>
+
+    </div>
 </div>
+
+<br>
 {% endblock %}

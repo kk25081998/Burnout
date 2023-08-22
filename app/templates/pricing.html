@@ -1,14 +1,87 @@
 {% extends "base.html" %}
 
 {% block content %}
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
 <style>
     body {
         font-family: 'Arial', sans-serif;
         background: linear-gradient(45deg, #020014, #09033F);
     }
+
+    /* General card styling */
+    .pricing-card {
+        border-radius: 15px;
+        overflow: hidden;
+        transition: transform 0.3s, box-shadow 0.3s;
+        box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+        border: none;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between; 
+    }
+
+    .pricing-card:hover {
+        transform: scale(1.05);
+        box-shadow: 0px 5px 25px rgba(0, 0, 0, 0.2);
+    }
+
+    .pricing-card-header {
+        font-size: 1.5rem;
+        font-weight: bold;
+        padding: 15px 0;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .feature-list {
+        color: #555;
+        font-size: 0.95rem;
+        margin: 15px 0;
+    }
+
+    .pricing-btn {
+        font-size: 1.2rem;
+        font-weight: bold;
+        margin-top: 20px;
+        color: #182e68;
+        border-color: #182e68;
+    }
+
+    .page-intro {
+        color: #eee;
+        font-size: 2rem;
+        margin-bottom: 30px;
+        text-align: center;
+    }
+
+    /* Styling for graphics placeholders */
+    .graphic {
+        background: #333; 
+        height: 75px; 
+        margin-bottom: 15px; 
+        border-radius: 8px; 
+        display: flex; 
+        align-items: center; 
+        justify-content: center;
+    }
+
+    .graphic img {
+        max-width: 100%;
+        border-radius: 8px;
+    }
+
 </style>
 
 <div class="container mt-5" style="max-width: 1200px;">
+
+    <!-- Introductory Text -->
+    <div class="page-intro">
+        Discover the Right Plan for Your Business
+        <p style="font-size: 1rem; color: #aaa;">Choose from a range of plans tailored to suit your company's needs.</p>
+    </div>
+
     <div class="row justify-content-center">
 
         {% set plans = [
@@ -17,39 +90,80 @@
                 'subtitle': '(for small companies)',
                 'features': ['Up to 50 employees', 'Standard burnout monitoring', 'Basic reporting'],
                 'price': '$100/month',
-                'color': '#64B5F6'
+                'color': '#64B5F6',
+                'icon': 'fa-cube' 
             },
             {
                 'title': 'Pro',
                 'subtitle': '(for medium-sized companies)',
                 'features': ['Up to 200 employees', 'Advanced monitoring features', 'Detailed reporting & analytics'],
                 'price': '$350/month',
-                'color': '#81C784'
+                'color': '#81C784',
+                'icon': 'fa-cubes' 
             },
             {
                 'title': 'Enterprise',
                 'subtitle': '(for large companies)',
                 'features': ['Unlimited employees', 'Pro features + premium support', 'Custom solutions & branding'],
                 'price': 'Contact for pricing',
-                'color': '#FFD54F'
+                'color': '#FFD54F',
+                'icon': 'fa-building' 
             }
         ] %}
 
         {% for plan in plans %}
         <div class="col-md-4 mb-5">
-            <div class="card" style="border-radius: 15px; overflow: hidden; transition: transform 0.3s, box-shadow 0.3s; box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1); border: none;" onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0px 5px 25px rgba(0, 0, 0, 0.2)';" onmouseout="this.style.transform=''; this.style.boxShadow='0px 4px 15px rgba(0, 0, 0, 0.1)';">
+            <div class="card pricing-card">
+                <div class="graphic text-center">
+                    <!-- Font Awesome icon -->
+                    <i class="fa {{ plan.icon }}" style="font-size: 3rem; color: {{ plan.color }};"></i>
+                </div>
                 <div class="card-body text-center">
-                    <div style="font-size: 1.5rem; font-weight: bold; padding: 15px 0; text-transform: uppercase; letter-spacing: 1px; background-color: {{ plan.color }}; color: {{ 'white' if plan.title != 'Enterprise' else 'black' }};">{{ plan.title }}</div>
+                    <div class="pricing-card-header" style="background-color: {{ plan.color }}; color: {{ 'white' if plan.title != 'Enterprise' else 'black' }};">{{ plan.title }}</div>
                     <div style="color: #777; font-style: italic; margin-bottom: 15px;">{{ plan.subtitle }}</div>
                     {% for feature in plan.features %}
-                        <div style="margin: 15px 0; font-size: 0.95rem; color: #555;">{{ feature }}</div>
+                        <div class="feature-list">{{ feature }}</div>
                     {% endfor %}
-                    <a href="{{ url_for('main.contact_us') }}" class="btn btn-outline-dark" style="font-size: 1.2rem; font-weight: bold; margin-top: 20px; color: #182e68; border-color: #182e68;">{{ plan.price }}</a>
+                </div>
+                <div class="card-footer text-center">
+                    <a href="{{ url_for('main.contact_us') }}" class="btn btn-outline-dark pricing-btn">{{ plan.price }}</a>
                 </div>
             </div>
         </div>
         {% endfor %}
 
     </div>
+</div>
+
+
+<!-- FAQ Section -->
+<div class="container mt-5">
+    <h2 class="page-intro">Frequently Asked Questions</h2>
+    
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <h5>How easy is it to integrate Flourish at Work?</h5>
+            <p>Our platform is designed for seamless integration, no matter the size or nature of your company. Plus, our team is here to guide you every step of the way.</p>
+        </div>
+        <div class="col-md-6 mb-4">
+            <h5>Is there any long-term commitment?</h5>
+            <p>No, we operate on a month-to-month basis. You can choose to upgrade, downgrade, or cancel at any time. Our goal is to offer flexibility and value.</p>
+        </div>
+        <div class="col-md-6 mb-4">
+            <h5>How secure is our employees' data?</h5>
+            <p>Data privacy is our top priority. All data is encrypted, and we comply with all GDPR and CCPA regulations. Your employees' data is safe with us.</p>
+        </div>
+        <div class="col-md-6 mb-4">
+            <h5>Can we request custom features?</h5>
+            <p>Absolutely! We understand that every organization has unique needs. Let us know your requirements, and we'll do our best to accommodate them.</p>
+        </div>
+    </div>
+</div>
+
+<!-- Call to Action -->
+<div class="container-fluid bg-primary text-white text-center py-5">
+    <h2 class="page-intro">Ready to transform your workplace?</h2>
+    <p>Join us in making mental well-being a priority.</p>
+    <a href="{{ url_for('main.contact_us') }}" class="btn btn-light btn-lg">Contact Us</a>
 </div>
 {% endblock %}
