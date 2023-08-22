@@ -1,19 +1,237 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container">
-    <h2>HR Burnout Report</h2>
-    
-    <section class="department-data">
-        <h3>Department Burnout Data</h3>
-        <!-- Display department burnout data here. Ideally, you'd format it and possibly show graphs or charts -->
-        <div>{{ department_data }}</div> <!-- Placeholder; you'll format and display the data appropriately -->
-    </section>
-    
-    <section class="team-data">
-        <h3>Team Burnout Data</h3>
-        <!-- Display team burnout data here. -->
-        <div>{{ team_data }}</div> <!-- Placeholder; again, you'll format and display the data as needed -->
-    </section>
+<style>
+    body {
+        font-family: 'Arial', sans-serif;
+        background: linear-gradient(45deg, #020014, #09033F);
+    }
+
+    .custom-card {
+        background-color: #2a2a2a;
+        color: white;
+    }
+
+    .custom-card-body {
+        height: 230px; 
+    }
+
+    .custom-jumbotron {
+        background-color: #2a2a2a;
+        color: white;
+        padding: 2rem;
+        border-radius: 10px;
+    }
+    .userStatsChart2 {
+        width: 100%;
+        height: 500px;
+    }
+    .selector {
+        margin-bottom: 20px;
+    }
+    .chartContainer {
+        width: 100%;
+        height: 600px;  /* Adjust this value as per your requirement */
+    }
+
+</style>
+
+<div class="container mt-5">
+
+    <!-- Dropdown for selecting departments -->
+    <div class="row selector mb-4">
+        <div class="col-md-6">
+            <label for="departmentSelect">Select Department:</label>
+            <select id="departmentSelect" class="form-control">
+                {% for department in departments %}
+                    <option value="{{ department }}">{{ department }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+
+    <!-- Card with white background for User Count -->
+    <div class="card bg-white mb-4">
+        <div class="card-body">
+            <h4 class="text-center mb-4" style="color: #09033F;">User Count</h4>
+            <div class="row justify-content-center">
+                <div class="col-md-8 chartContainer">
+                    <canvas id="departmentStatsChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dropdown for selecting managers -->
+    <div class="row selector mb-4">
+        <div class="col-md-6">
+            <label for="managerSelect">Select Manager:</label>
+            <select id="managerSelect" class="form-control">
+                {% for manager in managers %}
+                    {% if manager.id is not none %} <!-- Only display managers if the ID is not None -->
+                        <option value="{{ manager.id }}" {% if loop.first %}selected{% endif %}>{{ manager.first_name }} {{ manager.last_name }}</option>
+                    {% endif %}
+                {% endfor %}
+            </select>            
+        </div>
+    </div>
+
+
+    <!-- Card with white background for Average Scores for Users and Managers -->
+    <div class="card bg-white mb-4">
+        <div class="card-body">
+            <h4 class="text-center mb-4" style="color: #09033F;">Average Scores for Users and Managers</h4>
+            <div class="row justify-content-center">
+                <div class="col-md-8 chartContainer">
+                    <canvas id="managerStatsChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    var departmentsData = {{ department_data|tojson|safe }};
+    var teamData = {{ team_data|tojson|safe }};
+    var departmentsList = {{ departments|tojson|safe }};
+    var managersList = {{ managers|safe }};
+    console.log(teamData);
+    console.log(managersList);
+
+    var ctxDepartment = document.getElementById('departmentStatsChart').getContext('2d');
+    var ctxManager = document.getElementById('managerStatsChart').getContext('2d');
+
+    var barChartDepartment, barChartManager;
+
+    function getGradientColor(ctx, value) {
+        var gradient = ctx.createLinearGradient(0, 0, 0, 400);
+
+        if (value <= 33) {
+            gradient.addColorStop(0, 'lightgreen');
+            gradient.addColorStop(1, 'green');
+        } else if (value <= 66) {
+            gradient.addColorStop(0, 'yellow');
+            gradient.addColorStop(1, 'orange');
+        } else {
+            gradient.addColorStop(0, 'salmon');
+            gradient.addColorStop(1, 'red');
+        }
+
+        return gradient;
+    }
+
+    function createBarChart(ctx, results) {
+        var dataValues = [];
+        var backgroundColors = [];
+        results.forEach(function(result) {
+            var scaledScore = result.value;
+            dataValues.push(scaledScore);
+            backgroundColors.push(getGradientColor(ctx, scaledScore));
+        });
+
+        return new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: results.map(function(result) { return result.testDate; }),
+                datasets: [{
+                    label: 'Burnout Level',
+                    data: dataValues,
+                    backgroundColor: backgroundColors,
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                maintainAspectRatio: false, // Add this line
+                indexAxis: 'x',
+                scales: {
+                    x: {
+                        stacked: false,
+                        grid: {
+                            display: false
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        max: 100,
+                        ticks: {
+                            min: 0,
+                            max: 100,
+                            stepSize: 33,
+                            callback: function(value, index, values) {
+                                if (value === 0) return 'No Burnout';
+                                if (value === 33) return 'Low Burnout ';
+                                if (value === 66) return 'Mild Burnout ';
+                                if (value === 100) return 'High Burnout';
+                                return '';
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                layout: {
+                    padding: {
+                        left: 20,
+                        right: 20,
+                        top: 50,
+                        bottom: 50
+                    }
+                },
+                barThickness: 20 // Adjust the bar thickness here
+            }
+        });
+    }
+
+    function convertMonthlyDataToResults(monthlyData) {
+        var resultsArray = [];
+        for (var key in monthlyData) {
+            resultsArray.push({testDate: key, value: monthlyData[key]});
+        }
+        return resultsArray;
+    }
+
+
+
+    // Initial setup (You can set this up based on initial values you want to display)
+    var firstManagerId = Object.keys(teamData).find(id => id !== "None");
+    var initialManagerResults = convertMonthlyDataToResults(teamData[firstManagerId]); 
+    var initialDepartmentResults = convertMonthlyDataToResults(departmentsData[departmentsList[0]]);
+    console.log(initialManagerResults);
+    console.log(initialDepartmentResults);
+
+    var salesData = departmentsData["Sales"];
+    var convertedSalesData = convertMonthlyDataToResults(salesData);
+
+
+
+    barChartDepartment = createBarChart(ctxDepartment, initialDepartmentResults);
+    barChartManager = createBarChart(ctxManager, initialManagerResults);
+
+    // Event listeners to re-draw charts
+    document.getElementById('departmentSelect').addEventListener('change', function() {
+        var selectedDepartment = this.value;
+        var newResults = convertMonthlyDataToResults(departmentsData[selectedDepartment]);
+        if (barChartDepartment) barChartDepartment.destroy();
+        barChartDepartment = createBarChart(ctxDepartment, newResults);
+    });
+
+
+    document.getElementById('managerSelect').addEventListener('change', function() {
+        var selectedManager = this.value;
+        var newResults = convertMonthlyDataToResults(teamData[selectedManager]);
+        if (barChartManager) barChartManager.destroy();
+        barChartManager = createBarChart(ctxManager, newResults);
+    });
+
+
+
+</script>
+
 {% endblock %}

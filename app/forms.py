@@ -156,7 +156,7 @@ class FeedbackForm(FlaskForm):
 class CompanySettingsForm(FlaskForm):
     companyName = StringField('Company Name', [DataRequired(), Length(min=1, max=200)])
     companyDescription = StringField('Company Description', [DataRequired(), Length(min=1, max=500)])
-    companySize = IntegerField('Company Size', [DataRequired(), NumberRange(min=1, max=10000)])
+    companySize = IntegerField('Company Size', [DataRequired(), NumberRange(min=1, max=1000000)])
     companyFrequency = SelectField('Feedback Frequency', [DataRequired()],
                                    choices=[('1_week', '1 Week'),
                                             ('2_weeks', '2 Weeks'),

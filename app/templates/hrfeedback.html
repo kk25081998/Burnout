@@ -1,34 +1,141 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container">
-    <h2>Feedbacks for Improvement</h2>
-    
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>Date Submitted</th>
-                <th>Description</th>
-                <th>Status</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for feedback in feedbacks %}
-            <tr>
-                <td>{{ feedback.date_submitted.strftime('%Y-%m-%d') }}</td>
-                <td>{{ feedback.description }}</td>
-                <td>{{ feedback.status }}</td>
-                <td>
-                    <!-- Using a form to change the status of the feedback -->
-                    <form method="post" action="{{ url_for('main.change_feedback_status', feedback_id=feedback.id) }}" style="display: inline;">
-                        <button type="submit" class="btn btn-sm btn-primary">Change Status</button>
-                    </form>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.4/css/jquery.dataTables.css">
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.js"></script>
+
+<style>
+    body {
+        font-family: 'Arial', sans-serif;
+        background: linear-gradient(45deg, #020014, #09033F);
+    }
+
+    .card {
+        border-radius: 10px;
+        box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-title {
+        font-weight: bold;
+        font-size: 24px;
+        margin-bottom: 20px;
+    }
+
+    table {
+        border-collapse: separate;
+        border-spacing: 0 10px;
+    }
+
+    th {
+        font-weight: bold;
+        background-color: #09033F;
+        color: white;
+    }
+
+    tr:hover {
+        background-color: #f5f5f5;
+    }
+
+    td, th {
+        padding: 10px 20px;
+    }
+
+    tbody tr:nth-child(odd) {
+        background-color: #f3f3f3;
+    }
+
+    .btn-sm {
+        border-radius: 5px;
+    }
+</style>
+
+<div class="container mt-5 feedback-container">
+    <div class="card">
+        <div class="card-body">
+            <h2 class="card-title text-center" style="color: #09033F;">Feedbacks for Improvement</h2>
+            
+            <table class="table table-bordered table-hover" id="feedbackTable">
+                <thead>
+                    <tr>
+                        <th>Date Submitted</th>
+                        <th>Description</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for feedback in feedbacks %}
+                    <tr>
+                        <td>{{ feedback.date_submitted.strftime('%Y-%m-%d') }}</td>
+                        <td>{{ feedback.description }}</td>
+                        <td id="feedback-{{ feedback.id }}-status">{{ feedback.status }}</td>
+                        <td style="text-align: center; vertical-align: middle;">
+                            <!-- Using a form to change the status of the feedback -->
+                            <form method="post" action="{{ url_for('main.change_feedback_status', feedback_id=feedback.id) }}" style="display: inline;">
+                                <button data-feedback-id="{{ feedback.id }}" class="change-status-btn btn btn-sm btn-primary">Change Status</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 
+<!-- CDN -->
+<script>
+    jQuery(document).ready(function($) {
+        $('#feedbackTable').DataTable({
+            "pageLength": 10,
+            "searching": true,
+            "ordering": true,
+            "info": true,
+            "lengthChange": false,
+            "stateSave": true  // Save the state of the table (pagination, search, etc.)
+        });
+    });
+    $(document).on('click', '.change-status-btn', function(e) {
+    e.preventDefault();
+
+    const feedbackId = $(this).data('feedback-id');
+
+    $.post(`/hr/feedback/change_status/${feedbackId}`, function(response) {
+        if (response.success) {
+            // Update the feedback status in the table
+            $(`#feedback-${feedbackId}-status`).text('Reviewed');
+
+            // Show the Bootstrap alert
+            let alertBox = `
+                <br>
+                <div class="alert alert-success alert-dismissible show" role="alert">
+                    ${response.message}
+                </div>
+            `;
+            $('.feedback-container').append(alertBox);
+        } else {
+            // Handle error
+            let alertBox = `
+                <br>
+                <div class="alert alert-danger alert-dismissible show" role="alert">
+                    Error updating feedback status.
+                </div>
+            `;
+            $('.feedback-container').append(alertBox);
+        }
+    });
+});
+
+
+    // This detects any alert being added to the DOM
+    $(document).on('DOMNodeInserted', '.alert', function() {
+        let $alert = $(this);
+        setTimeout(function() {
+            $alert.alert('close');  // close() method provided by Bootstrap for alerts
+        }, 2000);  // Alert fades out after 2 seconds
+    });
+
+
+</script> 
 {% endblock %}

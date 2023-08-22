@@ -6,71 +6,102 @@
         font-family: 'Arial', sans-serif;
         background: linear-gradient(45deg, #020014, #09033F);
     }
+
+    .form-container {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+        color: #182e68;
+    }
+
+    .btn-primary {
+        background-color: #182e68;
+        border: none;
+        border-radius: 5px;
+        padding: 10px 20px;
+        font-weight: bold;
+    }
+
+    .btn-primary:hover {
+        background-color: #0b1c4b;
+    }
+
+    .jumbotron {
+        background-color: #f7f7f7;
+        border-radius: 10px;
+        box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.1);
+    }
+
 </style>
-<div class="container mt-5">
-    <div class="jumbotron text-center bg-white" style="padding: 1rem 2rem;">
-        <h1 class="display-4" style="color: #182e68">Settings & Configuration</h1>
-        <p class="lead" style="color: #182e68">Update and modify {{ current_user.company.name }}'s specific settings.</p>
-    </div>       
+<div class="container mt-5">     
 
-    <form action="{{ url_for('main.company_settings') }}" method="post" enctype="multipart/form-data">
-        {{ form.hidden_tag() }}
-        <div class="form-group">
-            <label for="companyName">Company Name</label>
-            <input type="text" class="form-control" id="companyName" name="companyName" value="{{ current_user.company.name }}">
-        </div>
+    <div class="form-container mt-4">
+        <h2 class="text-center mb-4" style="color: #182e68;">Company Settings</h2> <!-- This is your title -->
 
-        <div class="form-group">
-            <label for="companyDescription">Company Description</label>
-            <input type="text" class="form-control" id="companyDescription" name="companyDescription" value="{{ current_user.company.description }}">
-        </div>
-
-        <div class="form-group">
-            <label for="companySize">Company Size</label>
-            <input type="number" class="form-control" id="companySize" name="companySize" value="{{ current_user.company.size }}">
-        </div>
-
-        <div class="form-group">
-            <label for="companyFrequency">Feedback Frequency</label>
-            <select class="form-control" id="companyFrequency" name="companyFrequency">
-                <option value="1_week" {% if current_user.company.frequency == '1_week' %} selected {% endif %}>1 Week</option>
-                <option value="2_weeks" {% if current_user.company.frequency == '2_weeks' %} selected {% endif %}>2 Weeks</option>
-                <option value="1_month" {% if current_user.company.frequency == '1_month' or not current_user.company.frequency %} selected {% endif %}>1 Month</option>
-                <option value="2_months" {% if current_user.company.frequency == '2_months' %} selected {% endif %}>2 Months</option>
-            </select>
-        </div>        
-
-        <!-- Additional company-specific settings can be added here. -->
-        <div class="form-group">
-            <label for="companyLogo" class="mr-3">Upload Company Logo</label>
-            <div class="form-group d-flex align-items-center">
-            
-                <!-- Display current logo if it exists -->
-                {% if current_user.company.image %}
-                    <div class="mb-2 mr-3">
-                        <img src="{{ url_for('static', filename='company_logo/' + current_user.company.image) }}" alt="Current Company Logo" width="100">
-                    </div>
-                {% endif %}
-                
-                <div>
-                    <input type="file" class="form-control-file" id="companyLogo" name="companyLogo">
-                    {% if form.companyLogo.errors %}
-                        <span class="text-danger d-block mt-1">{{ form.companyLogo.errors[0] }}</span>
-                    {% endif %}
-                </div>
-            </div>    
-        </div>
-        
-        
-
-        {% if message %}
-            <div class="alert alert-{{ message_type }}">
-                {{ message }}
+        <form action="{{ url_for('main.company_settings') }}" method="post" enctype="multipart/form-data">
+            {{ form.hidden_tag() }}
+            <div class="form-group">
+                <label for="companyName">Company Name</label>
+                <input type="text" class="form-control" id="companyName" name="companyName" value="{{ current_user.company.name }}">
             </div>
-        {% endif %}
+    
+            <div class="form-group">
+                <label for="companyDescription">Company Description</label>
+                <input type="text" class="form-control" id="companyDescription" name="companyDescription" value="{{ current_user.company.description }}">
+            </div>
+    
+            <div class="form-group">
+                <label for="companySize">Company Size</label>
+                <input type="number" class="form-control" id="companySize" name="companySize" value="{{ current_user.company.size }}">
+            </div>
+    
+            <div class="form-group">
+                <label for="companyFrequency">Feedback Frequency</label>
+                <select class="form-control" id="companyFrequency" name="companyFrequency">
+                    <option value="1_week" {% if current_user.company.frequency == '1_week' %} selected {% endif %}>1 Week</option>
+                    <option value="2_weeks" {% if current_user.company.frequency == '2_weeks' %} selected {% endif %}>2 Weeks</option>
+                    <option value="1_month" {% if current_user.company.frequency == '1_month' or not current_user.company.frequency %} selected {% endif %}>1 Month</option>
+                    <option value="2_months" {% if current_user.company.frequency == '2_months' %} selected {% endif %}>2 Months</option>
+                </select>
+            </div>        
+    
+            <!-- Additional company-specific settings can be added here. -->
+            <div class="form-group">
+                <label for="companyLogo" class="mr-3">Upload Company Logo</label>
+                <div class="form-group d-flex align-items-center">
+                
+                    <!-- Display current logo if it exists -->
+                    {% if current_user.company.image %}
+                        <div class="mb-2 mr-3">
+                            <img src="{{ url_for('static', filename='company_logo/' + current_user.company.image) }}" alt="Current Company Logo" width="100">
+                        </div>
+                    {% endif %}
+                    
+                    <div>
+                        <input type="file" class="form-control-file" id="companyLogo" name="companyLogo">
+                        {% if form.companyLogo.errors %}
+                            <span class="text-danger d-block mt-1">{{ form.companyLogo.errors[0] }}</span>
+                        {% endif %}
+                    </div>
+                </div>    
+            </div>
+            
+            {% if message %}
+                <div class="alert alert-{{ message_type }}">
+                    {{ message }}
+                </div>
+            {% endif %}
+    
+            <button type="submit" class="btn btn-primary">Update Settings</button>
+        </form>
+    </div>
 
-        <button type="submit" class="btn btn-primary">Update Settings</button>
-    </form>
+    
 
     <hr>
     <!-- <h3>Other Configurations:</h3>

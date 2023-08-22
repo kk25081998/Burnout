@@ -1,12 +1,20 @@
 {% extends "base.html" %}
 
-{% block extra_css %}
+{% block content %}
 <style>
     .card {
         height: 100%;  /* Makes sure all cards are of the same height */
     }
 </style>
-{% endblock %}
+<style>
+    body {
+        font-family: 'Arial', sans-serif;
+        background: linear-gradient(45deg, #020014, #09033F);
+    }
+    .card {
+        background-color: #2a2a2a;
+    }
+</style>
 
 <script>
     function toggleDetails(id) {
@@ -20,7 +28,6 @@
 </script>
 
 
-{% block content %}
 <div class="container">
     <div class="jumbotron">
         <h1 class="display-4">Welcome to the Wellness Hub!</h1>
@@ -61,7 +68,7 @@
     </div>
 
     <!-- Dropdowns for the first row -->
-    <div class="card bg-light mt-3" id="evaluateDetails" style="display: none;">
+    <div class="card bg-white mt-3" id="evaluateDetails" style="display: none;">
         <div class="card-body p-4">
             <h5>Evaluate Your Options</h5>
             <p>When faced with burnout, it's essential to evaluate your options. This involves understanding your current situation, setting boundaries, and communicating your needs. By addressing burnout proactively, you can create a healthier work environment and improve your well-being.</p>
@@ -94,6 +101,8 @@
             </div>
         </div>
     </div>
+
+    <br>
 
     <!-- Dropdown for Seek Support -->
     <div class="card bg-light mt-3" id="supportDetails" style="display: none;">
@@ -348,6 +357,7 @@
             </div>
         </div>
     </div>
+    <br>
 </div>
 {% endblock %}
 

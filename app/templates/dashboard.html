@@ -1,11 +1,17 @@
 {% extends "base.html" %}
 
 {% block content %}
+<style>
+    body {
+        font-family: 'Arial', sans-serif;
+        background: linear-gradient(45deg, #020014, #09033F);
+    }
+    .card {
+        background-color: #2a2a2a;
+    }
+</style>
+  
 <div class="container mt-5">
-    <div class="jumbotron text-center">
-        <h1 class="display-4">Welcome to your Dashboard!</h1>
-        <p class="lead">Monitor your well-being and prevent burnout effectively.</p>
-    </div>
     
     <div class="row mt-4">
         <div class="col-md-4">
@@ -30,7 +36,7 @@
                             Date of Birth: Not provided<br>
                         {% endif %}
                         Organization: {{user.company.name}}<br>
-                        Role: Software Engineer
+                        Role: {{user.title}}
                     </p>
                 </div>
             </div>

@@ -1,63 +1,110 @@
 {% extends "base.html" %}
-<link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" type="text/css">
 
 {% block content %}
-<div class="container">
-    <h2>User Management</h2>
-    
-    <table class="table table-bordered table-hover" id="hrUserTable">
-        <thead>
-            <tr>
-                <th>Email</th>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Date of Birth</th>
-                <th>Role</th>
-                <th>Title</th>
-                <th>Department</th>
-                <th>Manager Email</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for user in users.items %}
-            <tr>
-                <td>{{ user.email }}</td>
-                <td>{{ user.firstname }}</td>
-                <td>{{ user.lastname }}</td>
-                <td>{{ user.date_of_birth if user.date_of_birth else 'N/A' }}</td>
-                <td>{{ user.role.name }}</td>
-                <td>{{ user.title }}</td> 
-                <td>{{ user.department }}</td>
-                <td>{{ user.manager_email }}</td>
-                <td>
-                    <a href="{{ url_for('main.edit_user', user_id=user.id) }}" class="btn btn-sm btn-primary">Edit</a>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.4/css/jquery.dataTables.css">
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.js"></script>
+
+<style>
+    body {
+        font-family: 'Arial', sans-serif;
+        background: linear-gradient(45deg, #020014, #09033F);
+    }
+
+    .card {
+        border-radius: 10px;
+        box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-title {
+        font-weight: bold;
+        font-size: 24px;
+        margin-bottom: 20px;
+    }
+
+    table {
+        border-collapse: separate;
+        border-spacing: 0 10px;
+    }
+
+    th {
+        font-weight: bold;
+        background-color: #09033F;
+        color: white;
+    }
+
+    tr:hover {
+        background-color: #f5f5f5;
+    }
+
+    td, th {
+        padding: 10px 20px;
+    }
+
+    tbody tr:nth-child(odd) {
+        background-color: #f3f3f3;
+    }
+
+    .btn-sm {
+        border-radius: 5px;
+    }
+
+
+</style>
+
+<div class="container mt-5">
+    <div class="card">
+        <div class="card-body">
+            <h2 class="card-title text-center" style="color: #09033F;">User Management</h2>            
+            <table class="table table-bordered table-hover" id="hrUserTable">
+                <thead>
+                    <tr>
+                        <th>Email</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Date of Birth</th>
+                        <th>Role</th>
+                        <th>Title</th>
+                        <th>Department</th>
+                        <th>Manager Email</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users.items %}
+                    <tr>
+                        <td>{{ user.email }}</td>
+                        <td>{{ user.firstname }}</td>
+                        <td>{{ user.lastname }}</td>
+                        <td>{{ user.date_of_birth if user.date_of_birth else 'N/A' }}</td>
+                        <td>{{ user.role.name }}</td>
+                        <td>{{ user.title }}</td> 
+                        <td>{{ user.department }}</td>
+                        <td>{{ user.manager_email }}</td>
+                        <td style="text-align: center; vertical-align: middle;">
+                            <a href="{{ url_for('main.edit_user', user_id=user.id) }}" class="btn btn-sm btn-primary">Edit</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 
-{% endblock %}
-
-
-{% block scripts %}
-    <!-- CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest"></script>
-    <!-- Initialize DataTables -->
-    <script>
-        jQuery(document).ready(function($) {
-            $('#hrUserTable').DataTable({
-                "pageLength": 10,
-                "searching": true,
-                "ordering": true,
-                "info": true,
-                "lengthChange": false
-            });
+<!-- CDN -->
+<script>
+    jQuery(document).ready(function($) {
+        $('#hrUserTable').DataTable({
+            "pageLength": 10,
+            "searching": true,
+            "ordering": true,
+            "info": true,
+            "lengthChange": false
         });
-    </script>    
+    });
+</script>
+
+<!-- Your chart scripts here (if any) -->
+
 {% endblock %}
-
-
-

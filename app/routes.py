@@ -12,7 +12,7 @@ from app.personalization import save_picture, send_contact_email, user_took_test
 from app.models import User, Company, Results, Feedback
 from datetime import datetime
 from sqlalchemy.exc import SQLAlchemyError
-from sqlalchemy import extract, func
+from sqlalchemy import extract, func, distinct, cast, Integer
 
 login_manager = LoginManager()
 login_manager.login_view = 'main.login'
@@ -329,9 +329,10 @@ def company_dashboard():
     user_ids = [user.id for user in company_users]
     results = Results.query.filter(Results.user_id.in_(user_ids)).all()
 
+    company_id = current_user.companyId
     burnout_trends = get_burnout_trends()
-    department_data = get_department_burnout_data()
-    team_data = get_team_burnout_data()
+    department_data = get_department_burnout_data(company_id)
+    team_data = get_team_burnout_data(company_id)
 
     adminCount = User.query.filter_by(companyId=current_user.companyId, role_id=2).count()
     hrCount = User.query.filter_by(companyId=current_user.companyId, role_id=3).count()
@@ -346,7 +347,7 @@ def company_dashboard():
             results = (
                 db.session.query(
                     extract('month', Results.testDate).label('month'), 
-                    func.avg(Results.scoreA + Results.scoreB + Results.scoreC).label('avg_value')
+                    func.round(100 * func.avg(Results.scoreA + Results.scoreB + Results.scoreC) / 132).label('avg_value')
                 )
                 .filter(Results.user_id.in_(user_ids))
                 .group_by(extract('month', Results.testDate))
@@ -382,6 +383,8 @@ def company_dashboard():
                            regular_users_avg=monthly_avgs['regular_users'],
                            manager_avg=monthly_avgs['managers'])
 
+
+
 @main.route('/company/settings', methods=['GET', 'POST'])
 @login_required
 def company_settings():
@@ -412,8 +415,10 @@ def company_settings():
         return redirect(url_for('main.company_settings'))
 
     elif form.errors:
+        first_key = next(iter(form.errors))
+        first_value = form.errors[first_key][0] if form.errors[first_key] else None
         message_type = 'danger'
-        message = 'Please correct the following errors before proceeding.'
+        message = 'Error in field: ' + first_key + ' (' + first_value + ')'
 
     return render_template('adminsettingsconfig.html', form=form, message_type=message_type, message=message)
 
@@ -433,10 +438,14 @@ def company_users():
     company_users = User.query.filter_by(companyId=current_user.companyId) \
         .paginate(page=page, per_page=users_per_page, error_out=False)
 
-    if current_user.role_id == 3:
-        return render_template('hrusermanagement.html', users=company_users)
+    # Build a mapping from managerId to email for quick lookup in the template
+    manager_id_to_email = {user.id: user.email for user in User.query.all()}
 
-    return render_template('adminusermanagement.html', users=company_users)
+    if current_user.role_id == 3:
+        return render_template('hrusermanagement.html', users=company_users, manager_emails=manager_id_to_email)
+
+    return render_template('adminusermanagement.html', users=company_users, manager_emails=manager_id_to_email)
+
 
 @main.route('/edit_user/<int:user_id>', methods=['GET', 'POST'])
 @login_required
@@ -509,25 +518,143 @@ def delete_user(user_id):
 @main.route('/hr/overview')
 @login_required
 def hr_overview():
+    # Make sure the current user is allowed to view the company dashboard (e.g., a company admin)
     if not current_user.role_id == 3:
         abort(403)
 
-    # Assuming you have a function or method to calculate the burnout trends or statistics
-    burnout_trends = get_burnout_trends()
+    # Fetch company-related data that you want to display on the dashboard
+    # For demonstration, I'm fetching all users belonging to the company
+    company_users = User.query.filter_by(companyId=current_user.companyId).all()
+    # Assuming `company_users` is a list of user objects for a specific company
+    user_ids = [user.id for user in company_users]
+    results = Results.query.filter(Results.user_id.in_(user_ids)).all()
 
-    return render_template('hrdashboard.html', burnout_trends=burnout_trends)
+    company_id = current_user.companyId
+
+    burnout_trends = get_burnout_trends()
+    department_data = get_department_burnout_data(company_id)
+    team_data = get_team_burnout_data(company_id)
+
+    adminCount = User.query.filter_by(companyId=current_user.companyId, role_id=2).count()
+    hrCount = User.query.filter_by(companyId=current_user.companyId, role_id=3).count()
+    managerCount = User.query.filter_by(companyId=current_user.companyId, role_id=4).count()
+    userCount = User.query.filter_by(companyId=current_user.companyId, role_id=5).count()
+
+    def get_monthly_avg_for_roles(role_ids_mapping):
+        """Returns monthly averages for different roles."""
+        monthly_avg_by_role = {role: [0] * 12 for role in role_ids_mapping.keys()}
+
+        for role, user_ids in role_ids_mapping.items():
+            results = (
+                db.session.query(
+                    extract('month', Results.testDate).label('month'), 
+                    func.round(100 * func.avg(Results.scoreA + Results.scoreB + Results.scoreC) / 132).label('avg_value')
+
+                )
+                .filter(Results.user_id.in_(user_ids))
+                .group_by(extract('month', Results.testDate))
+                .all()
+            )
+
+            for month, avg_value in results:
+                monthly_avg_by_role[role][month-1] = avg_value
+
+        return monthly_avg_by_role
+
+    # Mapping roles to their respective user IDs
+    role_ids_mapping = {
+        'regular_users': [user.id for user in company_users if user.role_id == 5],
+        'managers': [user.id for user in company_users if user.role_id == 4],
+    }
+
+    monthly_avgs = get_monthly_avg_for_roles(role_ids_mapping)
+
+
+    # Pass all data to the template
+    return render_template('admindashboard.html',
+                            results=results, 
+                           company_users=company_users, 
+                           burnout_trends=burnout_trends,
+                           department_data=department_data, 
+                           team_data=team_data,
+                           adminCount=adminCount,
+                           hrCount=hrCount,
+                           managerCount=managerCount,
+                           userCount=userCount,
+                           regular_users_avg=monthly_avgs['regular_users'],
+                           manager_avg=monthly_avgs['managers'])
 
 @main.route('/hr/burnout-report')
 @login_required
 def hr_burnout_report():
     if not current_user.role_id == 3:
         abort(403)
+    
+    company_id = current_user.companyId
 
-    # Assuming you have functions to aggregate employee burnout data
-    department_data = get_department_burnout_data()
-    team_data = get_team_burnout_data()
+    def get_all_departments(company_id):
+        # Query the User table for distinct department values for the given company
+        distinct_departments = db.session.query(distinct(User.department)).filter_by(companyId=company_id).all()
 
-    return render_template('hrreporting.html', department_data=department_data, team_data=team_data)
+        # Convert the result into a list of department strings
+        departments = [department[0] for department in distinct_departments if department[0]]  # the if condition ensures we don't include None values
+
+        return departments
+
+    def get_all_managers(company_id):
+        managers = User.query.filter_by(companyId=company_id, role_id=4).all()
+        
+        # Convert list of manager objects to a list of dictionaries
+        manager_list = []
+
+        # Add a default 'No Manager Assigned' option with an id of -1
+        manager_list.append({
+            'id': -1,
+            'first_name': 'Users With No',
+            'last_name': 'Manager Assigned'
+        })
+
+        for manager in managers:
+            manager_dict = {
+                'id': manager.id,
+                'first_name': manager.firstname,
+                'last_name': manager.lastname,
+                # Add any other attributes of the manager you'd like to include
+            }
+            manager_list.append(manager_dict)
+
+        return manager_list
+
+    def replace_none_with_string(data):
+        if isinstance(data, dict):
+            keys_to_replace = [key for key in data if key is None or key == ""]
+            for key in keys_to_replace:
+                data[-1] = data.pop(key)
+
+            for value in data.values():
+                if isinstance(value, (dict, list)):
+                    replace_none_with_string(value)
+        return data
+
+    # Fetching the various burnout data using helper functions
+    department_data = get_department_burnout_data(company_id)
+    team_data = get_team_burnout_data(company_id)
+    departments = get_all_departments(company_id)
+    managers = get_all_managers(company_id)
+    team_data = replace_none_with_string(team_data)
+
+    # You can also fetch any other necessary data related to burnout or general statistics that you want to show.
+
+    print(department_data)
+    print(team_data)
+    print(departments)
+    print(managers)
+    # Passing the data to the template
+    return render_template('hrreporting.html', 
+                            department_data=department_data, 
+                            team_data=team_data,
+                            departments=departments,
+                            managers=managers)
 
 
 @main.route('/hr/edit-user/<int:user_id>', methods=['GET', 'POST'])
@@ -566,16 +693,14 @@ def hr_feedback():
 @login_required
 def change_feedback_status(feedback_id):
     if not current_user.role_id == 3:
-        abort(403)
+        return jsonify(success=False, message='Unauthorized access'), 403
 
     feedback = Feedback.query.get_or_404(feedback_id)
 
-    # In a real-world scenario, you'd probably have a dropdown or some form mechanism to capture the new status
-    feedback.status = "Reviewed"  # Example status change, this would actually come from a form or other input mechanism
+    feedback.status = "Reviewed"
     db.session.commit()
 
-    flash('Feedback status updated!', 'success')
-    return redirect(url_for('main.hr_feedback'))
+    return jsonify(success=True, message='Feedback status updated!')
 
 @main.route('/testhtml', methods=['GET', 'POST'])
 def testhtml():

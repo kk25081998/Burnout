@@ -1,6 +1,16 @@
 {% extends "base.html" %}
 
 {% block content %}
+<style>
+    body {
+        font-family: 'Arial', sans-serif;
+        background: linear-gradient(45deg, #020014, #09033F);
+    }
+    .form-label {
+        color: #09033F;
+    }
+</style>
+
 <div class="container mt-5">
     <div class="row">
         <div class="col-lg-8 offset-lg-2"> <!-- Center the form on large screens -->
@@ -52,10 +62,10 @@
                             {% endif %}
                             {{ form.image(class="form-control-file") }}
                         </div>
-                        <a href="/change_password" class="btn btn-link mb-3">Change Password</a> <!-- Link to change password -->    
-                        <div class="form-group">
+                        <div class="d-flex justify-content-between align-items-center">
                             {{ form.submit(class="btn btn-primary mt-2 px-4") }}
-                        </div>
+                            <a href="/change_password" class="btn btn-link mb-3">Change Password</a>
+                        </div>                        
                         {% if form.errors['__all__'] %}
                             <span class="text-danger">{{ form.errors['__all__'][0] }}</span>
                         {% endif %}
