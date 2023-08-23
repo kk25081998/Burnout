@@ -24,9 +24,8 @@
 
 ## Subtasks:
 
-* Check logic is same everywhere for results (using scaled score /132 strategy) (1-2 hours more of work)
+* Logic for checking if the test page is not working, it shows test even when test is taken for that month
 * Make sure all UI forms are submittable with no issues by testing them (2-3 hours)
 * Come up with advanced report analytics possible for HR page (2-3 hours)
 * Come up with new features for the app (2 hour brainstorm)
 * Find which is easier to migrate to postgre/mysql/mariadb for the long run in aws and implement in aws (4-5 hours)
-* Logic for checking if the test page is not working, it shows test even when test is taken for that month
