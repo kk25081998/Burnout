@@ -198,16 +198,28 @@ def test_history():
 @login_required
 def feedback():
     form = FeedbackForm()
+    message = ''
+    message_type = ''
+
     if form.validate_on_submit():
         new_feedback = Feedback(
-            companyId=current_user.companyId, 
-            description=form.description.data
+            company_id=current_user.companyId, 
+            description=form.feedback.data
         )
         db.session.add(new_feedback)
         db.session.commit()
-        flash('Thank you for your feedback!', 'success')
-        return redirect(url_for('feedback'))
-    return render_template('feedback.html', form=form)
+        return redirect(url_for('main.feedback', success=True))  # Redirect with success parameter
+
+    # Check for success parameter in the URL
+    if 'success' in request.args:
+        message = 'Thank you for your feedback!'
+        message_type = 'success'
+    elif form.is_submitted():
+        # Form validation failed
+        message = 'There was an error processing your feedback. Please check the form and try again.'
+        message_type = 'danger'
+
+    return render_template('feedback.html', form=form, message=message, message_type=message_type)
 
 
 # manager specific

@@ -174,11 +174,14 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url_for('main.resources') }}">Wellness Hub</a>
                         </li>
-                        {% if current_user.subordinates.count() > 0 %}
+                        {% if current_user.subordinates.count() > 2 %}
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url_for('main.team_test_history') }}">Team Test History</a>
                         </li>
                         {% endif %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('main.feedback') }}">HR Feedback</a>
+                        </li>
                     
                 <!-- For User role_id = 5 -->
                 {% elif current_user.role_id == 5 %}
@@ -195,11 +198,9 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url_for('main.resources') }}">Wellness Hub</a>
                         </li>
-                        {% if current_user.subordinates.count() > 0 %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('main.team_test_history') }}">Team Test History</a>
+                            <a class="nav-link" href="{{ url_for('main.feedback') }}">HR Feedback</a>
                         </li>
-                        {% endif %}
                         
                 {% endif %}
                 </ul>
