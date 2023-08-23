@@ -4,6 +4,7 @@
 
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.4/css/jquery.dataTables.css">
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/colresizable/1.6.0/colResizable-1.6.min.js"></script>
 
 <style>
     body {
@@ -100,11 +101,14 @@
             "searching": true,
             "ordering": true,
             "info": true,
-            "lengthChange": false
+            "lengthChange": false,
+            "initComplete": function() {
+                // Apply colResizable after the table is drawn
+                $("#hrUserTable").colResizable({
+                    resizeMode: 'fit'
+                });
+            }
         });
     });
-</script>
-
-<!-- Your chart scripts here (if any) -->
-
+</script> 
 {% endblock %}

@@ -453,15 +453,19 @@ def company_users():
 
     # Fetch paginated users from the company
     users_per_page = 25
-    company_users = User.query.filter_by(companyId=current_user.companyId) \
-        .paginate(page=page, per_page=users_per_page, error_out=False)
-
-    # Build a mapping from managerId to email for quick lookup in the template
-    manager_id_to_email = {user.id: user.email for user in User.query.all()}
-
+    
+    # Hr only see Staff and Managers
     if current_user.role_id == 3:
+        company_users = User.query.filter_by(companyId=current_user.companyId) \
+            .filter(User.role_id.in_([4, 5])) \
+            .paginate(page=page, per_page=users_per_page, error_out=False)
+        manager_id_to_email = {user.id: user.email for user in User.query.all()}
         return render_template('hrusermanagement.html', users=company_users, manager_emails=manager_id_to_email)
 
+    # Admin see all users
+    company_users = User.query.filter_by(companyId=current_user.companyId) \
+        .paginate(page=page, per_page=users_per_page, error_out=False)
+    manager_id_to_email = {user.id: user.email for user in User.query.all()}
     return render_template('adminusermanagement.html', users=company_users, manager_emails=manager_id_to_email)
 
 
