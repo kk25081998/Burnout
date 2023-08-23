@@ -9,7 +9,7 @@ from flask import Blueprint
 from flask import current_app
 import json
 from app.personalization import save_picture, send_contact_email, user_took_test_this_month, process_test_results, get_burnout_trends, get_department_burnout_data, get_team_burnout_data, save_company_logo, redirect_next_or_dashboard
-from app.models import User, Company, Results, Feedback
+from app.models import User, Company, Results, Feedback, Resources
 from datetime import datetime, timedelta
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy import extract, func, distinct, cast, Integer
@@ -267,7 +267,23 @@ def team_test_history():
 @main.route('/resources', methods=['GET'])
 # @login_required
 def resources():
-    return render_template('resources.html', title='Wellness Hub')
+    # Get all resources from the database
+    evaluate_resources = Resources.query.filter_by(category="Evaluate Your Options").all()
+    support_resources = Resources.query.filter_by(category="Seek Support").all()
+    activity_resources = Resources.query.filter_by(category="Try a Relaxing Activity").all()
+    exercise_resources = Resources.query.filter_by(category="Exercise").all()
+    sleep_resources = Resources.query.filter_by(category="Sleep").all()
+    mindfulness_resources = Resources.query.filter_by(category="Mindfulness").all()
+
+    return render_template('resources.html', 
+                           title='Wellness Hub', 
+                           evaluate_resources=evaluate_resources, 
+                           support_resources=support_resources, 
+                           activity_resources=activity_resources,
+                           exercise_resources=exercise_resources,
+                           sleep_resources=sleep_resources,
+                           mindfulness_resources=mindfulness_resources)
+
 
 
 @main.route('/pricing', methods=['GET'])

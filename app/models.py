@@ -88,3 +88,14 @@ class Feedback(db.Model):
 
     def __repr__(self):
         return f'<Feedback {self.id} for Company {self.company_id}>'
+
+class Resources(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    category = db.Column(db.String(120), nullable=False)
+    title = db.Column(db.String(120), nullable=False)
+    description = db.Column(db.String(500), nullable=True)
+    link = db.Column(db.String(500), nullable=False)
+    date_added = db.Column(db.DateTime, default=datetime.utcnow)
+
+    def __repr__(self):
+        return f"Resource('{self.title}', '{self.category}')"
