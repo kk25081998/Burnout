@@ -39,6 +39,7 @@
         color: #555;
         font-size: 0.95rem;
         margin: 15px 0;
+        font-weight: bold;
     }
 
     .pricing-btn {
@@ -78,13 +79,21 @@
 
     <!-- Introductory Text -->
     <div class="page-intro">
-        Discover the Right Plan for Your Business
+        Discover the Right Plan for Your Needs
         <p style="font-size: 1rem; color: #aaa;">Choose from a range of plans tailored to suit your company's needs.</p>
     </div>
 
     <div class="row justify-content-center">
 
         {% set plans = [
+            {
+                'title': 'Individual',
+                'subtitle': '(for individual users)',
+                'features': ['Personal Dashboard', 'Detailed Analysis', 'Monthly Reports'],
+                'price': '$5/month',
+                'color': '#FF8A80',
+                'icon': 'fa-user'
+            },            
             {
                 'title': 'Basic',
                 'subtitle': '(for small companies)',
@@ -119,7 +128,7 @@
                     <i class="fa {{ plan.icon }}" style="font-size: 3rem; color: {{ plan.color }};"></i>
                 </div>
                 <div class="card-body text-center">
-                    <div class="pricing-card-header" style="background-color: {{ plan.color }}; color: {{ 'white' if plan.title != 'Enterprise' else 'black' }};">{{ plan.title }}</div>
+                    <div class="pricing-card-header" style="background-color: {{ plan.color }}; color: #000000 ;">{{ plan.title }}</div>
                     <div style="color: #777; font-style: italic; margin-bottom: 15px;">{{ plan.subtitle }}</div>
                     {% for feature in plan.features %}
                         <div class="feature-list">{{ feature }}</div>
