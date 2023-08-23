@@ -157,11 +157,11 @@ class CompanySettingsForm(FlaskForm):
     companyName = StringField('Company Name', [DataRequired(), Length(min=1, max=200)])
     companyDescription = StringField('Company Description', [DataRequired(), Length(min=1, max=500)])
     companySize = IntegerField('Company Size', [DataRequired(), NumberRange(min=1, max=1000000)])
-    companyFrequency = SelectField('Feedback Frequency', [DataRequired()],
-                                   choices=[('1_week', '1 Week'),
-                                            ('2_weeks', '2 Weeks'),
-                                            ('1_month', '1 Month'),
-                                            ('2_months', '2 Months')])
+    # companyFrequency = SelectField('Feedback Frequency', [DataRequired()],
+    #                                choices=[('1_week', '1 Week'),
+    #                                         ('2_weeks', '2 Weeks'),
+    #                                         ('1_month', '1 Month'),
+    #                                         ('2_months', '2 Months')])
     companyLogo = FileField('Upload Company Logo', validators=[Optional(), FileAllowed(['jpg', 'png'])])
     submit_settings = SubmitField('Update Settings')
  

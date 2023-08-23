@@ -10,7 +10,7 @@ from flask import current_app
 import json
 from app.personalization import save_picture, send_contact_email, user_took_test_this_month, process_test_results, get_burnout_trends, get_department_burnout_data, get_team_burnout_data, save_company_logo, redirect_next_or_dashboard
 from app.models import User, Company, Results, Feedback
-from datetime import datetime
+from datetime import datetime, timedelta
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy import extract, func, distinct, cast, Integer
 
@@ -74,20 +74,39 @@ def logout():
 def dashboard():
     get_flashed_messages()
     user = User.query.filter_by(id=current_user.id).first()
-    last_score = Results.query.filter_by(user_id=current_user.id).order_by(Results.testDate.desc()).first()
-    last_three_scores = Results.query.filter_by(user_id=current_user.id).order_by(Results.testDate.desc()).limit(3).all()
-    
+    today_date = datetime.now().date()  # Get the current date without time.
+    # Get the first day of the current month.
+    first_day_of_current_month = today_date.replace(day=1)
+    last_day_of_last_month = first_day_of_current_month - timedelta(days=1)
+
+    last_score = Results.query.filter_by(user_id=current_user.id).filter(Results.testDate <= today_date).order_by(Results.testDate.desc()).first()
+    last_three_scores = (Results.query
+                    .filter(Results.user_id == current_user.id)
+                    .filter(Results.testDate <= last_day_of_last_month)  # Exclude scores with future dates.
+                    .order_by(Results.testDate.desc())
+                    .limit(3)
+                    .all())
+
     # Fetch all results for the user to display in the chart
     all_results = Results.query.filter_by(user_id=current_user.id).order_by(Results.testDate.asc()).all()
-    
+
     current_month = datetime.now().month
     last_month = (current_month - 1) % 12 or 12
     two_months_ago = (current_month - 2) % 12 or 12
-    
-    scores_dict = {score.testDate.month: score for score in last_three_scores}
+    three_months_ago = (current_month - 3) % 12 or 12
 
-    return render_template('dashboard.html', user=user, last_score=last_score, last_three_scores=last_three_scores, current_month=current_month, scores_dict=scores_dict, last_month=last_month, two_months_ago=two_months_ago)
-    
+    current_year = datetime.now().year
+    prev_year = current_year - 1
+
+
+    scores_dict = {}
+
+    for score in last_three_scores:
+        scores_dict[score.testDate.month] = score
+
+    print(scores_dict)
+    return render_template('dashboard.html', user=user, last_score=last_score, current_month=current_month, scores_dict=scores_dict, last_month=last_month, two_months_ago=two_months_ago, three_months_ago = three_months_ago, current_year=current_year, prev_year=prev_year)
+
 
 @main.route('/view_profile', methods=['GET', 'POST'])
 @login_required
@@ -402,7 +421,6 @@ def company_settings():
         current_user.company.name = form.companyName.data
         current_user.company.description = form.companyDescription.data
         current_user.company.size = form.companySize.data
-        current_user.company.frequency = form.companyFrequency.data
 
         # Save the company logo if it was uploaded
         if form.companyLogo.data:

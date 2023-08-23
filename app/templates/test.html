@@ -1,8 +1,13 @@
 {% extends "base.html" %}
 
-{% block extra_css %}
+{% block content %}
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(45deg, #020014, #09033F);
+            color: #e1e1e1;
+        }
         .btn {
             margin-top: 20px;
             border-radius: 20px;
@@ -11,6 +16,9 @@
             transition: all 0.3s ease-in-out;
             align-items: center;
             justify-content: center;
+        }
+        .form-group {
+            color: #09033F;
         }
         .btn-primary {
             background-color: #007bff;
@@ -33,29 +41,29 @@
             font-weight: bold;
         }
         .section {
-            padding: 30px 0; /* 30px padding top and bottom */
             margin: 20px 0; /* 20px margin top and bottom */
-            border-bottom: 1px solid #f0f0f0; /* subtle divider */
+        }
+        .section-title {
+            text-align: center;
+            color: darkblue;
         }
     </style>
-{% endblock %}
 
-{% block content %}
 
 <div class="container mt-5">
     <div class="mbi-description mb-4 p-4">
-        <h4 class="text-center mb-3 text-primary">Wellness Insight Assessment Rating Scale:</h4>
+        <h3 class="text-center mb-3 text-primary">Wellness Insight Assessment Rating Scale:</h3>
         <p class="font-weight-bold">For each statement, you're asked to indicate how often you feel a particular way. The scale ranges from 0 to 6, and here's what each number represents:</p>
         <ul class="list-group">
-            <li class="list-group-item"><strong>0 (Never):</strong> You have never felt this way.</li>
-            <li class="list-group-item"><strong>1 (A few times a year or less):</strong> You rarely feel this way, perhaps a few times throughout the year.</li>
-            <li class="list-group-item"><strong>2 (Once a month or less):</strong> You feel this way occasionally but not frequently.</li>
-            <li class="list-group-item"><strong>3 (A few times a month):</strong> You feel this way several times in a month, but it's not a regular occurrence.</li>
-            <li class="list-group-item"><strong>4 (Once a week):</strong> You feel this way about once every week.</li>
-            <li class="list-group-item"><strong>5 (A few times a week):</strong> This feeling occurs multiple times in a week.</li>
-            <li class="list-group-item"><strong>6 (Every day):</strong> You feel this way daily.</li>
+            <li class="list-group-item" style="color: #09033F;"><strong>0 (Never):</strong> You have never felt this way.</li>
+            <li class="list-group-item" style="color: #09033F;"><strong>1 (A few times a year or less):</strong> You rarely feel this way, perhaps a few times throughout the year.</li>
+            <li class="list-group-item" style="color: #09033F;"><strong>2 (Once a month or less):</strong> You feel this way occasionally but not frequently.</li>
+            <li class="list-group-item" style="color: #09033F;"><strong>3 (A few times a month):</strong> You feel this way several times in a month, but it's not a regular occurrence.</li>
+            <li class="list-group-item" style="color: #09033F;"><strong>4 (Once a week):</strong> You feel this way about once every week.</li>
+            <li class="list-group-item" style="color: #09033F;"><strong>5 (A few times a week):</strong> This feeling occurs multiple times in a week.</li>
+            <li class="list-group-item" style="color: #09033F;"><strong>6 (Every day):</strong> You feel this way daily.</li>
         </ul>
-        <p class="mt-3 text-muted">Please select the number that best matches your feelings based on the frequency.</p>
+        <p class="mt-3" style="color: #e1e1e1;">Please select the number that best matches your feelings based on the frequency.</p>
     </div>
     
 
@@ -65,7 +73,7 @@
                 {{ form.hidden_tag() }}
                 <div class="container">
                     <div class="section">
-                        <h3 style="text-align: center;">Emotional Fatigue</h3>
+                        <h3 class="section-title">Emotional Fatigue</h3>
                         {% for question in section1 %}
                         <div class="form-group question">
                             <span class="missed-indicator" style="display: none; color: red;">★ Incomplete</span><br><label>{{ question.label }}</label><br>
@@ -78,11 +86,9 @@
                         </div>
                         {% endfor %}
                     </div>
-
-                    <div style="margin: 40px 0; border-top: 1px solid #e0e0e0;"></div>
-    
-                    <div class="section"></div>
-                        <h3 style="text-align: center;">Cynicism & Detachment</h3>
+                    <br>
+                    <div class="section">
+                        <h3 class="section-title">Cynicism & Detachment</h3>
                         {% for question in section2 %}
                         <div class="form-group question">
                             <span class="missed-indicator" style="display: none; color: red;">★ Incomplete</span><br><label>{{ question.label }}</label><br>
@@ -95,11 +101,9 @@
                         </div>
                         {% endfor %}
                     </div>
-
-                    <div style="margin: 40px 0; border-top: 1px solid #e0e0e0;"></div>
-    
+                    <br>
                     <div class="section">
-                        <h3 style="text-align: center;">Professional Efficacy</h3>
+                        <h3 class="section-title">Professional Efficacy</h3>
                         {% for question in section3 %}
                         <div class="form-group question">
                             <span class="missed-indicator" style="display: none; color: red;">★ Incomplete</span><br><label>{{ question.label }}</label><br>

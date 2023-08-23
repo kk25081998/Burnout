@@ -6,116 +6,76 @@
         font-family: 'Arial', sans-serif;
         background: linear-gradient(45deg, #020014, #09033F);
     }
-
-    .form-container {
-        background: white;
-        padding: 20px;
+    .form-label {
+        color: #09033F;
+    }
+    .card {
         border-radius: 10px;
-        box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.1);
+        box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1);
+        background-color: #ffffff;
+        padding: 5px;
     }
-
-    .form-group {
-        margin-bottom: 20px;
-        color: #182e68;
-    }
-
-    .btn-primary {
-        background-color: #182e68;
-        border: none;
-        border-radius: 5px;
-        padding: 10px 20px;
-        font-weight: bold;
-    }
-
-    .btn-primary:hover {
-        background-color: #0b1c4b;
-    }
-
-    .jumbotron {
-        background-color: #f7f7f7;
-        border-radius: 10px;
-        box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.1);
-    }
-
 </style>
-<div class="container mt-5">     
 
-    <div class="form-container mt-4">
-        <h2 class="text-center mb-4" style="color: #182e68;">Company Settings</h2> <!-- This is your title -->
-
-        <form action="{{ url_for('main.company_settings') }}" method="post" enctype="multipart/form-data">
-            {{ form.hidden_tag() }}
-            <div class="form-group">
-                <label for="companyName">Company Name</label>
-                <input type="text" class="form-control" id="companyName" name="companyName" value="{{ current_user.company.name }}">
-            </div>
-    
-            <div class="form-group">
-                <label for="companyDescription">Company Description</label>
-                <input type="text" class="form-control" id="companyDescription" name="companyDescription" value="{{ current_user.company.description }}">
-            </div>
-    
-            <div class="form-group">
-                <label for="companySize">Company Size</label>
-                <input type="number" class="form-control" id="companySize" name="companySize" value="{{ current_user.company.size }}">
-            </div>
-    
-            <div class="form-group">
-                <label for="companyFrequency">Feedback Frequency</label>
-                <select class="form-control" id="companyFrequency" name="companyFrequency">
-                    <option value="1_week" {% if current_user.company.frequency == '1_week' %} selected {% endif %}>1 Week</option>
-                    <option value="2_weeks" {% if current_user.company.frequency == '2_weeks' %} selected {% endif %}>2 Weeks</option>
-                    <option value="1_month" {% if current_user.company.frequency == '1_month' or not current_user.company.frequency %} selected {% endif %}>1 Month</option>
-                    <option value="2_months" {% if current_user.company.frequency == '2_months' %} selected {% endif %}>2 Months</option>
-                </select>
-            </div>        
-    
-            <!-- Additional company-specific settings can be added here. -->
-            <div class="form-group">
-                <label for="companyLogo" class="mr-3">Upload Company Logo</label>
-                <div class="form-group d-flex align-items-center">
-                
-                    <!-- Display current logo if it exists -->
-                    {% if current_user.company.image %}
-                        <div class="mb-2 mr-3">
-                            <img src="{{ url_for('static', filename='company_logo/' + current_user.company.image) }}" alt="Current Company Logo" width="100">
-                        </div>
-                    {% endif %}
-                    
-                    <div>
-                        <input type="file" class="form-control-file" id="companyLogo" name="companyLogo">
-                        {% if form.companyLogo.errors %}
-                            <span class="text-danger d-block mt-1">{{ form.companyLogo.errors[0] }}</span>
-                        {% endif %}
-                    </div>
-                </div>    
-            </div>
-            
-            {% if message %}
-                <div class="alert alert-{{ message_type }}">
-                    {{ message }}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-lg-8 offset-lg-2"> <!-- Center the form on large screens -->
+            <div class="card">
+                <div class="card-header bg-warning text-white"> <!-- New header color -->
+                    <h2 class="mb-0 text-center">Company Settings</h2>
                 </div>
-            {% endif %}
-    
-            <button type="submit" class="btn btn-primary">Update Settings</button>
-        </form>
+                <div class="card-body">
+                    <form action="{{ url_for('main.company_settings') }}" method="post" enctype="multipart/form-data">
+                        {{ form.hidden_tag() }}
+
+                        <div class="form-group">
+                            <label class="form-label"><i class="fa fa-building"></i> Company Name</label>
+                            <input type="text" class="form-control" id="companyName" name="companyName" value="{{ current_user.company.name }}">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label"><i class="fa fa-info-circle"></i> Company Description</label>
+                            <input type="text" class="form-control" id="companyDescription" name="companyDescription" value="{{ current_user.company.description }}">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label"><i class="fa fa-users"></i> Company Size</label>
+                            <input type="number" class="form-control" id="companySize" name="companySize" value="{{ current_user.company.size }}">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="companyLogo" class="mr-3" style="color:#09033F">Upload Company Logo</label>
+                            <div class="form-group d-flex align-items-center" style="color:#09033F">
+                            
+                                <!-- Display current logo if it exists -->
+                                {% if current_user.company.image %}
+                                    <div class="mb-2 mr-3">
+                                        <img src="{{ url_for('static', filename='company_logo/' + current_user.company.image) }}" alt="Current Company Logo" width="100">
+                                    </div>
+                                {% endif %}
+                                
+                                <div>
+                                    <input type="file" class="form-control-file" id="companyLogo" name="companyLogo">
+                                    {% if form.companyLogo.errors %}
+                                        <span class="text-danger d-block mt-1">{{ form.companyLogo.errors[0] }}</span>
+                                    {% endif %}
+                                </div>
+                            </div>    
+                        </div>
+                        
+                        <!-- Message display -->
+                        {% if message %}
+                            <div class="alert alert-{{ message_type }} alert-dismissible fade show" role="alert">
+                                {{ message }}
+                            </div>
+                        {% endif %}
+
+                        <button type="submit" class="btn btn-primary mt-2 px-4">Update Settings</button>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
-
-    
-
-    <hr>
-    <!-- <h3>Other Configurations:</h3>
-
-    <div class="form-group form-check">
-        <input type="checkbox" class="form-check-input" id="enableModuleA" name="enableModuleA" {% if current_user.company.moduleA_enabled %} checked {% endif %}>
-        <label class="form-check-label" for="enableModuleA">Enable Module A for Company</label>
-    </div>
-
-    <div class="form-group form-check">
-        <input type="checkbox" class="form-check-input" id="enableModuleB" name="enableModuleB" {% if current_user.company.moduleB_enabled %} checked {% endif %}>
-        <label class="form-check-label" for="enableModuleB">Enable Module B for Company</label>
-    </div>
-
-    <button type="submit" class="btn btn-secondary">Save Configurations</button> -->
 </div>
+
 {% endblock %}

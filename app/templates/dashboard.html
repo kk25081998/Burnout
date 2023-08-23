@@ -5,15 +5,65 @@
     body {
         font-family: 'Arial', sans-serif;
         background: linear-gradient(45deg, #020014, #09033F);
+        color: #e1e1e1;
     }
+
     .card {
         background-color: #2a2a2a;
+        border-radius: 8px;
+        overflow: hidden;
     }
+
+    .card-header {
+        font-weight: bold;
+        background-color: #1a1a1a;
+        padding: 15px;
+    }
+
+    .card-body {
+        padding: 15px;
+    }
+
+    .card.bg-primary {
+        background-color: #2e4d9f !important;
+    }
+
+    a {
+        color: #007bff;
+        text-decoration: none;
+    }
+
+    a:hover {
+        color: #0056b3;
+        text-decoration: underline;
+    }
+
+    .resources-section {
+        background-color: rgba(255, 255, 255, 0);
+        padding: 20px;
+        border-radius: 8px;
+    }
+
+    .list-group-item {
+        border: none;
+        background-color: transparent;
+    }
+
+    .list-group-item:hover {
+        background-color: rgba(0,0,0,0.05);
+    }
+
+    .large-text .list-group-item {
+        font-size: 1.5rem;  /* adjust this value as needed */
+    }
+
 </style>
   
 <div class="container mt-5">
     
     <div class="row mt-4">
+        
+        <!-- Profile Card -->
         <div class="col-md-4">
             <div class="card">
                 <div class="card-header">
@@ -21,35 +71,46 @@
                 </div>
                 <div class="card-body text-center">
                     <!-- Add a profile picture -->
-                {% if current_user.image %}
-                    <img src="{{ url_for('static', filename='profile_pics/' + current_user.image) }}" alt="Profile Picture" class="img-thumbnail mb-3" style="max-width: 250px; max-height: 250px;">
-                {% else %}
-                    <img src="{{ url_for('static', filename='profile_pics/default.jpg') }}" alt="Profile Picture" class="img-thumbnail mb-3" style="max-width: 250px; max-height: 250px;">
-                {% endif %}
+                    {% if current_user.image %}
+                        <img src="{{ url_for('static', filename='profile_pics/' + current_user.image) }}" alt="Profile Picture" class="img-thumbnail mb-3" style="max-width: 250px; max-height: 250px;">
+                    {% else %}
+                        <img src="{{ url_for('static', filename='profile_pics/default.jpg') }}" alt="Profile Picture" class="img-thumbnail mb-3" style="max-width: 250px; max-height: 250px;">
+                    {% endif %}
 
-                    <!-- Display user profile data -->
-                    <h5>{{user.firstname}} {{user.lastname}}</h5>
-                    <p class="text-muted">
+                    <h5>{{ user.firstname }} {{ user.lastname }}</h5>
+                    <p class="card-body text-center">
                         {% if user.date_of_birth %}
                             Date of Birth: {{ user.date_of_birth.split(" ")[0] }}<br>
                         {% else %}
                             Date of Birth: Not provided<br>
                         {% endif %}
-                        Organization: {{user.company.name}}<br>
-                        Role: {{user.title}}
+                        Organization: {{ user.company.name }}<br>
+                        Role: {{ user.title }}
                     </p>
                 </div>
             </div>
         </div>
+        
+        <!-- Burnout Score Card -->
         <div class="col-md-4">
-            <div class="card bg-primary text-white">
+            <div class="card" 
+                 {% if last_score %}
+                    {% set scaled_score = (last_score.scoreA + last_score.scoreB + (48 - last_score.scoreC)) * 100 / 132 + 0.5 %}
+                    {% if scaled_score <= 33 %}
+                        style="background: linear-gradient(45deg, lightgreen, green);"
+                    {% elif scaled_score <= 66 %}
+                        style="background: linear-gradient(45deg, yellow, orange);"
+                    {% else %}
+                        style="background: linear-gradient(45deg, salmon, red);"
+                    {% endif %}
+                {% endif %}
+            >
                 <div class="card-header">
                     <h3>Current Burnout Score</h3>
                 </div>
                 <div class="card-body text-center">
-                    <h1>
+                    <h1 style="color: #020014;">
                         {% if last_score %}
-                            {% set scaled_score = (last_score.scoreA + last_score.scoreB + (48 - last_score.scoreC)) * 100 / 132 + 0.5 %}
                             {{ scaled_score|int }}/100
                         {% else %}
                             N/A
@@ -58,20 +119,21 @@
                 </div>
             </div>
         </div>
-
+        
+        <!-- Score History Card -->
         <div class="col-md-4">
             <div class="card">
                 <div class="card-header">
                     <h3>Score History</h3>
                 </div>
                 <div class="card-body">
-                    <ul class="list-group">
-                        {% for month in [two_months_ago, last_month, current_month] %}
+                    <ul class="list-group large-text">
+                        {% for month in [three_months_ago, two_months_ago, last_month] %}
                             <li class="list-group-item d-flex justify-content-between">
                                 {{ ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][month-1] }}
                                 <span>
                                     {% if scores_dict.get(month) %}
-                                        {% set scaled_score = (scores_dict[month].scoreA + scores_dict[month].scoreB + (48 - scores_dict[month].scoreC)) * 100 / 132 + 0.5 %}
+                                        {% set scaled_score = (scores_dict[month].scoreA + scores_dict[month].scoreB + (48 - scores_dict[month].scoreC)) * 100 / 132 %}
                                         {{ scaled_score|int }}/100
                                     {% else %}
                                         <span class="text-muted">--/--</span>
@@ -80,13 +142,15 @@
                             </li>
                         {% endfor %}
                     </ul>
-                </div>
+                </div>                
             </div>
         </div>
+
     </div>
     
-    <hr class="mt-5">
+    <hr class="mt-2">
     
+    <!-- Resources Section -->
     <div class="resources-section mt-4 pb-5">
         <h2>Resources</h2>
         <p>Here are some resources to help you maintain your well-being:</p>
@@ -96,7 +160,5 @@
             <li class="list-group-item"><a href="https://www.headspace.com/">Headspace: Guided meditations designed to reduce stress, improve sleep, and enhance focus</a></li>
         </ul>
     </div>
-    
-    
 </div>
 {% endblock %}

@@ -34,7 +34,7 @@
         <div class="card-body">
 
             <!-- Title for Company Stats Chart -->
-            <h4 class="text-center mb-4" style="color: #09033F;">User Count</h4>
+            <h4 class="text-center mb-4" style="color: #09033F; font-weight: bold;">User Count</h4>
 
             <!-- Chart for Company Stats -->
             <div class="row justify-content-center">
@@ -46,7 +46,7 @@
             <hr class="mt-5">
 
             <!-- Title for User and Manager Average Scores Chart -->
-            <h4 class="text-center mb-4" style="color: #09033F;">Average Scores for Users and Managers</h4>
+            <h4 class="text-center mb-4" style="color: #09033F; font-weight: bold;">Average Scores for Staff and Managers</h4>
 
             <div class="row justify-content-center">
                 <div class="col-md-8">
@@ -72,7 +72,7 @@
     var userStatsChart = new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: ['Total Users', 'Admins', 'HRs', 'Managers', 'Employees'],
+            labels: ['Total Users', 'Admins', 'HRs', 'Managers', 'Staff'],
             datasets: [{
                 label: 'User Statistics',
                 data: [userCounts, adminCount, hrCount, managerCount, regularUserCount],
