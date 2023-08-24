@@ -14,7 +14,7 @@ from werkzeug.exceptions import HTTPException  # import HTTPException instead of
 from flask import Blueprint
 import json
 from app.models import User, Company, Results
-from sqlalchemy import extract, func, distinct, cast, Integer
+from sqlalchemy import extract, func, distinct, cast, Integer, text
 
 def save_picture(form_picture, user_email, user_id):
     _, f_ext = os.path.splitext(form_picture.filename)
@@ -121,62 +121,75 @@ def get_burnout_trends():
     # Get the current user's company ID
     company_id = current_user.companyId
     
+    # Extract month and year from testDate for grouping and ordering
+    extracted_month = db.func.extract('month', Results.testDate).label('month')
+    extracted_year = db.func.extract('year', Results.testDate).label('year')
+    
     # Fetch burnout trends only for the current company
-    # For SQLite, use strftime('%m', Results.testDate) to get the month
     last_six_months = db.session.query(
-        db.func.strftime('%m', Results.testDate), 
+        extracted_month,
+        extracted_year, 
         db.func.avg(Results.scoreA),
         db.func.avg(Results.scoreB),
         db.func.avg(Results.scoreC)
-    ).join(User, User.id == Results.user_id).filter(User.companyId == company_id).group_by(db.func.strftime('%m', Results.testDate)).order_by(Results.testDate.desc()).limit(6).all()
+    ).join(User, User.id == Results.user_id).filter(User.companyId == company_id).group_by(extracted_month, extracted_year).order_by(extracted_year.desc(), extracted_month.desc()).limit(6).all()
 
     return last_six_months
 
 
 def get_department_burnout_data(company_id):
-    # Extract month and year from testDate to group by month
-    month_year = db.func.strftime('%Y-%m', Results.testDate)
+    department_monthly_scores = (
+        db.session.query(
+            User.department,
+            extract('year', Results.testDate).label('year'),
+            extract('month', Results.testDate).label('month'),
+            func.round(100 * func.avg(Results.scoreA + Results.scoreB + (48 - Results.scoreC)) / 132).label('avg_burnout')
+        )
+        .join(Results, User.id == Results.user_id)
+        .filter(User.companyId == company_id)
+        .group_by(User.department, 'year', 'month')
+        .order_by(extract('year', Results.testDate).desc(), extract('month', Results.testDate))
+        .all()
+    )
 
-    # Use SQLAlchemy's group_by and avg to compute average burnout score per department per month
-    department_monthly_scores = db.session.query(
-        User.department,
-        month_year.label('month_year'),
-        func.round(100 * func.avg(Results.scoreA + Results.scoreB + Results.scoreC) / 132).label('avg_burnout')
-    ).join(Results, User.id == Results.user_id
-    ).filter(User.companyId == company_id
-    ).group_by(User.department, 'month_year').all()
-
-    # Transform the results into a more useful dictionary format
     result_dict = {}
-    for dep, month, avg in department_monthly_scores:
+    for dep, year, month, avg in department_monthly_scores:
+        month_str = str(int(month)).zfill(2)  # Convert month to string and pad with zeros
+        month_year = f"{year}-{month_str}"
         if dep not in result_dict:
             result_dict[dep] = {}
-        result_dict[dep][month] = avg
+        result_dict[dep][month_year] = avg
 
     return result_dict
+
+
 
 
 def get_team_burnout_data(company_id):
-    # Extract month and year from testDate to group by month
-    month_year = db.func.strftime('%Y-%m', Results.testDate)
+    manager_monthly_scores = (
+        db.session.query(
+            User.manager_id,
+            extract('year', Results.testDate).label('year'),
+            extract('month', Results.testDate).label('month'),
+            func.round(100 * func.avg(Results.scoreA + Results.scoreB + (48 - Results.scoreC)) / 132).label('avg_burnout')
+        )
+        .join(Results, User.id == Results.user_id)
+        .filter(User.companyId == company_id)
+        .group_by(User.manager_id, 'year', 'month')
+        .order_by(text('year DESC, month DESC'))
+        .all()
+    )
 
-    # Use SQLAlchemy's group_by and avg to compute average burnout score per team per month
-    manager_monthly_scores = db.session.query(
-        User.manager_id,
-        month_year.label('month_year'),
-        func.round(100 * func.avg(Results.scoreA + Results.scoreB + Results.scoreC) / 132).label('avg_burnout')
-    ).join(Results, User.id == Results.user_id
-    ).filter(User.companyId == company_id
-    ).group_by(User.manager_id, 'month_year').all()
-
-    # Transform the results into a more useful dictionary format
     result_dict = {}
-    for manager, month, avg in manager_monthly_scores:
+    for manager, year, month, avg in manager_monthly_scores:
+        month_str = str(int(month)).zfill(2)  # Convert month to string and pad with zeros
+        month_year = f"{year}-{month_str}"
         if manager not in result_dict:
             result_dict[manager] = {}
-        result_dict[manager][month] = avg
+        result_dict[manager][month_year] = avg
 
     return result_dict
+
 
 
 # Function to redirect to appropriate dashboard based on user role_id
@@ -196,3 +209,9 @@ def redirect_next_or_dashboard():
     else:
         # Fallback to default dashboard or some other page if needed
         return redirect(url_for('main.dashboard'))
+
+
+def create_departments(company_id):
+    distinct_department_names = db.session.query(User.department).filter_by(companyId=company_id).distinct().all()
+    department_names = [row[0] for row in distinct_department_names]
+    return department_names

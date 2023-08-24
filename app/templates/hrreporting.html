@@ -42,18 +42,20 @@
     <div class="row selector mb-4">
         <div class="col-md-6">
             <label for="departmentSelect">Select Department:</label>
-            <select id="departmentSelect" class="form-control">
+            <select id="departmentSelect" class="form-control" onchange="updateTitle()">
                 {% for department in departments %}
                     <option value="{{ department }}">{{ department }}</option>
                 {% endfor %}
-            </select>
+            </select>            
         </div>
     </div>
 
     <!-- Card with white background for User Count -->
     <div class="card bg-white mb-4">
         <div class="card-body">
-            <h4 class="text-center mb-4" style="color: #09033F;">User Count</h4>
+            <h4 class="text-center mb-4" style="color: #09033F;">
+                Burnout levels for <span id="selectedDepartment">{{ departments[0] if departments }}</span>
+            </h4>
             <div class="row justify-content-center">
                 <div class="col-md-8 chartContainer">
                     <canvas id="departmentStatsChart"></canvas>
@@ -66,7 +68,7 @@
     <div class="row selector mb-4">
         <div class="col-md-6">
             <label for="managerSelect">Select Manager:</label>
-            <select id="managerSelect" class="form-control">
+            <select id="managerSelect" class="form-control" onchange="updateTitle2()">
                 {% for manager in managers %}
                     {% if manager.id is not none %} <!-- Only display managers if the ID is not None -->
                         <option value="{{ manager.id }}" {% if loop.first %}selected{% endif %}>{{ manager.first_name }} {{ manager.last_name }}</option>
@@ -80,7 +82,9 @@
     <!-- Card with white background for Average Scores for Users and Managers -->
     <div class="card bg-white mb-4">
         <div class="card-body">
-            <h4 class="text-center mb-4" style="color: #09033F;">Average Scores for Users and Managers</h4>
+            <h4 class="text-center mb-4" style="color: #09033F;">
+                Average Team Scores For Manager: <span id="selectedManager">{{ managers[0].first_name }} {{ managers[0].last_name }}</span>
+            </h4>            
             <div class="row justify-content-center">
                 <div class="col-md-8 chartContainer">
                     <canvas id="managerStatsChart"></canvas>
@@ -121,6 +125,22 @@
         }
 
         return gradient;
+    }
+
+    function updateTitle() {
+        // Get the selected value from the dropdown
+        const selectedValue = document.getElementById('departmentSelect').value;
+        
+        // Update the title with the selected value
+        document.getElementById('selectedDepartment').textContent = selectedValue;
+    }
+
+    function updateTitle2() {
+        // Get the selected manager's name from the dropdown
+        const selectedManagerName = document.getElementById('managerSelect').selectedOptions[0].text;
+        
+        // Update the title with the selected manager's name
+        document.getElementById('selectedManager').textContent = selectedManagerName;
     }
 
     function createBarChart(ctx, results) {

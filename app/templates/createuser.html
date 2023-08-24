@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    body {
+        font-family: 'Arial', sans-serif;
+        background: linear-gradient(45deg, #020014, #09033F);
+    }
+
+    .card {
+        border-radius: 10px;
+        box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1);
+        background-color: #ffffff;
+        padding: 5px;
+    }
+
+    .form-control {
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+        position: relative;
+    }
+
+    .text-danger {
+        color: #dc3545;
+    }
+
+    .form-label {
+        color: #09033F;
+    }
+
+    .btn-primary {
+        background-color: #09033F;
+        border: none;
+    }
+</style>
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-lg-8 offset-lg-2">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="mb-0 text-center">Register</h2>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {{ form.hidden_tag() }}
+                        
+                        {% for field in [form.email, form.firstname, form.lastname, form.role, form.title, form.department, form.password, form.confirm_password] %}
+                            <div class="form-group">
+                                <label class="form-label">{{ field.label }}</label>
+                                {{ field(class="form-control") }}
+                                {% if field.errors %}
+                                    <span class="text-danger">{{ field.errors[0] }}</span>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                        
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary">
+                                Register
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<br>
+<br>
+{% endblock %}

@@ -2,14 +2,14 @@
 from flask import render_template, redirect, url_for, flash, abort, request, jsonify, session, get_flashed_messages, send_from_directory
 from flask_login import login_user, logout_user, login_required, current_user, LoginManager
 from app import db, create_app
-from app.forms import RegistrationForm, LoginForm, EditProfileForm, TakeTest, SelectManagerForm, PasswordChangeForm, ContactForm, UnifiedUserForm, FeedbackForm, CompanySettingsForm
+from app.forms import CreateNewUserForm, LoginForm, EditProfileForm, TakeTest, SelectManagerForm, PasswordChangeForm, ContactForm, UnifiedUserForm, FeedbackForm, CompanySettingsForm
 from datetime import datetime
 from werkzeug.exceptions import HTTPException  # import HTTPException instead of abort
 from flask import Blueprint
 from flask import current_app
 import json
-from app.personalization import save_picture, send_contact_email, user_took_test_this_month, process_test_results, get_burnout_trends, get_department_burnout_data, get_team_burnout_data, save_company_logo, redirect_next_or_dashboard
-from app.models import User, Company, Results, Feedback, Resources
+from app.personalization import save_picture, send_contact_email, user_took_test_this_month, process_test_results, get_burnout_trends, get_department_burnout_data, get_team_burnout_data, save_company_logo, create_departments, redirect_next_or_dashboard
+from app.models import User, Company, Results, Feedback, Resources, Role
 from datetime import datetime, timedelta
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy import extract, func, distinct, cast, Integer
@@ -507,13 +507,19 @@ def edit_user(user_id):
 
     # Retrieve manager's email if a manager is set for the user
     manager_email = user.manager.email if user.manager else ""
+    all_departments = create_departments(user.companyId)
 
-    form = UnifiedUserForm(original_email=user.email, obj=user)
+    message = ''
+    message_type = ''
+
+    form = UnifiedUserForm(original_email=user.email, obj=user, manager_email = manager_email, all_departments = all_departments)
 
     # For GET request
     if request.method == 'GET':
         form.role.data = user.role_id
-        return render_template('edituser.html', title='Edit User', form=form, user=user)
+        message = ''
+        message_type = ''
+        return render_template('edituser.html', title='Edit User', form=form, user=user, manager_email = manager_email, all_departments = all_departments, message=message, message_type= message_type)
     
     # For POST request
     if request.method == 'POST':
@@ -544,7 +550,7 @@ def edit_user(user_id):
             user.manager_id = None
 
         db.session.commit()
-        flash('User details have been updated.')
+        flash('User details have been updated!', 'success')
         return redirect(url_for('main.edit_user', user_id=user.id))
 
 
@@ -598,7 +604,7 @@ def hr_overview():
             results = (
                 db.session.query(
                     extract('month', Results.testDate).label('month'), 
-                    func.round(100 * func.avg(Results.scoreA + Results.scoreB + Results.scoreC) / 132).label('avg_value')
+                    func.round(100 * func.avg(Results.scoreA + Results.scoreB + (48 - Results.scoreC)) / 132).label('avg_value')
 
                 )
                 .filter(Results.user_id.in_(user_ids))
@@ -693,12 +699,8 @@ def hr_burnout_report():
     managers = get_all_managers(company_id)
     team_data = replace_none_with_string(team_data)
 
-    # You can also fetch any other necessary data related to burnout or general statistics that you want to show.
-
     print(department_data)
-    print(team_data)
-    print(departments)
-    print(managers)
+
     # Passing the data to the template
     return render_template('hrreporting.html', 
                             department_data=department_data, 
@@ -751,6 +753,62 @@ def change_feedback_status(feedback_id):
     db.session.commit()
 
     return jsonify(success=True, message='Feedback status updated!')
+
+@main.route("/createuser", methods=['GET', 'POST'])
+@login_required
+def register():
+    form = CreateNewUserForm()
+
+    companyId = current_user.companyId
+
+    all_roles = [(role.id, role.name) for role in Role.query.all()]
+
+    # Depending on role_id, filter the role choices
+    if current_user.role_id == 3:  # HR
+        form.role.choices = [role for role in all_roles if role[0] in [4, 5]]
+    elif current_user.role_id == 2:  # Admin
+        form.role.choices = [role for role in all_roles if role[0] in [2, 3, 4, 5]]
+    else:
+        form.role.choices = all_roles
+
+    if form.validate_on_submit():
+        user = User(
+            email=form.email.data,
+            firstname=form.firstname.data,
+            lastname=form.lastname.data,
+            role_id=form.role.data,
+            title=form.title.data,
+            department=form.department.data,
+            companyId = companyId
+        )
+        user.set_password(form.password.data)
+        db.session.add(user)
+        db.session.commit()
+        flash('Your account has been created!', 'success')
+
+        # Get page number from request arguments (or default to page 1 if not provided)
+        page = request.args.get('page', 1, type=int)
+
+        # Fetch paginated users from the company
+        users_per_page = 25
+
+        # This part seems to be mispositioned. It should be outside the form validation check.
+        if current_user.role_id == 3:
+            company_users = User.query.filter_by(companyId=current_user.companyId) \
+                .filter(User.role_id.in_([4, 5])) \
+                .paginate(page=page, per_page=users_per_page, error_out=False)
+            manager_id_to_email = {user.id: user.email for user in User.query.all()}
+            return render_template('hrusermanagement.html', users=company_users, manager_emails=manager_id_to_email)
+        else: 
+            company_users = User.query.filter_by(companyId=current_user.companyId) \
+                .paginate(page=page, per_page=users_per_page, error_out=False)
+            manager_id_to_email = {user.id: user.email for user in User.query.all()}
+            return render_template('adminusermanagement.html', users=company_users, manager_emails=manager_id_to_email)
+
+    return render_template('createuser.html', title='Register', form=form)
+
+
+
 
 @main.route('/testhtml', methods=['GET', 'POST'])
 def testhtml():

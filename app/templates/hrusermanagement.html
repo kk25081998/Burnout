@@ -17,10 +17,22 @@
         box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1);
     }
 
-    .card-title {
-        font-weight: bold;
-        font-size: 24px;
-        margin-bottom: 20px;
+    .add-user-icon-btn {
+        background-color: #f68084; /* Same as gradient end color */
+        color: white;
+        border: none;
+        border-radius: 50%; /* This will make the button round */
+        width: 50px; /* Set a width and height to make it a perfect circle */
+        height: 50px;
+        font-size: 20px; /* Adjust icon size */
+        transition: background-color 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .add-user-icon-btn:hover {
+        background-color: #d45d7d; /* Slightly dark on hover */
     }
 
     table {
@@ -50,24 +62,56 @@
         border-radius: 5px;
     }
 
+    .edit-profile-btn {
+        position: relative;
+    }
+
+    .profile-icon {
+        font-size: 16px;
+    }
+
+    .pencil-icon {
+        font-size: 11px;
+        position: absolute;
+        bottom: 3px; 
+        right: 1px;
+    }
+    .no-border-right {
+        border-right: none !important;
+    }
+
+    .no-border-left {
+        border-left: none !important;
+    }
+    .center-content {
+        text-align: center;
+    }
+
 
 </style>
 
 <div class="container mt-5">
     <div class="card">
         <div class="card-body">
-            <h2 class="card-title text-center" style="color: #09033F;">User Management</h2>            
+            <br>     
             <table class="table table-bordered table-hover" id="hrUserTable">
                 <thead>
+                    <tr>
+                        <th colspan="6" class="no-border-right" style="text-align: center; vertical-align: center; background-color: #09033F; font-size: 30px; color: white;">User Management</th>
+                        <th class="no-border-left center-content" style="background-color: #09033F;">
+                            <!-- Add User Icon -->
+                            <a href="{{ url_for('main.register') }}" class="add-user-icon-btn">
+                                <i class="fas fa-user-plus"></i> <!-- Font Awesome User Add Icon -->
+                            </a>
+                        </th>
+                    </tr>
                     <tr>
                         <th>Email</th>
                         <th>First Name</th>
                         <th>Last Name</th>
-                        <th>Date of Birth</th>
                         <th>Role</th>
                         <th>Title</th>
                         <th>Department</th>
-                        <th>Manager Email</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -77,13 +121,14 @@
                         <td>{{ user.email }}</td>
                         <td>{{ user.firstname }}</td>
                         <td>{{ user.lastname }}</td>
-                        <td>{{ user.date_of_birth if user.date_of_birth else 'N/A' }}</td>
                         <td>{{ user.role.name }}</td>
                         <td>{{ user.title }}</td> 
                         <td>{{ user.department }}</td>
-                        <td>{{ user.manager_email }}</td>
                         <td style="text-align: center; vertical-align: middle;">
-                            <a href="{{ url_for('main.edit_user', user_id=user.id) }}" class="btn btn-sm btn-primary">Edit</a>
+                            <a href="{{ url_for('main.edit_user', user_id=user.id) }}" class="btn btn-sm btn-primary edit-profile-btn">
+                                <i class="fas fa-user profile-icon"></i>
+                                <i class="fas fa-pencil-alt pencil-icon"></i>
+                            </a>
                         </td>
                     </tr>
                     {% endfor %}
@@ -92,6 +137,8 @@
         </div>
     </div>
 </div>
+
+<br>
 
 <!-- CDN -->
 <script>

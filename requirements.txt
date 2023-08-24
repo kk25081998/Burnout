@@ -13,3 +13,5 @@ json
 Pillow
 psycopg2
 psycopg2-binary
+sqlite3-to-mysql
+pymysql

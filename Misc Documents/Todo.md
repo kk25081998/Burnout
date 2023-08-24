@@ -29,3 +29,14 @@
 * Come up with advanced report analytics possible for HR page (2-3 hours)
 * Come up with new features for the app (2 hour brainstorm)
 * Find which is easier to migrate to postgre/mysql/mariadb for the long run in aws and implement in aws (4-5 hours)
+
+
+RDS password:
+
+Master username
+
+admin
+
+Master password
+
+kk25081998/Kk25081998
