@@ -57,12 +57,36 @@ sudo systemctl start nginx
 sudo systemctl enable nginx
 ```
 
-2. Set up Nginx configuration:
+2. Set up Nginx configuration and create the relevant folders if not present:
 
 ```bash
 sudo bash -c 'cat > /etc/nginx/conf.d/flask_app.conf <<EOF
-... # (your configuration details here)
+server {
+    listen 80;
+    server_name florishatwork.xyz www.florishatwork.xyz;
+
+    # Redirect all HTTP requests to HTTPS
+    location / {
+        return 301 https://\$host\$request_uri;
+    }
+}
+
+server {
+    listen 443 ssl;
+    server_name florishatwork.xyz www.florishatwork.xyz;
+
+    ssl_certificate /etc/nginx/ssl/florishatwork_xyz.crt;
+    ssl_certificate_key /etc/nginx/ssl/private.key;
+    ssl_trusted_certificate /etc/nginx/ssl/florishatwork_xyz.ca-bundle;
+
+    location / {
+        proxy_pass http://localhost:8000;
+        proxy_set_header Host \$host;
+        proxy_set_header X-Real-IP \$remote_addr;
+    }
+}
 EOF'
+
 ```
 
 3. Restart Nginx:
@@ -100,7 +124,7 @@ sudo chmod 600 /etc/nginx/ssl/your-private.key
 3. Update your Nginx configuration:
 
 ```bash
-sudo vim /etc/nginx/sites-available/your-site-config
+sudo vim /etc/nginx/conf.d/flask_app.conf
 ```
 
 4. Validate and restart Nginx:
