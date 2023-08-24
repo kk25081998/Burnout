@@ -1,5 +1,5 @@
 # app/routes.py
-from flask import render_template, redirect, url_for, flash, abort, request, jsonify, session, get_flashed_messages, send_from_directory
+from flask import g, render_template, redirect, url_for, flash, abort, request, jsonify, session, get_flashed_messages, send_from_directory
 from flask_login import login_user, logout_user, login_required, current_user, LoginManager
 from app import db, create_app
 from app.forms import CreateNewUserForm, LoginForm, EditProfileForm, TakeTest, SelectManagerForm, PasswordChangeForm, ContactForm, UnifiedUserForm, FeedbackForm, CompanySettingsForm
@@ -8,6 +8,7 @@ from werkzeug.exceptions import HTTPException  # import HTTPException instead of
 from flask import Blueprint
 from flask import current_app
 import json
+import os
 from app.personalization import save_picture, send_contact_email, user_took_test_this_month, process_test_results, get_burnout_trends, get_department_burnout_data, get_team_burnout_data, save_company_logo, create_departments, redirect_next_or_dashboard
 from app.models import User, Company, Results, Feedback, Resources, Role
 from datetime import datetime, timedelta
@@ -17,6 +18,10 @@ from sqlalchemy import extract, func, distinct, cast, Integer
 login_manager = LoginManager()
 login_manager.login_view = 'main.login'
 main = Blueprint('main', __name__)
+
+@main.before_request
+def add_data_to_g():
+    g.topthing = os.environ.get('TOPTHING')
 
 @main.route('/')
 def index():
