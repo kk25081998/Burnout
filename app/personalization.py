@@ -8,7 +8,7 @@ from datetime import datetime
 from flask import render_template, redirect, url_for, flash, abort, request, jsonify, session, get_flashed_messages, send_from_directory
 from flask_login import login_user, logout_user, login_required, current_user, LoginManager
 from app import db, create_app
-from app.forms import RegistrationForm, LoginForm, EditProfileForm, TakeTest, SelectManagerForm, PasswordChangeForm, ContactForm
+from app.forms import LoginForm, EditProfileForm, TakeTest, SelectManagerForm, PasswordChangeForm, ContactForm
 from datetime import datetime
 from werkzeug.exceptions import HTTPException  # import HTTPException instead of abort
 from flask import Blueprint

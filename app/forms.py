@@ -2,25 +2,85 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
 from wtforms.validators import DataRequired, ValidationError, Email, EqualTo, URL, NumberRange, InputRequired, Optional, Length, Regexp
-from app.models import User
+from app.models import User, Company, Role
 from wtforms import TextAreaField, SelectField
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, IntegerField, DateField, FileField, RadioField
 from datetime import datetime
 
-class RegistrationForm(FlaskForm):
+INDUSTRY_CHOICES = [
+    ('Agriculture', 'Agriculture'),
+    ('Automotive', 'Automotive'),
+    ('Banking', 'Banking'),
+    ('Construction', 'Construction'),
+    ('Education', 'Education'),
+    ('Energy', 'Energy'),
+    ('Entertainment', 'Entertainment'),
+    ('Fashion', 'Fashion'),
+    ('Finance', 'Finance'),
+    ('Food & Beverage', 'Food & Beverage'),
+    ('Healthcare', 'Healthcare'),
+    ('Hospitality', 'Hospitality'),
+    ('Information Technology', 'Information Technology'),
+    ('Insurance', 'Insurance'),
+    ('Legal', 'Legal'),
+    ('Manufacturing', 'Manufacturing'),
+    ('Media', 'Media'),
+    ('Mining', 'Mining'),
+    ('Pharmaceuticals', 'Pharmaceuticals'),
+    ('Real Estate', 'Real Estate'),
+    ('Retail', 'Retail'),
+    ('Telecommunication', 'Telecommunication'),
+    ('Transportation', 'Transportation'),
+    ('Travel', 'Travel'),
+    ('Utilities', 'Utilities'),
+    ('Others', 'Others')
+]
+
+class CompanyRegistrationForm(FlaskForm):
+    # User fields
     email = StringField('Email', validators=[DataRequired(), Email(message='Please enter a valid email address')])
     firstname = StringField('First Name', validators=[DataRequired()])
     lastname = StringField('Last Name', validators=[DataRequired()])
     date_of_birth = DateField('Date of Birth', format='%Y-%m-%d', validators=[DataRequired()])
-    companyId = IntegerField('Company ID', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
     password_confirm = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
-    submit = SubmitField('Register')
+    
+    # Company fields
+    company_name = StringField('Company Name', validators=[DataRequired()])
+    company_description = StringField('Company Description', validators=[DataRequired()])
+    company_size = IntegerField('Company Size')
+    industry = SelectField('Industry', validators=[DataRequired()], choices=INDUSTRY_CHOICES)
 
+    submit = SubmitField('Register for Company')
+    
     def validate_email(self, email):
         user = User.query.filter_by(email=email.data).first()
         if user is not None:
             raise ValidationError('Email already in use.')
+
+
+class IndividualRegistrationForm(FlaskForm):
+    # User fields
+    email = StringField('Email', validators=[DataRequired(), Email(message='Please enter a valid email address')])
+    firstname = StringField('First Name', validators=[DataRequired()])
+    lastname = StringField('Last Name', validators=[DataRequired()])
+    date_of_birth = DateField('Date of Birth', format='%Y-%m-%d', validators=[DataRequired()])
+    password = PasswordField('Password', validators=[DataRequired()])
+    password_confirm = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
+    title = StringField('Title (e.g., Freelancer, Consultant)', validators=[DataRequired()])
+
+    # Company fields for individual subscriber (as a business entity)
+    company_name = StringField('Company Name or Freelance Name', validators=[DataRequired()])
+    company_description = StringField('Description for what you do', validators=[DataRequired()])
+    industry = SelectField('Industry', validators=[DataRequired()], choices=INDUSTRY_CHOICES)
+
+    submit = SubmitField('Register as Individual')
+    
+    def validate_email(self, email):
+        user = User.query.filter_by(email=email.data).first()
+        if user is not None:
+            raise ValidationError('Email already in use.')
+
 
 class LoginForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email(message='Please enter a valid email address')])
@@ -147,8 +207,6 @@ class UnifiedUserForm(FlaskForm):
 
 
             
-
-
 class FeedbackForm(FlaskForm):
     feedback = TextAreaField('Feedback', validators=[DataRequired(), Length(min=5, max=1000)])
     submit = SubmitField('Submit')
@@ -176,4 +234,3 @@ class CreateNewUserForm(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired()])
     confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
     submit = SubmitField('Create')
- 

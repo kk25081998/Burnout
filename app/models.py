@@ -36,7 +36,8 @@ class Company(db.Model):
     name = db.Column(db.String(64), nullable=False)
     description = db.Column(db.String(128), nullable=True)
     size = db.Column(db.Integer, nullable=True)
-    users = db.relationship('User', backref='company', lazy='dynamic') 
+    users = db.relationship('User', backref='company', lazy='dynamic')
+    industry = db.Column(db.String(128), nullable=False) 
     frequency = db.Column(db.String(64), nullable=True)
     image = db.Column(db.String(128), nullable=True)  
     

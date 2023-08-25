@@ -20,23 +20,11 @@
   - [ ] Sponsored articles and links
   - [ ] SaaS for business at low cost
   - [ ] ETC...
-- [ ] Figure out how to setup postgre/mysql/mariadb etc... instead of sqlite for aws
+- [X] Figure out how to setup postgre/mysql/mariadb etc... instead of sqlite for aws
 
 ## Subtasks:
 
+* Figure out new user registration
 * Logic for checking if the test page is not working, it shows test even when test is taken for that month
-* Make sure all UI forms are submittable with no issues by testing them (2-3 hours)
 * Come up with advanced report analytics possible for HR page (2-3 hours)
 * Come up with new features for the app (2 hour brainstorm)
-* Find which is easier to migrate to postgre/mysql/mariadb for the long run in aws and implement in aws (4-5 hours)
-
-
-RDS password:
-
-Master username
-
-admin
-
-Master password
-
-kk25081998/Kk25081998

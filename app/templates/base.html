@@ -230,6 +230,16 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('main.login') }}">Login</a>
                     </li>
+                    <!-- New Signup Dropdown -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="signupDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Signup
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="signupDropdown" style="text-align: center;">
+                            <a class="dropdown-item" href="{{ url_for('main.register_company') }}">Company</a>
+                            <a class="dropdown-item" href="{{ url_for('main.register_individual') }}">Individual</a>
+                        </div>
+                    </li>
                 </ul>
                 {% if current_user.is_authenticated %}
                 {% else %}

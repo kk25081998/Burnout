@@ -2,7 +2,7 @@
 from flask import g, render_template, redirect, url_for, flash, abort, request, jsonify, session, get_flashed_messages, send_from_directory
 from flask_login import login_user, logout_user, login_required, current_user, LoginManager
 from app import db, create_app
-from app.forms import CreateNewUserForm, LoginForm, EditProfileForm, TakeTest, SelectManagerForm, PasswordChangeForm, ContactForm, UnifiedUserForm, FeedbackForm, CompanySettingsForm
+from app.forms import CreateNewUserForm, LoginForm, EditProfileForm, TakeTest, SelectManagerForm, PasswordChangeForm, ContactForm, UnifiedUserForm, FeedbackForm, CompanySettingsForm, CompanyRegistrationForm, IndividualRegistrationForm
 from datetime import datetime
 from werkzeug.exceptions import HTTPException  # import HTTPException instead of abort
 from flask import Blueprint
@@ -24,9 +24,78 @@ def add_data_to_g():
     g.topthing = os.environ.get('TOPTHING')
 
 @main.route('/')
-def index():
-    get_flashed_messages()
+def index():    
+    # Check if user is authenticated (logged in)
+    if current_user.is_authenticated:
+        # Checking role_id and redirecting accordingly:
+        if current_user.role_id == 2:
+            return redirect(url_for('main.company_dashboard'))
+        elif current_user.role_id == 3:
+            return redirect(url_for('main.hr_overview'))
+        elif current_user.role_id in [4, 5]:
+            return redirect(url_for('main.dashboard'))
+
+    # Fallback to intro.html for non-logged-in users or if no role_id matched:
     return render_template('intro.html')
+
+@main.route('/register/individual', methods=['GET', 'POST'])
+def register_individual():
+    form = IndividualRegistrationForm()
+    if form.validate_on_submit():
+        # Create a new company instance for the individual
+        company = Company(
+            name=form.company_name.data, 
+            description=form.company_description.data, 
+            industry=form.industry.data  # This line has been modified to get the industry from the form
+        )
+        db.session.add(company)
+        db.session.commit()
+
+        # Create the user associated with the company
+        user = User(
+            email=form.email.data, 
+            firstname=form.firstname.data, 
+            lastname=form.lastname.data,
+            date_of_birth=form.date_of_birth.data.strftime('%Y-%m-%d'), 
+            companyId=company.id,
+            title=form.title.data,
+            role_id=5,
+            department='Individual'
+        )
+        user.set_password(form.password.data)
+        db.session.add(user)
+        db.session.commit()
+
+        user.manager_id = user.id
+        db.session.commit()
+
+        flash('Your individual account has been created!', 'success')
+        return redirect(url_for('main.login'))
+
+    return render_template('register_individual.html', title='Register as Individual', form=form)
+
+
+@main.route('/register/company', methods=['GET', 'POST'])
+def register_company():
+    form = CompanyRegistrationForm()
+    if form.validate_on_submit():
+        # Create a new company instance
+        company = Company(name=form.company_name.data, description=form.company_description.data, industry=form.industry.data, size = form.company_size.data)
+        db.session.add(company)
+        db.session.commit()
+
+        # Create a user associated with the company
+        user = User(email=form.email.data, firstname=form.firstname.data, lastname=form.lastname.data,
+                    date_of_birth=form.date_of_birth.data.strftime('%Y-%m-%d'), companyId=company.id,
+                    title="Admin", role_id=2)
+        user.set_password(form.password.data)
+        db.session.add(user)
+        db.session.commit()
+
+        flash('Your company account has been created!', 'success')
+        return redirect(url_for('main.login'))  # assuming you have a login route named 'login'
+
+    return render_template('register_company.html', title='Register Your Company', form=form)
 
 
 @main.route('/login', methods=['GET', 'POST'])
@@ -761,7 +830,7 @@ def change_feedback_status(feedback_id):
 
 @main.route("/createuser", methods=['GET', 'POST'])
 @login_required
-def register():
+def createuser():
     form = CreateNewUserForm()
 
     companyId = current_user.companyId
@@ -813,102 +882,6 @@ def register():
     return render_template('createuser.html', title='Register', form=form)
 
 
-
-
 @main.route('/testhtml', methods=['GET', 'POST'])
 def testhtml():
     return render_template('intro.html')
-
-
-# @main.route('/test', methods=['GET', 'POST'])
-# @login_required
-# def test():
-#     form = TakeTest()
-    
-#     # Fetch the most recent test date for the user
-#     last_test = Results.query.filter_by(user_id=current_user.id).order_by(Results.testDate.desc()).first()
-
-#     # Check if the user has taken the test in the current month
-#     if last_test and last_test.testDate.month == datetime.now().month and last_test.testDate.year == datetime.now().year:
-#         next_month = datetime(datetime.now().year, datetime.now().month % 12 + 1, 1)  # First day of next month
-#         flash(f'You can only take the burnout test once per calendar month. Please come back on {next_month.strftime("%B %d, %Y")} to take the test again.', 'warning')
-#         return render_template('test.html', title='test', form=form, next_eligible_date=next_month)
-
-#     # Questions grouped by section
-#     section1 = [form.q1, form.q2, form.q3, form.q4, form.q5, form.q6, form.q7]
-#     section2 = [form.q8, form.q9, form.q10, form.q11, form.q12, form.q13, form.q14]
-#     section3 = [form.q15, form.q16, form.q17, form.q18, form.q19, form.q20, form.q21, form.q22]
-
-#     print("Form data: ", form.data)
-#     print("Form errors: ", form.errors)
-
-#     if form.validate_on_submit():
-#         #debug
-#         print([question.data for question in section1])
-#         print([question.data for question in section2])
-#         print([question.data for question in section3])
-
-#         # Calculate scores for each section
-#         score1 = sum(int(question.data) for question in section1)
-#         score2 = sum(int(question.data) for question in section2)
-#         score3 = sum(int(question.data) for question in section3)
-#         date = datetime.datetime.now()
-
-#         # Save scores to database
-#         try:
-#             new_test_score = Results(user_id=current_user.id, testDate=date, scoreA=score1, scoreB=score2, scoreC=score3, )
-#             db.session.add(new_test_score)
-#             db.session.commit()
-#         except Exception as e:
-#             print(f"Error while saving test results: {e}")
-#             db.session.rollback()
-
-
-#         flash('Your test has been successfully submitted!')
-#         return redirect(url_for('main.test_history'))
-    
-#     return render_template('test.html', title='test', form=form, section1=section1, section2=section2, section3=section3)
-
-# @main.route('/register', methods=['GET', 'POST'])
-# def register():
-#     get_flashed_messages()
-#     if current_user.is_authenticated:
-#         return redirect(url_for('main.index'))
-
-#     form = RegistrationForm()
-#     if form.validate_on_submit():
-#         # Validate the company ID
-#         try:
-#             company_id = int(form.companyId.data)
-#         except ValueError:
-#             flash('Company ID is not valid. It should be a numeric value.')
-#             return redirect(url_for('main.register'))
-
-#         # Check if the company ID exists
-#         company = Company.query.get(company_id)
-#         print(f"Queried company: {company}")  # Debug print
-#         if company is None:
-#             print("Company is None, flashing message and redirecting")  # Debug print
-#             flash('Company ID is not valid. No such company exists.')
-#             return redirect(url_for('main.register'))
-
-#         existing_email = User.query.filter_by(email=form.email.data).first()
-#         if existing_email:
-#             flash('Email already registered. Please use a different one or log in.')
-#             return redirect(url_for('main.register'))
-
-#         if form.password.data != form.password_confirm.data:
-#             flash('Password and confirmation do not match. Please try again.')
-#             return redirect(url_for('main.register'))
-
-#         user = User(email=form.email.data, 
-#                     firstname=form.firstname.data,
-#                     lastname=form.lastname.data,
-#                     companyId=form.companyId.data)
-#         user.set_password(form.password.data)
-#         db.session.add(user)
-#         db.session.commit()
-#         flash('Registration successful.')
-#         return redirect(url_for('main.select_manager'))
-
-#     return render_template('register.html', form=form)
