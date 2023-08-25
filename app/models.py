@@ -39,7 +39,9 @@ class Company(db.Model):
     users = db.relationship('User', backref='company', lazy='dynamic')
     industry = db.Column(db.String(128), nullable=False) 
     frequency = db.Column(db.String(64), nullable=True)
-    image = db.Column(db.String(128), nullable=True)  
+    image = db.Column(db.String(128), nullable=True) 
+    subscription_status = db.Column(db.String(64), default="inactive")  # e.g., active, inactive, expired
+    subscription_id = db.Column(db.Integer, db.ForeignKey('subscription.id'))
     
     def __repr__(self):
         return f'<Company {self.name}>'
@@ -100,3 +102,29 @@ class Resources(db.Model):
 
     def __repr__(self):
         return f"Resource('{self.title}', '{self.category}')"
+
+
+class SubscriptionPlan(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(64), nullable=False)
+    description = db.Column(db.String(256), nullable=True)
+    price = db.Column(db.Float, nullable=False)
+    duration = db.Column(db.Integer, nullable=False)  # For example, 30 for 30 days
+    companies = db.relationship('Company', backref='subscription_plan', lazy='dynamic')
+
+class Subscription(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    company_id = db.Column(db.Integer, db.ForeignKey('company.id'))
+    subscription_plan_id = db.Column(db.Integer, db.ForeignKey('subscription_plan.id'))
+    start_date = db.Column(db.Date, nullable=False, default=datetime.utcnow)
+    end_date = db.Column(db.Date, nullable=True)
+    auto_renew = db.Column(db.Boolean, default=True)  # Can be toggled based on user preference
+    payments = db.relationship('PaymentHistory', backref='subscription', lazy='dynamic')
+
+class PaymentHistory(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    subscription_id = db.Column(db.Integer, db.ForeignKey('subscription.id'))
+    date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    amount = db.Column(db.Float, nullable=False)
+    transaction_id = db.Column(db.String(128), nullable=False)  # The ID from the payment gateway, useful for potential refunds or tracking
+    status = db.Column(db.String(64), nullable=False)  # e.g., success, failed, refunded

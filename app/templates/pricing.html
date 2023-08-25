@@ -91,6 +91,7 @@
                 'subtitle': '(for individual users)',
                 'features': ['Personal Dashboard', 'Detailed Analysis', 'Monthly Reports'],
                 'price': '$5/month',
+                'price_yearly': '$50/year',
                 'color': '#FF8A80',
                 'icon': 'fa-user'
             },            
@@ -99,6 +100,7 @@
                 'subtitle': '(for small companies)',
                 'features': ['Up to 50 employees', 'Standard burnout monitoring', 'Basic reporting'],
                 'price': '$100/month',
+                'price_yearly': '$1000/year',
                 'color': '#64B5F6',
                 'icon': 'fa-cube' 
             },
@@ -107,6 +109,7 @@
                 'subtitle': '(for medium-sized companies)',
                 'features': ['Up to 200 employees', 'Advanced monitoring features', 'Detailed reporting & analytics'],
                 'price': '$350/month',
+                'price_yearly': '$3500/year',
                 'color': '#81C784',
                 'icon': 'fa-cubes' 
             },
@@ -135,7 +138,12 @@
                     {% endfor %}
                 </div>
                 <div class="card-footer text-center">
-                    <a href="{{ url_for('main.contact_us') }}" class="btn btn-outline-dark pricing-btn">{{ plan.price }}</a>
+                    {% if plan.title != 'Enterprise' %}
+                        <a href="{{ url_for('main.contact_us') }}" class="btn btn-outline-dark pricing-btn mb-2">{{ plan.price }}</a>
+                        <a href="{{ url_for('main.contact_us') }}" class="btn btn-outline-dark pricing-btn mb-2">{{ plan.price_yearly }}</a>
+                    {% else %}
+                        <a href="{{ url_for('main.contact_us') }}" class="btn btn-outline-dark pricing-btn">{{ plan.price }}</a>
+                    {% endif %}
                 </div>
             </div>
         </div>
