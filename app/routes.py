@@ -59,7 +59,7 @@ def register_individual():
             date_of_birth=form.date_of_birth.data.strftime('%Y-%m-%d'), 
             companyId=company.id,
             title=form.title.data,
-            role_id=5,
+            role_id=6,
             department='Individual'
         )
         user.set_password(form.password.data)

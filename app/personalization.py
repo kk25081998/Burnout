@@ -90,7 +90,7 @@ def user_took_test_this_month(user_id):
     current_month = datetime.now().month
     current_year = datetime.now().year
 
-    return last_test.testDate.month == current_month and last_test.testDate.year == current_year
+    return (last_test.testDate.year > current_year) or (last_test.testDate.year == current_year and last_test.testDate.month >= current_month)
 
 def process_test_results(form):
     """Process test form and save results to database"""

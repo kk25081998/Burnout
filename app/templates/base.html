@@ -102,6 +102,12 @@
             color: #182e68;
             font-weight: bold;
         }
+        li.nav-item.dropdown,
+        li.nav-item.dropdown a,
+        li.nav-item.dropdown .dropdown-menu,
+        li.nav-item.dropdown .dropdown-item {
+            border: none !important;
+        }
     </style>
 </head>
 
@@ -186,21 +192,37 @@
                 <!-- For User role_id = 5 -->
                 {% elif current_user.role_id == 5 %}
                     <!-- Insert Navbar for User here -->
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('main.dashboard') }}">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('main.test') }}">Take Test</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('main.test_history') }}">Test History</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('main.resources') }}">Wellness Hub</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('main.feedback') }}">HR Feedback</a>
-                        </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('main.dashboard') }}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('main.test') }}">Take Test</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('main.test_history') }}">Test History</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('main.resources') }}">Wellness Hub</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('main.feedback') }}">HR Feedback</a>
+                    </li>
+                
+                {% elif current_user.role_id == 6 %}
+                <!-- Insert Navbar for User here -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('main.dashboard') }}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('main.test') }}">Take Test</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('main.test_history') }}">Test History</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('main.resources') }}">Wellness Hub</a>
+                    </li>
+
                         
                 {% endif %}
                 </ul>
