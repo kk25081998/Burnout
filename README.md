@@ -146,7 +146,7 @@ When deploying a Flask application with Gunicorn and Nginx:
    - Use Gunicorn to serve the Flask app.
 
 ```bash
-gunicorn your_flask_app:app -b localhost:8000
+gunicorn run:app -b localhost:8000 -w 4 --access-logfile /home/ec2-user/access.log --error-logfile /home/ec2-user/error.log
 ```
 
 2. **Configure and Start Nginx**:
@@ -158,5 +158,45 @@ sudo systemctl restart nginx
 ```
 
 In essence, Gunicorn runs the Flask app, while Nginx directs external requests to Gunicorn.
+
+---
+
+Certainly! Here's the updated section for your README file:
+
+---
+
+## How to Update the Application
+
+When you need to update the application, especially after pulling new changes from a repository, you may need to restart Gunicorn and Nginx to reflect these updates. The following script helps automate this process:
+
+```bash
+#!/bin/bash
+
+# Navigate to the given directory
+cd Main_app/Burnout/
+
+# Perform a git pull
+git pull
+sleep 15
+
+# Forcefully kill all processes with the name involving "gunicorn"
+pkill -9 -f gunicorn
+sleep 15
+
+# Start gunicorn with the specified parameters
+gunicorn run:app -b localhost:8000 -w 4 --access-logfile /home/ec2-user/access.log --error-logfile /home/ec2-user/error.log &
+sleep 15
+
+# Restart nginx
+sudo systemctl restart nginx
+```
+
+To utilize this script, simply run `./deploy.sh` in the folder you log into when connecting to the ec2 instance or do the following:
+
+1. Copy the script content into a file, for instance, `deply.sh`.
+2. Provide executable permissions: `chmod +x deploy.sh`.
+3. Run the script using `./deploy.sh` whenever you need to update your Flask application.
+
+Remember, you'll need sufficient permissions to execute some commands, especially those involving `sudo`. Ensure that you are logged in as a user with the required permissions, or consider using `sudo` where needed.
 
 ---
