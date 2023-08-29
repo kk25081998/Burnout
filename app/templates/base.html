@@ -108,6 +108,11 @@
         li.nav-item.dropdown .dropdown-item {
             border: none !important;
         }
+        .dropdown-menu a.dropdown-item:hover {
+            background-color: #333;  /* slightly lighter than black for a subtle hover effect */
+            color: white;
+        }
+
     </style>
 </head>
 
@@ -257,10 +262,10 @@
                         <a class="nav-link dropdown-toggle" href="#" id="signupDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Signup
                         </a>
-                        <div class="dropdown-menu" aria-labelledby="signupDropdown" style="text-align: center;">
-                            <a class="dropdown-item" href="{{ url_for('main.register_company') }}">Company</a>
-                            <a class="dropdown-item" href="{{ url_for('main.register_individual') }}">Individual</a>
-                        </div>
+                        <div class="dropdown-menu" aria-labelledby="signupDropdown" style="text-align: center; background-color: black;">
+                            <a class="dropdown-item" href="{{ url_for('main.register_company') }}" style="color: white;">Company</a>
+                            <a class="dropdown-item" href="{{ url_for('main.register_individual') }}" style="color: white;">Individual</a>
+                        </div>                                             
                     </li>
                 </ul>
                 {% if current_user.is_authenticated %}

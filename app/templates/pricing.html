@@ -74,90 +74,95 @@
     }
 
 </style>
+<div style="display: flex; justify-content: center; align-items: center;">
 
-<div class="container mt-4" style="max-width: 1200px;">
+    <div class="container mt-4" style="max-width: 1100px;">
 
-    <!-- Introductory Text -->
-    <div class="page-intro">
-        Discover the Right Plan for Your Needs
-        <p style="font-size: 1rem; color: #aaa;">Choose from a range of plans tailored to suit your company's needs.</p>
-    </div>
+        <!-- Introductory Text -->
+        <div class="page-intro">
+            Discover the Right Plan for Your Needs
+            <p style="font-size: 1rem; color: #aaa;">Choose from a range of plans tailored to suit your company's needs.</p>
+        </div>
 
-    <div class="row justify-content-center">
+        <div class="row justify-content-center">
 
-        {% set plans = [
-            {
-                'title': 'Individual',
-                'subtitle': '(for individual users)',
-                'features': ['Personal Dashboard', 'Detailed Analysis', 'Monthly Reports'],
-                'price': '$5/month',
-                'price_yearly': '$50/year',
-                'color': '#FF8A80',
-                'icon': 'fa-user'
-            },            
-            {
-                'title': 'Basic',
-                'subtitle': '(for small companies)',
-                'features': ['Up to 50 employees', 'Standard burnout monitoring', 'Basic reporting'],
-                'price': '$100/month',
-                'price_yearly': '$1000/year',
-                'color': '#64B5F6',
-                'icon': 'fa-cube' 
-            },
-            {
-                'title': 'Pro',
-                'subtitle': '(for medium-sized companies)',
-                'features': ['Up to 200 employees', 'Advanced monitoring features', 'Detailed reporting & analytics'],
-                'price': '$350/month',
-                'price_yearly': '$3500/year',
-                'color': '#81C784',
-                'icon': 'fa-cubes' 
-            },
-            {
-                'title': 'Enterprise',
-                'subtitle': '(for large companies)',
-                'features': ['Unlimited employees', 'Pro features + premium support', 'Custom solutions & branding'],
-                'price': 'Contact for pricing',
-                'color': '#FFD54F',
-                'icon': 'fa-building' 
-            }
-        ] %}
+            {% set plans = [
+                {
+                    'title': 'Individual',
+                    'subtitle': '(for individual users)',
+                    'features': ['Personal Dashboard', 'Detailed Analysis', 'Monthly Reports'],
+                    'price': '$5/month',
+                    'price_yearly': '$50/year',
+                    'color': '#FF8A80',
+                    'icon': 'fa-user'
+                },            
+                {
+                    'title': 'Basic',
+                    'subtitle': '(for small companies)',
+                    'features': ['Up to 50 employees', 'Standard burnout monitoring', 'Basic reporting'],
+                    'price': '$100/month',
+                    'price_yearly': '$1000/year',
+                    'color': '#64B5F6',
+                    'icon': 'fa-cube' 
+                },
+                {
+                    'title': 'Pro',
+                    'subtitle': '(for medium-sized companies)',
+                    'features': ['Up to 200 employees', 'Advanced monitoring features', 'Detailed reporting & analytics'],
+                    'price': '$350/month',
+                    'price_yearly': '$3500/year',
+                    'color': '#81C784',
+                    'icon': 'fa-cubes' 
+                },
+                {
+                    'title': 'Enterprise',
+                    'subtitle': '(for large companies)',
+                    'features': ['Unlimited employees', 'Pro features + premium support', 'Custom solutions & branding'],
+                    'price': 'Contact for pricing',
+                    'color': '#FFD54F',
+                    'icon': 'fa-building' 
+                }
+            ] %}
 
-        {% for plan in plans %}
-        <div class="col-md-4 mb-5">
-            <div class="card pricing-card">
-                <div class="graphic text-center">
-                    <!-- Font Awesome icon -->
-                    <i class="fa {{ plan.icon }}" style="font-size: 3rem; color: {{ plan.color }};"></i>
-                </div>
-                <div class="card-body text-center">
-                    <div class="pricing-card-header" style="background-color: {{ plan.color }}; color: #000000 ;">{{ plan.title }}</div>
-                    <div style="color: #777; font-style: italic; margin-bottom: 15px;">{{ plan.subtitle }}</div>
-                    {% for feature in plan.features %}
-                        <div class="feature-list">{{ feature }}</div>
-                    {% endfor %}
-                </div>
-                <div class="card-footer text-center">
-                    {% if plan.title != 'Enterprise' %}
-                        <a href="{{ url_for('main.contact_us') }}" class="btn btn-outline-dark pricing-btn mb-2">{{ plan.price }}</a>
-                        <a href="{{ url_for('main.contact_us') }}" class="btn btn-outline-dark pricing-btn mb-2">{{ plan.price_yearly }}</a>
-                    {% else %}
-                        <a href="{{ url_for('main.contact_us') }}" class="btn btn-outline-dark pricing-btn">{{ plan.price }}</a>
-                    {% endif %}
+            {% for plan in plans %}
+            <div class="col-md-4 mb-5">
+                <div class="card pricing-card">
+                    <div class="graphic text-center">
+                        <!-- Font Awesome icon -->
+                        <i class="fa {{ plan.icon }}" style="font-size: 3rem; color: {{ plan.color }};"></i>
+                    </div>
+                    <div class="card-body text-center">
+                        <div class="pricing-card-header" style="background-color: {{ plan.color }}; color: #000000 ;">{{ plan.title }}</div>
+                        <div style="color: #777; font-style: italic; margin-bottom: 15px;">{{ plan.subtitle }}</div>
+                        {% for feature in plan.features %}
+                            <div class="feature-list">{{ feature }}</div>
+                        {% endfor %}
+                    </div>
+                    <div class="card-footer text-center">
+                        {% if plan.title != 'Enterprise' %}
+                            <a href="{{ url_for('main.contact_us') }}" class="btn btn-outline-dark pricing-btn mb-2">{{ plan.price }}</a>
+                            <a href="{{ url_for('main.contact_us') }}" class="btn btn-outline-dark pricing-btn mb-2">{{ plan.price_yearly }}</a>
+                        {% else %}
+                            <a href="{{ url_for('main.contact_us') }}" class="btn btn-outline-dark pricing-btn">{{ plan.price }}</a>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
-        </div>
-        {% endfor %}
+            {% endfor %}
 
+        </div>
     </div>
 </div>
 
 
+
 <!-- FAQ Section -->
-<div class="container mt-5">
+<div class="container-fluid mt-5" style="background-color: #1a1a1a;">
+    <br>
     <h2 class="page-intro">Frequently Asked Questions</h2>
     
-    <div class="row">
+    <div class="row" style="margin: 1em;">
+        <!-- Existing Questions -->
         <div class="col-md-6 mb-4">
             <h5>How easy is it to integrate Flourish at Work?</h5>
             <p>Our platform is designed for seamless integration, no matter the size or nature of your company. Plus, our team is here to guide you every step of the way.</p>
@@ -174,11 +179,30 @@
             <h5>Can we request custom features?</h5>
             <p>Absolutely! We understand that every organization has unique needs. Let us know your requirements, and we'll do our best to accommodate them.</p>
         </div>
+
+        <!-- New Questions -->
+        <div class="col-md-6 mb-4">
+            <h5>How does the platform handle scalability?</h5>
+            <p>Our system architecture is built for scale, ensuring that as your organization grows, Flourish at Work will seamlessly scale to meet your needs without compromising performance.</p>
+        </div>
+        <div class="col-md-6 mb-4">
+            <h5>What support do you offer post-integration?</h5>
+            <p>We offer 24/7 technical support post-integration. Additionally, we provide regular training sessions and updates to ensure you maximize the benefits of our platform.</p>
+        </div>
+        <div class="col-md-6 mb-4">
+            <h5>Is there a demo or trial version available?</h5>
+            <p>Yes, we offer a demo version for you to explore the features and benefits of Flourish at Work. Contact our team to schedule a personalized walkthrough.</p>
+        </div>
+        <div class="col-md-6 mb-4">
+            <h5>How often do you release updates?</h5>
+            <p>We believe in continuous improvement. Our team regularly releases updates, which include new features, security enhancements, and performance optimizations. Clients are always informed in advance about major updates.</p>
+        </div>
     </div>
 </div>
 
+
 <!-- Call to Action -->
-<div class="container-fluid bg-primary text-white text-center py-5">
+<div class="hero-container text-white text-center py-5">
     <h2 class="page-intro">Ready to transform your workplace?</h2>
     <p>Join us in making mental well-being a priority.</p>
     <a href="{{ url_for('main.contact_us') }}" class="btn btn-light btn-lg">Contact Us</a>
