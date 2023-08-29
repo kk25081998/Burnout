@@ -161,11 +161,7 @@ In essence, Gunicorn runs the Flask app, while Nginx directs external requests t
 
 ---
 
-Certainly! Here's the updated section for your README file:
-
----
-
-## How to Update the Application
+## How to Update the Application with new Code
 
 When you need to update the application, especially after pulling new changes from a repository, you may need to restart Gunicorn and Nginx to reflect these updates. The following script helps automate this process:
 
