@@ -42,7 +42,8 @@ class Company(db.Model):
     image = db.Column(db.String(128), nullable=True) 
     subscription_status = db.Column(db.String(64), default="inactive")  # e.g., active, inactive, expired
     subscription_id = db.Column(db.Integer, db.ForeignKey('subscription.id'))
-    
+    subscription_plan_id = db.Column(db.Integer, db.ForeignKey('subscription_plan.id'))
+
     def __repr__(self):
         return f'<Company {self.name}>'
 
