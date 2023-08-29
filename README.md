@@ -44,7 +44,7 @@ cd /path/to/your/flask_app
 3. Start Gunicorn:
 
 ```bash
-gunicorn run:app -b localhost:8000
+gunicorn run:app -b localhost:8000 -w 4 --access-logfile /home/ec2-user/access.log --error-logfile /home/ec2-user/error.log
 ```
 
 ### Nginx Setup:
