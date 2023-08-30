@@ -24,7 +24,7 @@
 
 ## Subtasks:
 
-* Figure out new user registration
-* Logic for checking if the test page is not working, it shows test even when test is taken for that month
-* Come up with advanced report analytics possible for HR page (2-3 hours)
-* Come up with new features for the app (2 hour brainstorm)
+* [X] Figure out new user registration
+* [X] Logic for checking if the test page is not working, it shows test even when test is taken for that month
+* [ ] Come up with advanced report analytics possible for HR page (2-3 hours)
+* [X] Come up with new features for the app (2 hour brainstorm)
