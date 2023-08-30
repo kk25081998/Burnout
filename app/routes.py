@@ -32,7 +32,7 @@ def index():
             return redirect(url_for('main.company_dashboard'))
         elif current_user.role_id == 3:
             return redirect(url_for('main.hr_overview'))
-        elif current_user.role_id in [4, 5]:
+        elif current_user.role_id in [4, 5, 6]:
             return redirect(url_for('main.dashboard'))
 
     # Fallback to intro.html for non-logged-in users or if no role_id matched:
@@ -146,6 +146,10 @@ def logout():
 @main.route('/dashboard')
 @login_required
 def dashboard():
+    if current_user.role_id not in [4, 5, 6]:
+        abort(403)
+
+
     get_flashed_messages()
     user = User.query.filter_by(id=current_user.id).first()
     today_date = datetime.now().date()  # Get the current date without time.
@@ -239,6 +243,9 @@ def view_profile():
 @main.route('/test', methods=['GET', 'POST'])
 @login_required
 def test():
+    if current_user.role_id not in [4, 5, 6]:
+        abort(403)
+
     form = TakeTest()
     
     # Check if the user has taken the test in the current month
@@ -263,6 +270,9 @@ def test():
 @main.route('/test_history', methods=['GET'])
 @login_required
 def test_history():
+    if current_user.role_id not in [4, 5, 6]:
+        abort(403)
+
     # Query the database for the user's results
     results = Results.query.filter_by(user_id=current_user.id).order_by(Results.testDate.desc()).all()
 
@@ -271,6 +281,9 @@ def test_history():
 @main.route('/feedback', methods=['GET', 'POST'])
 @login_required
 def feedback():
+    if current_user.role_id not in [4, 5]:
+        abort(403)
+
     form = FeedbackForm()
     message = ''
     message_type = ''
@@ -301,6 +314,9 @@ def feedback():
 @login_required
 def team_test_history():
     # Aggregate the results by testDate
+    if not current_user.role_id == 4:
+        abort(403)
+
     aggregated_results = (
         db.session.query(
             Results.testDate,
@@ -321,26 +337,12 @@ def team_test_history():
         aggregated_results=aggregated_results
     )
 
-# @main.route('/select_manager', methods=['GET', 'POST'])
-# @login_required
-# def select_manager():
-#     form = SelectManagerForm()
-#     form.manager.choices = [(0, 'None')] + [(u.id, f'{u.firstname} {u.lastname}') for u in User.query.filter_by(companyId=current_user.companyId).all() if u.id != current_user.id]
-#     if form.validate_on_submit():
-#         current_user.manager_id = form.manager.data
-#         db.session.commit()
-#         flash('Your manager has been selected.')
-#         return redirect(url_for('main.index'))  # redirect to the index page or any other page after manager selection
-#     return render_template('select_manager.html', form=form)
-
-# @main.before_request
-# def before_request():
-#     if current_user.is_authenticated and current_user.manager_id is None and request.endpoint not in ['main.select_manager', 'main.logout']:
-#         return redirect(url_for('main.select_manager'))
-
 @main.route('/resources', methods=['GET'])
 # @login_required
 def resources():
+    if current_user.role_id not in [4, 5, 6]:
+        abort(403)
+
     # Get all resources from the database
     evaluate_resources = Resources.query.filter_by(category="Evaluate Your Options").all()
     support_resources = Resources.query.filter_by(category="Seek Support").all()
@@ -831,6 +833,10 @@ def change_feedback_status(feedback_id):
 @main.route("/createuser", methods=['GET', 'POST'])
 @login_required
 def createuser():
+
+    if current_user.role_id not in [2, 3]:
+        abort(403)
+
     form = CreateNewUserForm()
 
     companyId = current_user.companyId
