@@ -48,6 +48,14 @@
                 {% endfor %}
             </select>            
         </div>
+        <div class="col-md-6">
+            <label for="departmentScaleSelect">Scale:</label>
+            <select id="departmentScaleSelect" class="form-control">
+                <option value="1" selected>1 year</option>
+                <option value="2">2 years</option>
+                <option value="5">5 years</option>
+            </select>
+        </div>        
     </div>
 
     <!-- Card with white background for User Count -->
@@ -57,7 +65,7 @@
                 Burnout levels for <span id="selectedDepartment">{{ departments[0] if departments }}</span>
             </h4>
             <div class="row justify-content-center">
-                <div class="col-md-8 chartContainer">
+                <div class="col-md-12 chartContainer">
                     <canvas id="departmentStatsChart"></canvas>
                 </div>
             </div>
@@ -76,6 +84,14 @@
                 {% endfor %}
             </select>            
         </div>
+        <div class="col-md-6">
+            <label for="managerScaleSelect">Scale:</label>
+            <select id="managerScaleSelect" class="form-control">
+                <option value="1" selected>1 year</option>
+                <option value="2">2 years</option>
+                <option value="5">5 years</option>
+            </select>
+        </div>        
     </div>
 
 
@@ -86,7 +102,7 @@
                 Average Team Scores For Manager: <span id="selectedManager">{{ managers[0].first_name }} {{ managers[0].last_name }}</span>
             </h4>            
             <div class="row justify-content-center">
-                <div class="col-md-8 chartContainer">
+                <div class="col-md-12 chartContainer">
                     <canvas id="managerStatsChart"></canvas>
                 </div>
             </div>
@@ -127,6 +143,12 @@
         return gradient;
     }
 
+    function filterDataByScale(data, scale) {
+        // Take the last 'scale' data points based on the dropdown selection
+        return data.slice(-scale * 12);  // 12 data points per year
+    }
+
+
     function updateTitle() {
         // Get the selected value from the dropdown
         const selectedValue = document.getElementById('departmentSelect').value;
@@ -143,6 +165,8 @@
         document.getElementById('selectedManager').textContent = selectedManagerName;
     }
 
+    
+
     function createBarChart(ctx, results) {
         var dataValues = [];
         var backgroundColors = [];
@@ -151,6 +175,19 @@
             dataValues.push(scaledScore);
             backgroundColors.push(getGradientColor(ctx, scaledScore));
         });
+
+        var barThicknessValue;
+        switch (results.length) {
+            case 12: 
+                barThicknessValue = 30; 
+                break;
+            case 24: 
+                barThicknessValue = 20; 
+                break;
+            default: 
+                barThicknessValue = 10;  // Or any other default value
+        }
+
 
         return new Chart(ctx, {
             type: 'bar',
@@ -204,7 +241,7 @@
                         bottom: 50
                     }
                 },
-                barThickness: 20 // Adjust the bar thickness here
+                barThickness: barThicknessValue  // Adjust the bar thickness here
             }
         });
     }
@@ -221,15 +258,14 @@
 
     // Initial setup (You can set this up based on initial values you want to display)
     var firstManagerId = Object.keys(teamData).find(id => id !== "None");
-    var initialManagerResults = convertMonthlyDataToResults(teamData[firstManagerId]); 
-    var initialDepartmentResults = convertMonthlyDataToResults(departmentsData[departmentsList[0]]);
+    var initialManagerResults = convertMonthlyDataToResults(teamData[firstManagerId]).slice(-12); 
+    var initialDepartmentResults = convertMonthlyDataToResults(departmentsData[departmentsList[0]]).slice(-12);
+
     console.log(initialManagerResults);
     console.log(initialDepartmentResults);
 
     var salesData = departmentsData["Sales"];
     var convertedSalesData = convertMonthlyDataToResults(salesData);
-
-
 
     barChartDepartment = createBarChart(ctxDepartment, initialDepartmentResults);
     barChartManager = createBarChart(ctxManager, initialManagerResults);
@@ -237,18 +273,38 @@
     // Event listeners to re-draw charts
     document.getElementById('departmentSelect').addEventListener('change', function() {
         var selectedDepartment = this.value;
-        var newResults = convertMonthlyDataToResults(departmentsData[selectedDepartment]);
+        var scale = parseInt(document.getElementById('departmentScaleSelect').value, 10);
+        var filteredResults = filterDataByScale(convertMonthlyDataToResults(departmentsData[selectedDepartment]), scale);
         if (barChartDepartment) barChartDepartment.destroy();
-        barChartDepartment = createBarChart(ctxDepartment, newResults);
+        barChartDepartment = createBarChart(ctxDepartment, filteredResults);
     });
 
 
     document.getElementById('managerSelect').addEventListener('change', function() {
         var selectedManager = this.value;
-        var newResults = convertMonthlyDataToResults(teamData[selectedManager]);
+        var scale = parseInt(document.getElementById('managerScaleSelect').value, 10);
+        var filteredResults = filterDataByScale(convertMonthlyDataToResults(teamData[selectedManager]), scale);
         if (barChartManager) barChartManager.destroy();
-        barChartManager = createBarChart(ctxManager, newResults);
+        barChartManager = createBarChart(ctxManager, filteredResults);
     });
+
+    document.getElementById('departmentScaleSelect').addEventListener('change', function() {
+        var selectedDepartment = document.getElementById('departmentSelect').value;
+        var scale = parseInt(this.value, 10);
+        var filteredResults = filterDataByScale(convertMonthlyDataToResults(departmentsData[selectedDepartment]), scale);
+        if (barChartDepartment) barChartDepartment.destroy();
+        barChartDepartment = createBarChart(ctxDepartment, filteredResults);
+    });
+
+    document.getElementById('managerScaleSelect').addEventListener('change', function() {
+        var selectedManager = document.getElementById('managerSelect').value;
+        var scale = parseInt(this.value, 10);
+        var filteredResults = filterDataByScale(convertMonthlyDataToResults(teamData[selectedManager]), scale);
+        if (barChartManager) barChartManager.destroy();
+        barChartManager = createBarChart(ctxManager, filteredResults);
+    });
+
+
 
 
 

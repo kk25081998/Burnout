@@ -182,7 +182,7 @@ def dashboard():
     for score in last_three_scores:
         scores_dict[score.testDate.month] = score
 
-    print(scores_dict)
+    # print(scores_dict)
     return render_template('dashboard.html', user=user, last_score=last_score, current_month=current_month, scores_dict=scores_dict, last_month=last_month, two_months_ago=two_months_ago, three_months_ago = three_months_ago, current_year=current_year, prev_year=prev_year)
 
 
@@ -602,7 +602,7 @@ def edit_user(user_id):
         
         # Form validation
         if not form.validate():
-            print(form.errors)
+            # print(form.errors)
             return render_template('edituser.html', title='Edit User', form=form, user=user)
         
         # Check if the new email already exists in the database and it's not the same as the original
@@ -740,11 +740,11 @@ def hr_burnout_report():
         manager_list = []
 
         # Add a default 'No Manager Assigned' option with an id of -1
-        manager_list.append({
-            'id': -1,
-            'first_name': 'Users With No',
-            'last_name': 'Manager Assigned'
-        })
+        # manager_list.append({
+        #     'id': -1,
+        #     'first_name': 'Users With No',
+        #     'last_name': 'Manager Assigned'
+        # })
 
         for manager in managers:
             manager_dict = {
@@ -775,7 +775,7 @@ def hr_burnout_report():
     managers = get_all_managers(company_id)
     team_data = replace_none_with_string(team_data)
 
-    print(department_data)
+    # print(department_data)
 
     # Passing the data to the template
     return render_template('hrreporting.html', 

@@ -6,28 +6,18 @@
         font-family: 'Arial', sans-serif;
         background: linear-gradient(45deg, #020014, #09033F);
     }
-
-    .custom-card {
-        background-color: #2a2a2a;
-        color: white;
+    #userStatsChart {
+        width: 100%;  /* This will ensure that the chart takes up the full width of its parent */
+        height: 400px;  /* Adjust this value based on your desired height */
+    }
+    #userStatsChart2 {
+        width: 100%;  /* This will ensure that the chart takes up the full width of its parent */
+        height: 800px;  /* Adjust this value based on your desired height */
     }
 
-    .custom-card-body {
-        height: 230px; /* Adjust the height as needed */
-    }
-    .custom-jumbotron {
-        background-color: #2a2a2a;
-        color: white;
-        padding: 2rem;
-        border-radius: 10px;
-    }
-    .userStatsChart2 {
-        width: 100%;
-        height: 500px; /* Or any other desired height */
-    }
 </style>
 
-<div class="container mt-5">
+<div class="container mt-1">
 
     <!-- Card with white background -->
     <div class="card bg-white mb-4">
@@ -38,7 +28,7 @@
 
             <!-- Chart for Company Stats -->
             <div class="row justify-content-center">
-                <div class="col-md-8">
+                <div class="col-md-4">
                     <canvas id="userStatsChart"></canvas>
                 </div>
             </div>
@@ -49,7 +39,7 @@
             <h4 class="text-center mb-4" style="color: #09033F;">Average Scores for Users and Managers</h4>
 
             <div class="row justify-content-center">
-                <div class="col-md-8">
+                <div class="col-md-12">
                     <canvas id="userStatsChart2"></canvas>
                 </div>
             </div>
@@ -77,11 +67,11 @@
                 label: 'User Statistics',
                 data: [userCounts, adminCount, hrCount, managerCount, regularUserCount],
                 backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)',
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(255, 206, 86, 0.2)',
-                    'rgba(75, 192, 192, 0.2)',
-                    'rgba(153, 102, 255, 0.2)'
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)'
                 ],
                 borderColor: [
                     'rgba(255, 99, 132, 1)',
@@ -90,7 +80,7 @@
                     'rgba(75, 192, 192, 1)',
                     'rgba(153, 102, 255, 1)'
                 ],
-                borderWidth: 1
+                borderWidth: 20
             }]
         },
         options: {
@@ -105,7 +95,8 @@
                     display: false
                 }
             },
-            backgroundColor: 'rgba(255, 255, 255, 1)'
+            backgroundColor: 'rgba(255, 255, 255, 1)',
+            maintainAspectRatio: false
         }
     });
 </script>
@@ -117,7 +108,7 @@
     var ctx2 = document.getElementById('userStatsChart2').getContext('2d');
 
     function getGradientColor(value) {
-        var gradient = ctx2.createLinearGradient(0, 0, 0, 400);
+        var gradient = ctx2.createLinearGradient(0, 0, 0, 800);
 
         if (value <= 33) {
             gradient.addColorStop(0, 'lightgreen');
@@ -165,8 +156,8 @@
             indexAxis: 'x',
             scales: {
                 x: {
-                    barPercentage: 0.5,      // Adjusts the width of the bars relative to the space between bars
-                    categoryPercentage: 0.7  // Adjusts the width of the bars relative to the space between categories (or months in this case)
+                    barPercentage: 1,      // Adjusts the width of the bars relative to the space between bars
+                    categoryPercentage: 1 // Adjusts the width of the bars relative to the space between categories (or months in this case)
                 },
                 y: {
                     beginAtZero: true,
@@ -193,13 +184,13 @@
             },
             layout: {
                 padding: {
-                    left: 20,
-                    right: 20,
-                    top: 50,
-                    bottom: 50
+                    left: 5,
+                    right: 5,
+                    top: 5,
+                    bottom: 5
                 }
             },
-            barThickness: 10
+            barThickness: 30
         }
     });
 
