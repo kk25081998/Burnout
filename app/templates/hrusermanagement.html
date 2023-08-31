@@ -116,7 +116,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for user in users.items %}
+                    {% for user in users %}
                     <tr>
                         <td>{{ user.email }}</td>
                         <td>{{ user.firstname }}</td>
@@ -144,7 +144,7 @@
 <script>
     jQuery(document).ready(function($) {
         $('#hrUserTable').DataTable({
-            "pageLength": 10,
+            "pageLength": 25,
             "searching": true,
             "ordering": true,
             "info": true,

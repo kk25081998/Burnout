@@ -551,24 +551,15 @@ def company_users():
     # Make sure the current user is allowed to manage company users
     if not (current_user.role_id == 3 or current_user.role_id == 2):
         abort(403)
-
-    # Get page number from request arguments (or default to page 1 if not provided)
-    page = request.args.get('page', 1, type=int)
-
-    # Fetch paginated users from the company
-    users_per_page = 25
     
     # Hr only see Staff and Managers
     if current_user.role_id == 3:
-        company_users = User.query.filter_by(companyId=current_user.companyId) \
-            .filter(User.role_id.in_([4, 5])) \
-            .paginate(page=page, per_page=users_per_page, error_out=False)
+        company_users = User.query.filter_by(companyId=current_user.companyId).filter(User.role_id.in_([4, 5]))
         manager_id_to_email = {user.id: user.email for user in User.query.all()}
         return render_template('hrusermanagement.html', users=company_users, manager_emails=manager_id_to_email)
 
     # Admin see all users
-    company_users = User.query.filter_by(companyId=current_user.companyId) \
-        .paginate(page=page, per_page=users_per_page, error_out=False)
+    company_users = User.query.filter_by(companyId=current_user.companyId)
     manager_id_to_email = {user.id: user.email for user in User.query.all()}
     return render_template('adminusermanagement.html', users=company_users, manager_emails=manager_id_to_email)
 
