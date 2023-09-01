@@ -1,0 +1,186 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    /* Custom styles for this page */
+    .section-header {
+        font-weight: bold;
+        margin-bottom: 20px;
+    }
+
+    .subheading {
+        color: #fff;
+        font-size: 1.2rem;
+        margin-bottom: 25px;
+    }
+    .btn-group .btn {
+        transition: all 0.3s;
+    }
+    .btn-group .btn:hover {
+        background: rgba(255, 255, 255, 0.1);
+    }
+    .hero-section {
+        padding: 40px 0;
+    }
+    .section-content {
+        padding: 25px 50px;
+    }
+    .content-card {
+        display: none;
+        background-color: #1a1a1a; /* Corrected the color value */
+        border-radius: 5px;
+        padding: 20px;
+        box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+    }
+    .content-card.selected {
+        display: block;
+    }
+</style>
+
+<div class="hero-section text-center gradient-bg">
+    <section data-aos="fade-up" data-aos-delay="1">
+        <br>
+        <h1 class="section-header display-4">Our process</h1>
+        <p class="subheading">Choose your perspective to discover more.</p>
+        <!-- Buttons to show content -->
+        <div class="mt-md-1 btn-group">
+            <button class="btn btn-lg btn-outline-primary" onclick="showContent('for-individuals')">Individual</button>
+            <button class="btn btn-lg btn-outline-primary ml-3" onclick="showContent('for-companies')">Company</button>
+        </div>
+        <br>
+        <br>
+    </section>
+</div>
+
+
+<div class="content-section section-content">
+
+    <!-- For Individual Users -->
+    <section id="for-individuals" class="content-card" data-aos="fade-up" data-aos-delay="0">
+        <!-- Content as before ... -->
+        <h2 class="section-header display-5">For Individual Users:</h2>
+        
+        <!-- Currently Available -->
+        <h4 class="mb-3">Currently Available:</h4>
+
+        <!-- 1. Sign Up & Personalization -->
+        <h4>1. Sign Up & Personalization:</h4>
+        <ul>
+            <li><strong>Create Your Account:</strong> Embark on a transformative journey. Sign up using your preferred email.</li>
+            <li><strong>Profile Setup:</strong> Tailor your experience on our platform. Customize your profile with essential details.</li>
+        </ul>
+        
+        <!-- 2. Well-being Assessment -->
+        <h4>2. Well-being Assessment:</h4>
+        <ul>
+            <li><strong>Start with a Self-check:</strong> Dive into an intuitive assessment gauging your mental and emotional well-being.</li>
+            <li><strong>Receive Personalized Feedback:</strong> Post-assessment, get access to tailored feedback and resources. Prioritize and elevate your well-being with actionable insights.</li>
+        </ul>
+
+        <!-- 3. Resource Library Access -->
+        <h4>3. Resource Library Access:</h4>
+        <ul>
+            <li><strong>Curated Content:</strong> Discover handpicked articles, videos, and other valuable resources centred on mental health and well-being.</li>
+            <li><strong>Regular Updates:</strong> Keep yourself updated with fresh, relevant content added periodically.</li>
+        </ul>
+
+        <br>
+
+        <!-- Coming Soon -->
+        <h4 class="mb-3">Coming Soon:</h4>
+        
+        <!-- 4. Goal Setting & Tracking -->
+        <h4>4. Goal Setting & Tracking:</h4>
+        <ul>
+            <li><strong>Set Your Milestones:</strong> Envision and decide on personal well-being goals.</li>
+            <li><strong>Monitor Your Journey:</strong> Embrace our built-in tracker to monitor progress and celebrate milestones.</li>
+        </ul>
+
+        <!-- 5. Engage with the Community -->
+        <h4>5. Engage with the Community:</h4>
+        <ul>
+            <li><strong>Join Discussions:</strong> Participate actively in our community forum, share your journey, and learn from like-minded individuals.</li>
+            <li><strong>Stay Safe:</strong> Experience a moderated forum, ensuring a supportive and secure environment for all.</li>
+        </ul>
+
+        <!-- Call-to-Action for Individual Users -->
+        <div class="text-center mt-3 mb-5">
+            <a class="btn btn-primary" href="{{ url_for('main.register_individual') }}">Register Yourself</a>
+        </div>
+    </section>
+
+    <!-- For Companies -->
+    <section id="for-companies" class="content-card" data-aos="fade-up" data-aos-delay="0">
+        <!-- Content as before ... -->
+        <h2 class="section-header display-5">For Companies:</h2>
+        
+        <!-- Currently Available -->
+        <h4 class="mb-3">Currently Available:</h4>
+
+        <!-- 1. Corporate Registration -->
+        <h4>1. Corporate Registration:</h4>
+        <ul>
+            <li><strong>Company Sign-up:</strong> Align with Flourish at Work. Register your organization and prioritize your team's mental well-being.</li>
+            <li><strong>Customized Dashboard:</strong> Benefit from an overview of tools and features crafted for your team.</li>
+        </ul>
+
+        <!-- 2. Employee Well-being Analytics -->
+        <h4>2. Employee Well-being Analytics:</h4>
+        <ul>
+            <li><strong>Insights at a Glance:</strong> Monitor overall well-being trends. Make informed decisions that positively impact your organization.</li>
+            <li><strong>Protect Privacy:</strong> Rest easy knowing all data is aggregated and anonymized, ensuring the utmost privacy.</li>
+        </ul>
+
+        <!-- 3. Resource Library -->
+        <h4>3. Resource Library:</h4>
+        <ul>
+            <li><strong>Exclusive Content:</strong> Offer your employees an enriched collection, handpicked for corporate mental health and well-being.</li>
+            <li><strong>Suggest Resources:</strong> Contribute and recommend resources that resonate with your company culture.</li>
+        </ul>
+        <br>
+
+        <!-- Coming Soon -->
+        <h4 class="mb-3">Coming Soon:</h4>
+
+        <!-- 5. Integration with Company Tools -->
+        <h4>5. Integration with Company Tools:</h4>
+        <ul>
+            <li><strong>Seamless Experience:</strong> Integrate Flourish at Work with your existing HR systems for a cohesive experience.</li>
+            <li><strong>Custom Notifications:</strong> Facilitate company-wide notifications concerning mental health and well-being.</li>
+        </ul>
+
+        <!-- 6. Feedback & Collaboration -->
+        <h4>6. Feedback & Collaboration:</h4>
+        <ul>
+            <li><strong>Engage with the Developers:</strong> Collaborate with the Flourish at Work team to align the platform with your company's unique needs.</li>
+            <li><strong>Ongoing Support:</strong> Avail round-the-clock support for any queries or needs.</li>
+        </ul>
+
+        <!-- 7. Future Roadmap Insights -->
+        <h4>7. Future Roadmap Insights:</h4>
+        <ul>
+            <li><strong>Stay Ahead:</strong> Gain early access to new features, ensuring your organization stays at the forefront of employee well-being.</li>
+            <li><strong>Participate in Beta Tests:</strong> Engage in beta testing and help shape tools designed specifically for organizations.</li>
+        </ul>
+
+        <!-- Call-to-Action for Companies -->
+        <div class="text-center mt-3 mb-5">
+            <a class="btn btn-primary" href="{{ url_for('main.register_company') }}">Register Your Company</a>
+        </div>
+    </section>
+</div>
+
+<script>
+    function showContent(id) {
+        // Hide all content cards
+        let cards = document.querySelectorAll('.content-card');
+        cards.forEach(card => card.classList.remove('selected'));
+
+        // Show the selected card
+        document.getElementById(id).classList.add('selected');
+    }
+
+    // Set the "For Individuals" card as the default visible card
+    showContent('for-individuals');
+</script>
+{% endblock %}

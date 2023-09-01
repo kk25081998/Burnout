@@ -879,6 +879,6 @@ def createuser():
     return render_template('createuser.html', title='Register', form=form)
 
 
-@main.route('/testhtml', methods=['GET', 'POST'])
-def testhtml():
-    return render_template('intro.html')
+@main.route('/ourprocess', methods=['GET'])
+def ourprocess():
+    return render_template('ourprocess.html')
