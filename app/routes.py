@@ -21,6 +21,7 @@ main = Blueprint('main', __name__)
 
 @main.before_request
 def add_data_to_g():
+    g.banner = os.environ.get('BANNER')
     g.topthing = os.environ.get('TOPTHING')
 
 @main.route('/')

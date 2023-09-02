@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{g.topthing}}</title>
+    <title>{{g.banner}}</title>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.rawgit.com/michalsnik/aos/2.1.1/dist/aos.css">
@@ -117,6 +118,11 @@
 </head>
 
 <body>
+    <!-- Alert Notification -->
+    <div class="alert alert-info text-center" role="alert">
+        {{ g.banner }}
+    </div>
+
 
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light">
