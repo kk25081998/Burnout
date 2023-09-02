@@ -6,18 +6,20 @@ from flask_login import LoginManager
 db = SQLAlchemy()
 migrate = Migrate()
 login_manager = LoginManager()
-login_manager.login_view = 'main.login'
+login_manager.login_view = "main.login"
+
 
 def create_app():
     app = Flask(__name__, template_folder="templates")
-    app.config.from_object('config.Config')
-    app.config['DEBUG'] = True
+    app.config.from_object("config.Config")
+    app.config["DEBUG"] = True
 
     db.init_app(app)  # Initialize the db object
     migrate.init_app(app, db)
     login_manager.init_app(app)
 
     from app.routes import main
+
     app.register_blueprint(main)
 
     with app.app_context():
