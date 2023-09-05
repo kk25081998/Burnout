@@ -35,6 +35,21 @@
     .content-card.selected {
         display: block;
     }
+    .video-container {
+        position: relative;
+        padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+        height: 0;
+        overflow: hidden;
+    }
+    .video-container iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        padding-left: 5%;
+        padding-right: 5%;
+    }
 </style>
 
 <div class="hero-section text-center gradient-bg">
@@ -170,6 +185,21 @@
         <div class="text-center mt-3 mb-5">
             <a class="btn btn-primary" href="{{ url_for('main.register_company') }}">Register Your Company</a>
         </div>
+
+        
+    </section>
+</div>
+
+<div class="hero-section text-center gradient-bg">
+    <section data-aos="fade-up" data-aos-delay="1">
+        <h3 class="section-header display-4" style="font-size: xx-large;">Demo for Companies</h3>
+        <br>
+        <!-- YouTube Video Embed -->
+        <div class="video-container">
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/HvcBWtOWhvk?si=XBU7jnMCyIhridvx" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+        </div>
+        <br>
+        <br>
     </section>
 </div>
 
