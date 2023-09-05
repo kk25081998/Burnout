@@ -1,23 +1,28 @@
 import random
 
+
 def generate_users_sql():
-    user_roles = {
-        2: ("Admin", 2),
-        3: ("HR", 3),
-        4: ("Manager", 10),
-        5: ("User", 35)
-    }
+    user_roles = {2: ("Admin", 2), 3: ("HR", 3), 4: ("Manager", 10), 5: ("User", 35)}
 
     company_id = 35
     password = "pbkdf2:sha256:600000$LiIiJi5YaNTb1TrJ$50f9d06e88d476d7c74c2767a2ac6650a9140f24233bbe73a0c17659210b841f"
-    
+
     user_count = 69  # starting from 70
     user_sql_statements = []
 
     manager_ids = []
 
     # Extended departments
-    departments = ["Tech", "Sales", "Finance", "Marketing", "Support", "HR", "Operations", "Research"]
+    departments = [
+        "Tech",
+        "Sales",
+        "Finance",
+        "Marketing",
+        "Support",
+        "HR",
+        "Operations",
+        "Research",
+    ]
 
     for role_id, (role_name, count) in user_roles.items():
         for i in range(count):
@@ -26,7 +31,7 @@ def generate_users_sql():
             if role_id == 4:
                 manager_ids.append(user_count)
 
-            email = f"{role_name.lower()}{user_count}@example.com" 
+            email = f"{role_name.lower()}{user_count}@example.com"
             firstname = f"{role_name} {i + 1}"
             lastname = "User"
             dob = f"198{random.randint(0, 9)}-0{random.randint(1, 9)}-{random.randint(10, 29)}"
@@ -53,6 +58,7 @@ def generate_users_sql():
 
     return user_sql_statements
 
+
 def generate_results_sql(user_start_id, user_end_id):
     results_sql_statements = []
 
@@ -75,10 +81,11 @@ def generate_results_sql(user_start_id, user_end_id):
 
     return results_sql_statements
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     user_sql = generate_users_sql()
     results_sql = generate_results_sql(70, 119)  # Extended user count
-    
+
     # Combine all statements
     all_statements = user_sql + results_sql
 
@@ -86,5 +93,5 @@ if __name__ == '__main__':
     with open("insert_statements.sql", "w") as file:
         for statement in all_statements:
             file.write(statement + "\n")
-    
+
     print("SQL statements generated and saved to insert_statements.sql!")
