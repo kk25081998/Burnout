@@ -523,9 +523,9 @@ def resources():
     )
 
 
-@main.route("/pricing", methods=["GET"])
-def pricing():
-    return render_template("pricing.html", title="Pricing")
+# @main.route("/pricing", methods=["GET"])
+# def pricing():
+#     return render_template("pricing.html", title="Pricing")
 
 
 @main.route("/company", methods=["GET"])
