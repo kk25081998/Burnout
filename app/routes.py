@@ -51,6 +51,7 @@ from app.personalization import (
     save_company_logo,
     create_departments,
     redirect_next_or_dashboard,
+    recommend_resource
 )
 from app.models import User, Company, Results, Feedback, Resources, Role
 from datetime import datetime, timedelta
@@ -211,6 +212,7 @@ def change_password():
 
 @main.route("/logout")
 def logout():
+    session.pop('recommended_resource_ids', None)
     logout_user()
     return redirect(url_for("main.index"))
 
@@ -264,6 +266,9 @@ def dashboard():
     for score in last_three_scores:
         scores_dict[score.testDate.month] = score
 
+    resources = recommend_resource(current_user.id)
+    print(resources)
+
     # print(scores_dict)
     return render_template(
         "dashboard.html",
@@ -276,6 +281,7 @@ def dashboard():
         three_months_ago=three_months_ago,
         current_year=current_year,
         prev_year=prev_year,
+        resources=resources
     )
 
 

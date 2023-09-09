@@ -38,25 +38,52 @@
         text-decoration: underline;
     }
 
-    .resources-section {
-        background-color: rgba(255, 255, 255, 0);
+    .content-section {
+        background-color: #2a2a2a;
         padding: 20px;
-        border-radius: 8px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .resources-section h2 {
+        color: #e1e1e1;
+        border-bottom: 2px solid #e0e0e0;
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+    }
+
+    .resources-section p {
+        color: #b1b1b1;
+        font-size: 16px;
+        margin-bottom: 5px;
     }
 
     .list-group-item {
         border: none;
-        background-color: transparent;
+        padding: 15px;
+        background-color: #1a1a1a;
+        margin-bottom: 5px;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
     }
 
     .list-group-item:hover {
-        background-color: rgba(0,0,0,0.05);
+        background-color: #0a0a0a;
+    }
+
+    .list-group-item a {
+        color: #007bff;
+        text-decoration: none;
+        font-weight: 500;
+    }
+
+    .list-group-item a:hover {
+        text-decoration: underline;
     }
 
     .large-text .list-group-item {
         font-size: 1.5rem;  /* adjust this value as needed */
     }
-
 </style>
   
 <div class="container mt-5">
@@ -147,17 +174,18 @@
         </div>
 
     </div>
+    <br>
     
-    <hr class="mt-2">
-    
+</div>
+
+<div class="content-section section-content container mt-5" style="margin-bottom: 2%;">
     <!-- Resources Section -->
-    <div class="resources-section mt-4 pb-5">
-        <h2>Resources</h2>
-        <p>Here are some resources to help you maintain your well-being:</p>
+    <div class="resources-section mt-4 pb-3">
+        <h2>Curated Resources For you</h2>
         <ul class="list-group">
-            <li class="list-group-item"><a href="https://hbr.org/2021/01/how-to-tell-your-boss-youre-burned-out">Harvard Business Review: How to Tell Your Boss You’re Burned Out</a></li>
-            <li class="list-group-item"><a href="https://www.7cups.com/">7 Cups: Connect with trained listeners for free counseling and support</a></li>
-            <li class="list-group-item"><a href="https://www.headspace.com/">Headspace: Guided meditations designed to reduce stress, improve sleep, and enhance focus</a></li>
+            {% for resource in resources %}
+                <li class="list-group-item"><a href="{{ resource.link }}">{{ resource.title }}: {{ resource.description }}</a></li>
+            {% endfor %}
         </ul>
     </div>
 </div>

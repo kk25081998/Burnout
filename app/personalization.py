@@ -1,5 +1,6 @@
 import os
 import hashlib
+import random
 from PIL import Image
 from flask import current_app
 from werkzeug.utils import secure_filename
@@ -37,7 +38,7 @@ from datetime import datetime
 from werkzeug.exceptions import HTTPException  # import HTTPException instead of abort
 from flask import Blueprint
 import json
-from app.models import User, Company, Results
+from app.models import User, Company, Results, Resources
 from sqlalchemy import extract, func, distinct, cast, Integer, text
 
 
@@ -156,6 +157,8 @@ def process_test_results(form):
         )
         db.session.add(new_test_score)
         db.session.commit()
+        # After the user takes a new test or when you want to refresh the recommendations
+        session.pop('recommended_resources', None)
         return True
     except Exception as e:
         print(f"Error while saving test results: {e}")
@@ -286,3 +289,66 @@ def create_departments(company_id):
     )
     department_names = [row[0] for row in distinct_department_names]
     return department_names
+
+
+def recommend_resource(user_id):
+    # Categorize resources based on effectiveness
+    low_effectiveness = [1, 2, 3]
+    medium_effectiveness = [4, 5, 6, 7]
+    high_effectiveness = [8, 9, 10]
+
+    # Fetch the 5 latest burnout scores for the user
+    user_scores = (
+        Results.query.filter_by(user_id=user_id)
+        .order_by(Results.testDate.desc())
+        .limit(5)  # Fetching the last 5 scores for trend analysis
+        .all()
+    )
+
+    # Calculate the weighted average burnout score from the latest results
+    weights = [0.4, 0.3, 0.15, 0.1, 0.05]
+    avg_score = sum([(score.scoreA + score.scoreB + (48 - score.scoreC)) * weight for score, weight in zip(user_scores, weights)])
+
+    # Determine user need based on burnout score
+    if 0 <= avg_score <= 33:
+        needed_effectiveness = low_effectiveness
+    elif 34 <= avg_score <= 66:
+        needed_effectiveness = medium_effectiveness
+    else:
+        needed_effectiveness = high_effectiveness
+
+    # Check for increasing trend in burnout scores
+    increasing_trend = all(
+        user_scores[i].scoreA + user_scores[i].scoreB + (48 - user_scores[i].scoreC) < user_scores[i+1].scoreA + user_scores[i+1].scoreB + (48 - user_scores[i+1].scoreC)
+        for i in range(len(user_scores) - 1)
+    )
+
+    # If there's an increasing trend, recommend a stronger resource
+    if increasing_trend:
+        if needed_effectiveness == low_effectiveness:
+            needed_effectiveness = medium_effectiveness
+        elif needed_effectiveness == medium_effectiveness:
+            needed_effectiveness = high_effectiveness
+
+    print(needed_effectiveness)
+
+    # Check if recommendations are already stored in the session
+    if 'recommended_resource_ids' in session:
+        resource_ids = session['recommended_resource_ids']
+        return Resources.query.filter(Resources.id.in_(resource_ids)).all()
+
+    # Fetch resources from the database that match the needed effectiveness
+    potential_resources = (
+        db.session.query(Resources)
+        .filter(Resources.effectiveness.in_(needed_effectiveness))
+        .all()
+    )
+
+    # Choose 3 random resources from the potential resources
+    recommended_resources = random.sample(potential_resources, min(3, len(potential_resources)))
+
+    # Store a serialized version of the recommendations in the session
+    session['recommended_resource_ids'] = [resource.id for resource in recommended_resources]
+
+    print(len(recommended_resources))
+    return recommended_resources

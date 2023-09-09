@@ -122,6 +122,7 @@ class Resources(db.Model):
     description = db.Column(db.String(500), nullable=True)
     link = db.Column(db.String(500), nullable=False)
     date_added = db.Column(db.DateTime, default=datetime.utcnow)
+    effectiveness = db.Column(db.Integer, nullable=True)
 
     def __repr__(self):
         return f"Resource('{self.title}', '{self.category}')"
