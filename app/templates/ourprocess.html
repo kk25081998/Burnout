@@ -1,6 +1,9 @@
 {% extends "base.html" %}
 
 {% block content %}
+<meta name="description" content="Discover the comprehensive process of Flourish at Work, designed for both individuals and companies to combat employee burnout and enhance well-being.">
+<meta name="keywords" content="employee burnout, well-being, Flourish at Work, corporate mental health, individual mental health, Maslach Burnout Inventory, HR solutions">
+
 <style>
     /* Custom styles for this page */
     .section-header {
@@ -55,12 +58,12 @@
 <div class="hero-section text-center gradient-bg">
     <section data-aos="fade-up" data-aos-delay="1">
         <br>
-        <h1 class="section-header display-4">Our process</h1>
-        <p class="subheading">Choose your perspective to discover more.</p>
+        <h1 class="section-header display-4">Our Comprehensive Process to Combat Burnout</h1>
+        <p class="subheading">Tailored solutions for both individuals and businesses.</p>
         <!-- Buttons to show content -->
         <div class="mt-md-1 btn-group">
-            <button class="btn btn-lg btn-outline-primary" onclick="showContent('for-individuals')">Individual</button>
-            <button class="btn btn-lg btn-outline-primary ml-3" onclick="showContent('for-companies')">Company</button>
+            <button class="btn btn-lg btn-outline-primary" onclick="showContent('for-individuals')">For Individuals</button>
+            <button class="btn btn-lg btn-outline-primary ml-3" onclick="showContent('for-companies')">For Companies</button>
         </div>
         <br>
         <br>
@@ -72,7 +75,6 @@
 
     <!-- For Individual Users -->
     <section id="for-individuals" class="content-card" data-aos="fade-up" data-aos-delay="0">
-        <!-- Content as before ... -->
         <h2 class="section-header display-5">For Individual Users:</h2>
         
         <!-- Currently Available -->
@@ -118,7 +120,7 @@
             <li><strong>Join Discussions:</strong> Participate actively in our community forum, share your journey, and learn from like-minded individuals.</li>
             <li><strong>Stay Safe:</strong> Experience a moderated forum, ensuring a supportive and secure environment for all.</li>
         </ul>
-
+        <br>
         <!-- Call-to-Action for Individual Users -->
         <div class="text-center mt-3 mb-5">
             <a class="btn btn-primary" href="{{ url_for('main.register_individual') }}">Register Yourself</a>
@@ -127,8 +129,8 @@
 
     <!-- For Companies -->
     <section id="for-companies" class="content-card" data-aos="fade-up" data-aos-delay="0">
-        <!-- Content as before ... -->
         <h2 class="section-header display-5">For Companies:</h2>
+        <p>Empower your organization with Flourish at Work's comprehensive approach to employee well-being. From analytics to resource libraries, we offer solutions tailored for businesses to combat burnout and enhance productivity.</p>
         
         <!-- Currently Available -->
         <h4 class="mb-3">Currently Available:</h4>
@@ -180,6 +182,7 @@
             <li><strong>Stay Ahead:</strong> Gain early access to new features, ensuring your organization stays at the forefront of employee well-being.</li>
             <li><strong>Participate in Beta Tests:</strong> Engage in beta testing and help shape tools designed specifically for organizations.</li>
         </ul>
+        <br>
 
         <!-- Call-to-Action for Companies -->
         <div class="text-center mt-3 mb-5">
@@ -201,6 +204,6 @@
     }
 
     // Set the "For Individuals" card as the default visible card
-    showContent('for-individuals');
+    showContent('for-companies');
 </script>
 {% endblock %}
